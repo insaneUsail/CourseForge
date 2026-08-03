@@ -53,12 +53,12 @@ export async function getClassAnalytics(classId: string) {
 
   // Calculate stats
   const totalStudents = classRecord.memberships.length;
-  const studentsWhoAttempted = new Set(attempts.map((a) => a.studentId)).size;
+  const studentsWhoAttempted = new Set(attempts.map((a: any) => a.studentId)).size;
   const avgScore =
     attempts.length > 0
       ? Math.round(
           (attempts.reduce(
-            (sum, a) => sum + (a.score / a.totalQuestions) * 100,
+            (sum, a: any) => sum + (a.score / a.totalQuestions) * 100,
             0
           ) /
             attempts.length)
@@ -68,13 +68,13 @@ export async function getClassAnalytics(classId: string) {
   // Per-student breakdown
   const studentStats = classRecord.memberships.map((membership) => {
     const studentAttempts = attempts.filter(
-      (a) => a.studentId === membership.studentId
+      (a: any) => a.studentId === membership.studentId
     );
     const studentAvg =
       studentAttempts.length > 0
         ? Math.round(
             studentAttempts.reduce(
-              (sum, a) => sum + (a.score / a.totalQuestions) * 100,
+              (sum, a: any) => sum + (a.score / a.totalQuestions) * 100,
               0
             ) / studentAttempts.length
           )
@@ -86,7 +86,7 @@ export async function getClassAnalytics(classId: string) {
       school: membership.school,
       attemptCount: studentAttempts.length,
       avgScore: studentAvg,
-      attempts: studentAttempts.map((a) => ({
+      attempts: studentAttempts.map((a: any) => ({
         quizId: a.quizId,
         chapterTitle: a.quiz.chapter.title,
         score: a.score,
@@ -140,13 +140,13 @@ export async function getTeacherAnalyticsOverview() {
     attempts.length > 0
       ? Math.round(
           attempts.reduce(
-            (sum, a) => sum + (a.score / a.totalQuestions) * 100,
+            (sum, a: any) => sum + (a.score / a.totalQuestions) * 100,
             0
           ) / attempts.length
         )
       : 0;
 
-  const studentsWhoAttempted = new Set(attempts.map((a) => a.studentId)).size;
+  const studentsWhoAttempted = new Set(attempts.map((a: any) => a.studentId)).size;
 
   return {
     totalClasses: classes.length,
