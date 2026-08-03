@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CourseForge 🚀
 
-## Getting Started
+CourseForge is a modern, open-source educational platform designed to empower teachers and students. It allows educators to create structured classes, build rich interactive chapters, and share knowledge publicly, while providing students with a seamless learning and assessment experience.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **For Teachers:**
+  - Create and manage classes with unique enrollment keys.
+  - Build comprehensive chapters using a rich text editor.
+  - Create quizzes and assessments for students.
+  - View detailed analytics and performance metrics for all students.
+  - Share chapters to the public directory for open access.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **For Students:**
+  - Join classes using secure enrollment keys.
+  - Access learning materials and interactive chapters.
+  - Take quizzes to test knowledge and track personal progress.
+  - Browse the public directory to learn new topics for free without enrolling.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Modern & Responsive Design:**
+  - Built with a vibrant, modern UI using Tailwind CSS.
+  - Fully responsive and accessible.
+  - Dark mode and Light mode support.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Tech Stack
 
-## Learn More
+- **Framework:** [Next.js 15](https://nextjs.org/) (App Router)
+- **Language:** TypeScript
+- **Database:** PostgreSQL
+- **ORM:** [Prisma](https://www.prisma.io/)
+- **Authentication:** [Auth.js](https://authjs.dev/) (NextAuth)
+- **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
+- **Rich Text:** Tiptap Editor
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 Getting Started
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Prerequisites
+- Node.js (v18+)
+- PostgreSQL database (Local or Cloud like Neon/Supabase)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Installation
 
-## Deploy on Vercel
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/YourUsername/courseForge.git
+   cd courseForge
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. **Set up environment variables:**
+   Create a `.env` file in the root directory and add the following:
+   ```env
+   # Database connection string
+   DATABASE_URL="postgresql://user:password@localhost:5432/courseforge"
+   
+   # Auth secret (generate with `openssl rand -base64 32`)
+   NEXTAUTH_SECRET="your_super_secret_string"
+   NEXTAUTH_URL="http://localhost:3000"
+   ```
+
+4. **Initialize the Database:**
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   ```
+
+5. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
+
+6. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## ☁️ Deployment
+
+CourseForge is optimized for deployment on Vercel. 
+Ensure you set your `DATABASE_URL` and `NEXTAUTH_SECRET` in the Vercel project settings before deploying. The build script will automatically run Prisma migrations.
+
+---
+Built with ❤️ for education.
