@@ -1,0 +1,223 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ===================================================================
+// Enums
+// ===================================================================
+
+enum Role {
+  TEACHER
+  STUDENT
+}
+
+enum ChapterStatus {
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum QuizStage {
+  MID_CHAPTER
+  FINAL
+}
+
+// ===================================================================
+// User — Teacher or Student
+// ===================================================================
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         Role
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  // Teacher relations
+  ownedClasses  Class[]
+  ownedChapters Chapter[]
+
+  // Student relations
+  memberships ClassMembership[]
+  attempts    Attempt[]
+
+  @@map("users")
+}
+
+// ===================================================================
+// Class — belongs to one teacher, has a unique join key
+// ===================================================================
+
+model Class {
+  id        String   @id @default(cuid())
+  teacherId String   @map("teacher_id")
+  name      String
+  key       String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  teacher      User              @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  memberships  ClassMembership[]
+  chapterLinks ClassChapterLink[]
+  attempts     Attempt[]
+
+  @@index([teacherId])
+  @@map("classes")
+}
+
+// ===================================================================
+// ClassMembership — student joins a class
+// ===================================================================
+
+model ClassMembership {
+  id        String   @id @default(cuid())
+  studentId String   @map("student_id")
+  classId   String   @map("class_id")
+  rollNo    String   @map("roll_no")
+  school    String
+  joinedAt  DateTime @default(now()) @map("joined_at")
+
+  student User  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  class   Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, classId])
+  @@index([studentId])
+  @@index([classId])
+  @@map("class_memberships")
+}
+
+// ===================================================================
+// Chapter — owned by a teacher, can be public or private
+// ===================================================================
+
+model Chapter {
+  id             String        @id @default(cuid())
+  ownerTeacherId String        @map("owner_teacher_id")
+  title          String
+  isPublic       Boolean       @default(false) @map("is_public")
+  status         ChapterStatus @default(IN_PROGRESS)
+  createdAt      DateTime      @default(now()) @map("created_at")
+  completedAt    DateTime?     @map("completed_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+
+  owner      User               @relation(fields: [ownerTeacherId], references: [id], onDelete: Cascade)
+  contents   Content[]
+  quizzes    Quiz[]
+  classLinks ClassChapterLink[]
+
+  @@index([ownerTeacherId])
+  @@index([isPublic])
+  @@map("chapters")
+}
+
+// ===================================================================
+// ClassChapterLink — the core reuse mechanism
+// Links a chapter into a class (even the owner's own class)
+// ===================================================================
+
+model ClassChapterLink {
+  id        String    @id @default(cuid())
+  classId   String    @map("class_id")
+  chapterId String    @map("chapter_id")
+  addedAt   DateTime  @default(now()) @map("added_at")
+  removedAt DateTime? @map("removed_at") // set when original author deletes chapter
+
+  class   Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@unique([classId, chapterId])
+  @@index([classId])
+  @@index([chapterId])
+  @@map("class_chapter_links")
+}
+
+// ===================================================================
+// Content — text content blocks within a chapter
+// ===================================================================
+
+model Content {
+  id         String   @id @default(cuid())
+  chapterId  String   @map("chapter_id")
+  title      String?
+  text       String   @db.Text
+  orderIndex Int      @map("order_index")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@index([chapterId])
+  @@map("contents")
+}
+
+// ===================================================================
+// Quiz — mid-chapter (always unlimited) or final (can be evaluation)
+// ===================================================================
+
+model Quiz {
+  id           String    @id @default(cuid())
+  chapterId    String    @map("chapter_id")
+  stage        QuizStage
+  isEvaluation Boolean   @default(false) @map("is_evaluation")
+  timerSeconds Int       @map("timer_seconds")
+  maxAttempts  Int?      @map("max_attempts") // null = unlimited
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  chapter   Chapter    @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  questions Question[]
+  attempts  Attempt[]
+
+  @@index([chapterId])
+  @@map("quizzes")
+}
+
+// ===================================================================
+// Question — MCQ with options array
+// ===================================================================
+
+model Question {
+  id                 String   @id @default(cuid())
+  quizId             String   @map("quiz_id")
+  questionText       String   @map("question_text") @db.Text
+  options            Json     // string[]
+  correctOptionIndex Int      @map("correct_option_index")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@index([quizId])
+  @@map("questions")
+}
+
+// ===================================================================
+// Attempt — always tagged with class_id for per-teacher analytics
+// ===================================================================
+
+model Attempt {
+  id               String   @id @default(cuid())
+  studentId        String   @map("student_id")
+  quizId           String   @map("quiz_id")
+  classId          String   @map("class_id")
+  score            Int
+  totalQuestions   Int      @map("total_questions")
+  answers          Json     // Record<questionId, selectedIndex>
+  startedAt        DateTime @map("started_at")
+  submittedAt      DateTime @map("submitted_at")
+  timeTakenSeconds Int      @map("time_taken_seconds")
+
+  student User  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  quiz    Quiz  @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  class   Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([quizId])
+  @@index([classId])
+  @@index([classId, quizId])
+  @@map("attempts")
+}

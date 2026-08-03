@@ -1,0 +1,243 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* ===================================================================
+   CourseForge Design System
+   =================================================================== */
+
+:root {
+  /* Semantic Colors - Light Mode (Default) */
+  --color-background: #F9FAFB;
+  --color-foreground: #111827;
+  --color-primary: #4F46E5; /* Indigo */
+  --color-primary-hover: #4338CA;
+  --color-accent: #10B981; /* Emerald */
+  --color-accent-hover: #059669;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F3F4F6;
+  --color-border: #E5E7EB;
+  --color-text-muted: #6B7280;
+  
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+
+  --radius: 16px;
+  --radius-sm: 8px;
+  --radius-lg: 24px;
+  --font-family: 'Inter', system-ui, sans-serif;
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Legacy Mappings to prevent breaking existing classes */
+  --color-bg-dark: var(--color-background);
+  --color-bg-dark2: var(--color-surface-alt);
+  --color-text-light: var(--color-foreground);
+  --color-text-muted-light: var(--color-text-muted);
+  --color-text: var(--color-foreground);
+}
+
+.dark {
+  /* Semantic Colors - Dark Mode */
+  --color-background: #0B0F19;
+  --color-foreground: #F9FAFB;
+  --color-primary: #6366F1;
+  --color-primary-hover: #4F46E5;
+  --color-accent: #C6FF3D;
+  --color-accent-hover: #d4ff6a;
+  --color-surface: #111827;
+  --color-surface-alt: #1F2937;
+  --color-border: #374151;
+  --color-text-muted: #9CA3AF;
+}
+
+@theme inline {
+  /* New Semantic Variables */
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  
+  /* Legacy Variables Mapped */
+  --color-bg-dark: var(--color-bg-dark);
+  --color-bg-dark2: var(--color-bg-dark2);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-text-light: var(--color-text-light);
+  --color-text-muted-light: var(--color-text-muted-light);
+  --color-text-default: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+  --color-surface: var(--color-surface);
+  --color-surface-alt: var(--color-surface-alt);
+  --color-border: var(--color-border);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-error: var(--color-error);
+  --radius-default: var(--radius);
+  --radius-sm: var(--radius-sm);
+  --radius-lg: var(--radius-lg);
+  --font-sans: var(--font-family);
+}
+
+/* ===================================================================
+   Base Resets & Defaults
+   =================================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-family);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===================================================================
+   Animations — Respect prefers-reduced-motion
+   =================================================================== */
+
+/* Card lift on hover */
+@keyframes card-lift {
+  from { transform: translateY(0); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  to   { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.12); }
+}
+
+/* Progress bar fill */
+@keyframes fill-width {
+  from { width: 0%; }
+}
+
+/* Staggered fade+slide entrance (landing hero cards) */
+@keyframes fade-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Toast slide in */
+@keyframes toast-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toast-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* Nav underline draw */
+@keyframes underline-draw {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+/* Page fade */
+@keyframes page-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Score pulse */
+@keyframes badge-pulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* ===================================================================
+   prefers-reduced-motion — disable all animations
+   =================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===================================================================
+   Utility Classes
+   =================================================================== */
+
+/* Page-level fade on mount */
+.page-enter {
+  animation: page-fade-in 150ms ease-out;
+}
+
+/* Toast */
+.toast-enter {
+  animation: toast-slide-in 200ms ease-out forwards;
+}
+.toast-exit {
+  animation: toast-fade-out 200ms ease-out forwards;
+}
+
+/* Progress bar */
+.progress-fill {
+  animation: fill-width 500ms ease-out forwards;
+}
+
+/* Landing hero cards stagger */
+.hero-card-enter {
+  opacity: 0;
+  animation: fade-slide-up 400ms ease-out forwards;
+}
+.hero-card-enter:nth-child(1) { animation-delay: 0ms; }
+.hero-card-enter:nth-child(2) { animation-delay: 80ms; }
+.hero-card-enter:nth-child(3) { animation-delay: 160ms; }
+.hero-card-enter:nth-child(4) { animation-delay: 240ms; }
+
+/* Nav link underline */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-accent);
+  transition: width var(--transition-normal);
+}
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Badge pulse on parent hover */
+.card-hover:hover .badge-pulse {
+  animation: badge-pulse 300ms ease-out;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface-alt);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
