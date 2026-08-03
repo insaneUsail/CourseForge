@@ -27,18 +27,18 @@ export function SignupForm() {
           <button
             type="button"
             onClick={() => setRole('TEACHER')}
-            className="flex-1 bg-bg-dark text-white p-6 rounded-xl border-2 border-transparent hover:border-accent transition flex flex-col items-center gap-3"
+            className="flex-1 bg-white text-slate-800 p-6 rounded-2xl border-2 border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 transition-all flex flex-col items-center gap-3 shadow-sm"
           >
-            <span className="text-3xl">👨‍🏫</span>
-            <span className="font-semibold">I want to teach</span>
+            <span className="text-4xl mb-2">👨‍🏫</span>
+            <span className="font-bold">I want to teach</span>
           </button>
           <button
             type="button"
             onClick={() => setRole('STUDENT')}
-            className="flex-1 bg-surface-alt text-text-default p-6 rounded-xl border-2 border-transparent hover:border-border transition flex flex-col items-center gap-3"
+            className="flex-1 bg-white text-slate-800 p-6 rounded-2xl border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 transition-all flex flex-col items-center gap-3 shadow-sm"
           >
-            <span className="text-3xl">👨‍🎓</span>
-            <span className="font-semibold">I want to learn</span>
+            <span className="text-4xl mb-2">👨‍🎓</span>
+            <span className="font-bold">I want to learn</span>
           </button>
         </div>
         <div className="text-center mt-4">
