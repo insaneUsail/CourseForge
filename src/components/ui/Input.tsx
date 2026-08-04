@@ -14,7 +14,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="flex flex-col gap-1 w-full">
         {label && (
-          <label htmlFor={inputId} className="text-sm font-medium text-[var(--color-text)]">
+          <label htmlFor={inputId} className="text-sm font-semibold text-gray-700 mb-1">
             {label}
           </label>
         )}
@@ -22,14 +22,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           id={inputId}
           ref={ref}
           className={clsx(
-            'bg-[var(--color-surface-alt)] border border-[var(--color-border)] rounded-[var(--radius-sm)] px-3 py-2 text-[var(--color-text)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent min-h-[44px]',
-            error && 'border-[var(--color-error)] focus:ring-[var(--color-error)]',
+            'bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#834DFB] focus:border-transparent min-h-[48px] placeholder:text-gray-400',
+            error && 'border-red-500 focus:ring-red-500',
             className
           )}
           {...props}
         />
         {error && (
-          <span className="text-sm text-[var(--color-error)] mt-1">{error}</span>
+          <span className="text-xs font-semibold text-red-500 mt-1">{error}</span>
         )}
       </div>
     );

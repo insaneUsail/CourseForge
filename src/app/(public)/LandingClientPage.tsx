@@ -2,24 +2,56 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useScroll, useMotionValueEvent } from 'framer-motion';
 import { 
   Sparkles, ArrowRight, BookOpen, Users, Play, Check, 
   ChevronDown, HelpCircle, Layers, Settings, Eye, Target, 
-  Globe, BarChart3, Award, Star, History, Clock, BookOpenCheck
+  Globe, BarChart3, Award, Star, History, Clock, BookOpenCheck, Plus,
+  GraduationCap, School, Presentation, User
 } from 'lucide-react';
 import { IconDocument3D, IconKey3D, IconChart3D, AbstractSphere, AbstractRing, AbstractCube, IconQuote3D, IconStar3D } from '@/components/ui/CustomIcons';
 
 // ===================================================================
+// Typewriter Animation Component
+const TypewriterText = ({ text, delay = 0, className = "" }: { text: string; delay?: number; className?: string }) => {
+  return (
+    <motion.span
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: { staggerChildren: 0.05, delayChildren: delay }
+        }
+      }}
+      className={`inline-block ${className}`}
+    >
+      {text.split('').map((char, i) => (
+        <motion.span
+          key={i}
+          variants={{
+            hidden: { opacity: 0, y: 10 },
+            visible: { opacity: 1, y: 0 }
+          }}
+          className="inline-block"
+        >
+          {char === ' ' ? '\u00A0' : char}
+        </motion.span>
+      ))}
+    </motion.span>
+  );
+};
+
 // Interactive 3D Mouse-Follow Tilt Wrapper Component
 // ===================================================================
 function TiltWrapper({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  // Smooth transformation mapping with springs
-  const rotateX = useSpring(useTransform(y, [-150, 150], [10, -10]), { stiffness: 120, damping: 18 });
-  const rotateY = useSpring(useTransform(x, [-150, 150], [-10, 10]), { stiffness: 120, damping: 18 });
+  // Smooth transformation mapping with springs (Increased Sensitivity)
+  const rotateX = useSpring(useTransform(y, [-150, 150], [25, -25]), { stiffness: 150, damping: 15 });
+  const rotateY = useSpring(useTransform(x, [-150, 150], [-25, 25]), { stiffness: 150, damping: 15 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = e.currentTarget;
@@ -56,10 +88,48 @@ function TiltWrapper({ children, className = "" }: { children: React.ReactNode; 
 export default function LandingClientPage({ user }: { user: any }) {
   // FAQ accordion state
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [activeFeature, setActiveFeature] = useState(0);
+
+  // Features sticky scroll
+  const featureScrollRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: featureScrollY } = useScroll({
+    target: featureScrollRef,
+    offset: ["start start", "end end"]
+  });
+
+  useMotionValueEvent(featureScrollY, "change", (latest) => {
+    const newIndex = Math.min(5, Math.max(0, Math.round(latest * 5)));
+    if (newIndex !== activeFeature) {
+      setActiveFeature(newIndex);
+    }
+  });
 
   // Cycling phrases for the hero section
   const textPhrases = ["I ELEVATE CLASSES.", "I REACH EVERYONE.", "I TRACK RESULTS."];
   const [phraseIdx, setPhraseIdx] = useState(0);
+
+  // Mouse follow state
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Add smooth spring physics for that "laggy/animated" trailing effect
+  const smoothMouseX = useSpring(mouseX, { stiffness: 60, damping: 20, mass: 0.5 });
+  const smoothMouseY = useSpring(mouseY, { stiffness: 60, damping: 20, mass: 0.5 });
+  
+  // Zigzag text parallax tracking (using smooth coordinates)
+  const textX1 = useTransform(smoothMouseX, (val) => (val - (typeof window !== 'undefined' ? window.innerWidth / 2 : 500)) * 0.03);
+  const textY1 = useTransform(smoothMouseY, (val) => (val - (typeof window !== 'undefined' ? window.innerHeight / 2 : 500)) * 0.02);
+  const textX2 = useTransform(smoothMouseX, (val) => (val - (typeof window !== 'undefined' ? window.innerWidth / 2 : 500)) * -0.03);
+  const textY2 = useTransform(smoothMouseY, (val) => (val - (typeof window !== 'undefined' ? window.innerHeight / 2 : 500)) * -0.02);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -77,22 +147,45 @@ export default function LandingClientPage({ user }: { user: any }) {
   ];
 
   return (
-    <main className="flex-1 flex flex-col bg-[#F5F3FF] overflow-hidden" style={{ perspective: '1200px' }}>
+    <>
+      {/* Custom Smart Cursor - Small UI element that adapts to backgrounds */}
+      <motion.div
+        className="fixed top-0 left-0 pointer-events-none z-[9999] hidden md:flex items-center justify-center mix-blend-difference"
+        style={{
+          x: useTransform(smoothMouseX, (val) => val - 16),
+          y: useTransform(smoothMouseY, (val) => val - 16),
+          width: 32,
+          height: 32,
+        }}
+      >
+        <div className="w-8 h-8 rounded-full border-[2px] border-white flex items-center justify-center relative shadow-[0_0_15px_rgba(255,255,255,0.8)]">
+           <div className="w-2 h-2 rounded-full bg-white absolute shadow-[0_0_10px_rgba(255,255,255,0.9)]"></div>
+        </div>
+      </motion.div>
+      
+      <main className="flex-1 flex flex-col bg-[#f5f3ff00] overflow-x-clip" style={{ perspective: '1200px' }}>
       
       {/* 1. HERO SECTION (Redesigned with High-Contrast DEV/PIXEL Style) */}
-      <section className="relative w-full overflow-hidden border-b-2 border-black bg-gradient-to-b from-[#F5F3FF] to-white">
-        {/* Premium Code-Driven Vector Background */}
+      <section id="home" className="relative w-full overflow-hidden border-b-2 border-black bg-[#B4F481] min-h-screen flex items-center">
+        {/* Massive Background Typography */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden opacity-[0.04]">
+          <h1 className="text-[20vw] font-black text-transparent whitespace-nowrap" style={{ WebkitTextStroke: '4px #18102B' }}>
+            COURSEFORGE
+          </h1>
+        </div>
+
+        {/* Premium Code-Driven Vector Background Layer */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          {/* Blueprint Grid */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800d_1px,transparent_1px),linear-gradient(to_bottom,#8080800d_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+          {/* Blueprint Grid (Black) */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#18102B1a_1px,transparent_1px),linear-gradient(to_bottom,#18102B1a_1px,transparent_1px)] bg-[size:32px_32px]"></div>
           
-          {/* Glowing Neon Aura Bubbles */}
-          <div className="absolute top-[5%] right-[-5%] w-[550px] h-[550px] bg-gradient-to-tr from-[#834DFB]/10 to-[#22D3EE]/15 rounded-full blur-[120px] animate-[pulse_8s_ease-in-out_infinite]"></div>
-          <div className="absolute bottom-[5%] left-[-10%] w-[500px] h-[500px] bg-gradient-to-br from-[#CCFF00]/10 to-[#FF6B35]/5 rounded-full blur-[140px] animate-[pulse_10s_ease-in-out_infinite]" style={{ animationDelay: '2s' }}></div>
+          {/* Glowing Aura Bubbles (White glow behind text for readability) */}
+          <div className="absolute top-[5%] right-[-5%] w-[550px] h-[550px] bg-[#834DFB]/10 rounded-full blur-[120px] animate-[pulse_8s_ease-in-out_infinite]"></div>
+          <div className="absolute bottom-[-10%] left-[-10%] w-[800px] h-[800px] bg-white/70 rounded-full blur-[120px] pointer-events-none"></div>
 
           {/* Spinning Vector Blueprint Geometry */}
-          <div className="absolute top-[15%] left-[25%] w-[450px] h-[450px] opacity-[0.04] animate-[spin_90s_linear_infinite]">
-            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-slate-800">
+          <div className="absolute top-[15%] left-[25%] w-[450px] h-[450px] opacity-[0.05] animate-[spin_90s_linear_infinite]">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-[#18102B]">
               <path d="M100 0 L200 100 L100 200 L0 100 Z" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4,4" />
               <circle cx="100" cy="100" r="90" stroke="currentColor" strokeWidth="1.5" />
               <rect x="35" y="35" width="130" height="130" stroke="currentColor" strokeWidth="1" />
@@ -100,8 +193,8 @@ export default function LandingClientPage({ user }: { user: any }) {
             </svg>
           </div>
           
-          <div className="absolute bottom-[10%] right-[20%] w-[380px] h-[380px] opacity-[0.06] animate-[spin_60s_linear_infinite_reverse]">
-            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-[#834DFB]">
+          <div className="absolute bottom-[10%] right-[20%] w-[380px] h-[380px] opacity-[0.05] animate-[spin_60s_linear_infinite_reverse]">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-[#18102B]">
               <polygon points="100,5 195,190 5,190" stroke="currentColor" strokeWidth="1.5" strokeDasharray="8,4" />
               <circle cx="100" cy="125" r="60" stroke="currentColor" strokeWidth="1" />
               <line x1="100" y1="5" x2="100" y2="190" stroke="currentColor" strokeWidth="0.5" />
@@ -109,12 +202,12 @@ export default function LandingClientPage({ user }: { user: any }) {
           </div>
 
           {/* Neon Star Pulsars */}
-          <div className="absolute top-[25%] right-[20%] w-2 h-2 bg-[#CCFF00] rounded-full shadow-[0_0_12px_#CCFF00] animate-ping" style={{ animationDuration: '3s' }}></div>
-          <div className="absolute bottom-[30%] left-[15%] w-1.5 h-1.5 bg-[#834DFB] rounded-full shadow-[0_0_10px_#834DFB] animate-ping" style={{ animationDuration: '4s', animationDelay: '1s' }}></div>
+          <div className="absolute top-[25%] right-[20%] w-3 h-3 bg-[#18102B] rounded-full animate-ping" style={{ animationDuration: '3s' }}></div>
+          <div className="absolute bottom-[30%] left-[15%] w-2 h-2 bg-white rounded-full animate-ping" style={{ animationDuration: '4s', animationDelay: '1s' }}></div>
         </div>
 
-        <AbstractSphere className="absolute top-[20%] right-[10%] w-32 h-32 opacity-80 pointer-events-none animate-[bounce_8s_ease-in-out_infinite] z-0" />
-        <AbstractRing className="absolute bottom-[15%] left-[5%] w-48 h-48 opacity-70 pointer-events-none animate-[pulse_6s_ease-in-out_infinite] z-0" />
+        <AbstractSphere className="absolute top-[20%] right-[10%] w-32 h-32 opacity-90 pointer-events-none animate-[bounce_8s_ease-in-out_infinite] z-0 text-[#18102B]" />
+        <AbstractRing className="absolute bottom-[15%] left-[5%] w-48 h-48 opacity-80 pointer-events-none animate-[pulse_6s_ease-in-out_infinite] z-0 text-[#18102B]" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 md:py-28 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           
@@ -125,19 +218,16 @@ export default function LandingClientPage({ user }: { user: any }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-sm border-2 border-black text-xs font-bold text-[#834DFB] w-fit">
-              <Sparkles className="w-4 h-4 text-[#F0E100] fill-[#F0E100] animate-pulse" />
-              <span>Next Generation Education Space</span>
-            </div>
+        
             
             <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-[#18102B] uppercase leading-[0.95] flex flex-col">
-              <span>I WRITE.</span>
-              <span>I TEACH.</span>
-              <div className="h-[75px] md:h-[95px] relative overflow-hidden mt-3">
+              <motion.span style={{ x: textX1, y: textY1 }} className="block">I WRITE.</motion.span>
+              <motion.span style={{ x: textX2, y: textY2 }} className="block">I TEACH.</motion.span>
+              <motion.div style={{ x: textX1, y: textY2 }} className="h-[75px] md:h-[95px] relative overflow-hidden mt-3">
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={phraseIdx}
-                    className="absolute left-0 text-white bg-[#834DFB] px-5 py-2.5 transform -rotate-1 inline-block text-3xl md:text-5xl font-black rounded-xl border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] whitespace-nowrap"
+                    className="absolute left-0 text-[#C6FF3D] bg-[#18102B] px-5 py-2.5 transform -rotate-1 inline-block text-3xl md:text-5xl font-black rounded-xl border-[3px] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] whitespace-nowrap"
                     initial={{ y: 40, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: -40, opacity: 0 }}
@@ -146,31 +236,38 @@ export default function LandingClientPage({ user }: { user: any }) {
                     {textPhrases[phraseIdx]}
                   </motion.span>
                 </AnimatePresence>
-              </div>
+              </motion.div>
             </h1>
             
-            <p className="text-lg md:text-xl text-[#6B6577] max-w-xl leading-relaxed font-semibold pt-4">
+            <p className="text-lg md:text-xl text-[#18102B]/90 max-w-xl leading-relaxed font-bold pt-4 relative z-10">
               Write your own chapters, or reuse content already trusted by other teachers — and still track every one of your own students, separately, in one clean dashboard.
             </p>
             
             <div className="flex flex-wrap gap-4">
               <Link href={user ? (user.role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard') : '/signup'}>
-                <button className="group inline-flex items-center gap-2.5 px-8 py-4.5 rounded-full bg-[#834DFB] text-white font-bold text-base hover:bg-[#723ee6] active:scale-95 transition-all duration-200 border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] cursor-pointer">
-                  Get Started Free
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
+                <button className="group relative overflow-hidden inline-flex items-center gap-2.5 px-8 py-4.5 rounded-full bg-[#18102B] text-white font-bold text-base hover:text-black active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all duration-200 border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] cursor-pointer">
+                  <span className="relative z-10 flex items-center gap-2.5 transition-colors duration-300">
+                    Get Started Free
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
+                  </span>
+                  <div className="absolute left-0 top-0 bottom-0 w-0 bg-[#C6FF3D] transition-all duration-300 ease-out group-hover:w-full z-0"></div>
                 </button>
               </Link>
               <a href="#how-it-works">
-                <button className="inline-flex items-center gap-2 px-8 py-4.5 rounded-full bg-white border-2 border-black text-[#18102B] font-bold text-base hover:bg-slate-50 active:scale-95 transition-all duration-200 shadow-[4px_4px_0px_rgba(0,0,0,1)] cursor-pointer">
-                  See How It Works
+                <button className="group relative overflow-hidden inline-flex items-center gap-2 px-8 py-4.5 rounded-full bg-white border-2 border-black text-[#18102B] hover:text-white font-bold text-base active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all duration-200 shadow-[4px_4px_0px_rgba(0,0,0,1)] cursor-pointer">
+                  <span className="relative z-10 flex items-center gap-2 transition-colors duration-300">
+                    See How It Works
+                  </span>
+                  <div className="absolute left-0 top-0 bottom-0 w-0 bg-[#834DFB] transition-all duration-300 ease-out group-hover:w-full z-0"></div>
                 </button>
               </a>
             </div>
 
             <div className="flex flex-wrap gap-2.5 pt-4">
-              {['Public Chapters', 'Private Classes', 'Practice Quizzes', 'Class Analytics'].map((tag) => (
-                <span key={tag} className="border-2 border-black bg-white rounded-md px-4 py-1.5 text-xs font-bold text-[#18102B] shadow-[2px_2px_0px_rgba(0,0,0,1)]">
-                  {tag}
+              {['Public Chapters', 'Private Classes', 'Practice Quizzes', 'Class Analytics'].map((tag, i) => (
+                <span key={tag} className="group relative overflow-hidden border-2 border-black bg-white rounded-md px-4 py-1.5 text-xs font-bold text-[#18102B] shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:text-white transition-colors duration-300 cursor-default">
+                  <span className="relative z-10">{tag}</span>
+                  <div className={`absolute left-0 top-0 bottom-0 w-0 transition-all duration-300 ease-out group-hover:w-full z-0 ${['bg-[#FF6B35]', 'bg-[#834DFB]', 'bg-[#18102B]', 'bg-[#F0E100] group-hover:text-black'][i]}`}></div>
                 </span>
               ))}
             </div>
@@ -184,15 +281,38 @@ export default function LandingClientPage({ user }: { user: any }) {
             transition={{ duration: 1, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             style={{ transformStyle: 'preserve-3d' }}
           >
+            {/* Aesthetic Floating Glass Orbs Background */}
+            <motion.div 
+              className="absolute top-10 right-10 w-64 h-64 rounded-full bg-[radial-gradient(circle_at_30%_30%,_rgba(198,255,61,0.8),_rgba(37,99,235,0.4),_transparent_70%)] blur-[40px] -z-10 mix-blend-screen pointer-events-none"
+              animate={{ 
+                y: [0, -30, 0],
+                scale: [1, 1.1, 1],
+                rotate: [0, 90, 0]
+              }}
+              transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
+            />
+            <motion.div 
+              className="absolute bottom-10 left-10 w-48 h-48 rounded-full bg-[radial-gradient(circle_at_30%_30%,_rgba(131,77,251,0.8),_rgba(255,107,53,0.4),_transparent_70%)] blur-[40px] -z-10 mix-blend-screen pointer-events-none"
+              animate={{ 
+                y: [0, 40, 0],
+                scale: [1, 1.2, 1],
+              }}
+              transition={{ repeat: Infinity, duration: 10, ease: "easeInOut", delay: 1 }}
+            />
             
             {/* Card 1: Orange Modern Ticket Card */}
             <motion.div 
               className="absolute top-0 left-6 w-[290px] z-20"
-              initial={{ rotate: -12, y: 30 }}
-              animate={{ rotate: -4, y: 0 }}
+              initial={{ rotate: -12, y: 30, opacity: 0 }}
+              animate={{ rotate: -4, y: 0, opacity: 1 }}
               transition={{ type: "spring", stiffness: 80, damping: 12, delay: 0.3 }}
             >
-              <TiltWrapper className="bg-[#FF6B35] text-white rounded-2xl shadow-2xl p-6 border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] relative w-full h-full">
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                className="w-full h-full"
+              >
+              <TiltWrapper className="bg-[#FF6B35] text-white rounded-2xl p-6 border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] relative w-full h-full hover:shadow-[10px_10px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-300">
                 {/* Corner Crosshairs */}
                 <span className="crosshair-corner crosshair-top-left font-black text-black">+</span >
                 <span className="crosshair-corner crosshair-top-right font-black text-black">+</span >
@@ -205,7 +325,8 @@ export default function LandingClientPage({ user }: { user: any }) {
                 </div>
 
                 <h3 className="text-3xl font-black leading-tight tracking-tighter text-[#18102B] mb-8">
-                  PHYSICS 101<br/>SHAKEOUT
+                  <TypewriterText text="PHYSICS 101" delay={0.5} /><br/>
+                  <TypewriterText text="SHAKEOUT" delay={0.8} />
                 </h3>
 
                 {/* Minimalist modern avatars containing new circle doodles */}
@@ -242,16 +363,22 @@ export default function LandingClientPage({ user }: { user: any }) {
                   </div>
                 </div>
               </TiltWrapper>
+              </motion.div>
             </motion.div>
 
             {/* Card 2: Modern Dark Card with Lime Ribbon */}
             <motion.div 
               className="absolute bottom-4 right-6 w-[310px] z-15"
-              initial={{ rotate: 12, y: 30 }}
-              animate={{ rotate: 3, y: 0 }}
+              initial={{ rotate: 12, y: 30, opacity: 0 }}
+              animate={{ rotate: 3, y: 0, opacity: 1 }}
               transition={{ type: "spring", stiffness: 80, damping: 12, delay: 0.4 }}
             >
-              <TiltWrapper className="bg-[#18102B] text-white rounded-2xl shadow-2xl p-6 border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] relative w-full h-full">
+              <motion.div
+                animate={{ y: [0, -12, 0] }}
+                transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 0.2 }}
+                className="w-full h-full"
+              >
+              <TiltWrapper className="bg-[#18102B] text-white rounded-2xl p-6 border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] relative w-full h-full hover:shadow-[10px_10px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-300">
                 {/* Angled Ribbon tags */}
                 <div className="absolute -top-3.5 left-6 flex flex-col gap-1 z-30">
                   <div className="bg-[#C6FF3D] text-black font-black text-[10px] uppercase tracking-wider py-1 px-3 rounded-md border-2 border-black transform -rotate-3">
@@ -262,7 +389,9 @@ export default function LandingClientPage({ user }: { user: any }) {
                 <div className="pt-6 flex justify-between items-start mb-6">
                   <div>
                     <span className="text-[#C6FF3D] text-[11px] font-black uppercase tracking-widest">CHAPTER 04</span>
-                    <h4 className="text-2xl font-black mt-1 tracking-tight">Kinematics & Motion</h4>
+                    <h4 className="text-2xl font-black mt-1 tracking-tight">
+                      <TypewriterText text="Kinematics & Motion" delay={1.2} />
+                    </h4>
                   </div>
                   <BookOpenCheck className="w-8 h-8 text-[#C6FF3D] mt-1" />
                 </div>
@@ -284,19 +413,25 @@ export default function LandingClientPage({ user }: { user: any }) {
 
                 {/* Solid flat neon-lime button */}
                 <button className="w-full bg-[#C6FF3D] hover:bg-[#b0f020] text-black font-black text-xs uppercase tracking-widest py-3.5 rounded-xl border-2 border-black transition-all duration-200 shadow-[3px_3px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none cursor-pointer">
-                  Join Class Now
+                  <TypewriterText text="Join Class Now" delay={1.5} />
                 </button>
               </TiltWrapper>
+              </motion.div>
             </motion.div>
 
             {/* Card 3: Mini Stat Dial Card */}
             <motion.div 
               className="absolute top-12 right-20 z-25"
-              initial={{ rotate: -15, scale: 0.8 }}
-              animate={{ rotate: -8, scale: 1 }}
+              initial={{ rotate: -15, scale: 0.8, opacity: 0 }}
+              animate={{ rotate: -8, scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.5 }}
             >
-              <TiltWrapper className="bg-white rounded-2xl p-5 shadow-2xl border-2 border-black flex items-center gap-4 shadow-[4px_4px_0px_rgba(0,0,0,1)] w-full h-full">
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 0.5 }}
+                className="w-full h-full"
+              >
+              <TiltWrapper className="bg-white rounded-2xl p-5 border-2 border-black flex items-center gap-4 shadow-[4px_4px_0px_rgba(0,0,0,1)] w-full h-full hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-300">
                 {/* Concentric Gauge SVG */}
                 <div className="relative w-12 h-12">
                   <svg className="w-full h-full transform -rotate-90">
@@ -309,9 +444,12 @@ export default function LandingClientPage({ user }: { user: any }) {
                 </div>
                 <div>
                   <div className="text-[10px] font-black text-[#6B6577] uppercase tracking-wider">Class Average</div>
-                  <div className="text-base font-black text-[#18102B]">Outstanding!</div>
+                  <h5 className="font-black text-base text-[#18102B]">
+                    <TypewriterText text="Outstanding!" delay={1.8} />
+                  </h5>
                 </div>
               </TiltWrapper>
+              </motion.div>
             </motion.div>
           </motion.div>
         </div>
@@ -319,22 +457,25 @@ export default function LandingClientPage({ user }: { user: any }) {
 
       {/* 2. RATING & PARTNER MARQUEE (Shutter Scale vertical reveal) */}
       <motion.section 
-        className="bg-white border-b-2 border-black py-12 px-6 overflow-hidden origin-center"
+        className="relative bg-[#18102B] border-b-2 border-black py-12 px-6 overflow-hidden origin-center"
         initial={{ opacity: 0, scaleY: 0.2 }}
         whileInView={{ opacity: 1, scaleY: 1 }}
-        viewport={{ once: false, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12">
+        {/* Subtle grid background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#B4F48115_1px,transparent_1px),linear-gradient(to_bottom,#B4F48115_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-0"></div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12">
           
           {/* Left: Star ratings */}
           <div className="flex flex-col items-center lg:items-start gap-2 flex-shrink-0 text-center lg:text-left">
-            <span className="text-sm font-bold text-[#6B6577] uppercase tracking-widest">PLATFORM RATING</span>
-            <div className="flex items-center gap-1.5 text-2xl font-extrabold text-[#18102B]">
+            <span className="text-sm font-bold text-white/60 uppercase tracking-widest">PLATFORM RATING</span>
+            <div className="flex items-center gap-1.5 text-2xl font-extrabold text-white">
               4,900+ Students
-              <div className="flex gap-0.5 ml-2 text-[#F0E100] text-xl">
+              <div className="flex gap-0.5 ml-2 text-[#B4F481] text-xl">
                 {[1,2,3,4,5].map((star) => (
-                  <Star key={star} className="w-5 h-5 fill-current stroke-[#834DFB] stroke-2" />
+                  <Star key={star} className="w-5 h-5 fill-current stroke-[#B4F481] stroke-2" />
                 ))}
               </div>
             </div>
@@ -342,10 +483,10 @@ export default function LandingClientPage({ user }: { user: any }) {
 
           {/* Right: Scrolling Marquee of Schools */}
           <div className="flex-1 w-full overflow-hidden relative">
-            <div className="absolute left-0 top-0 h-full w-12 bg-gradient-to-r from-white to-transparent z-10"></div>
-            <div className="absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-white to-transparent z-10"></div>
+            <div className="absolute left-0 top-0 h-full w-12 bg-gradient-to-r from-[#18102B] to-transparent z-10"></div>
+            <div className="absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-[#18102B] to-transparent z-10"></div>
             
-            <div className="text-[11px] font-bold text-[#834DFB] uppercase tracking-widest mb-3 text-center lg:text-left">
+            <div className="text-[11px] font-bold text-white/60 uppercase tracking-widest mb-3 text-center lg:text-left">
               TRUSTED BY EDUCATORS AT
             </div>
             
@@ -355,7 +496,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                   'Greenview High', 'St. Xavier\'s', 'Lincoln Academy', 'Sunrise Tutorials', 'Northfield Prep', 'Delhi Public School',
                   'Greenview High', 'St. Xavier\'s', 'Lincoln Academy', 'Sunrise Tutorials', 'Northfield Prep', 'Delhi Public School'
                 ].map((school, idx) => (
-                  <span key={idx} className="font-extrabold text-base text-[#B9B2C9] hover:text-[#834DFB] transition-colors cursor-default whitespace-nowrap">
+                  <span key={idx} className={`font-extrabold text-base transition-colors cursor-default whitespace-nowrap ${idx % 2 === 0 ? 'text-[#B4F481]' : 'text-white'}`}>
                     {school}
                   </span>
                 ))}
@@ -365,12 +506,21 @@ export default function LandingClientPage({ user }: { user: any }) {
         </div>
       </motion.section>
 
-      {/* 3. FEATURE CARDS CAROUSEL (Converted to Horizontal Scroll Snapper with Zoom Out) */}
-      <section id="features" className="relative w-full py-24 overflow-hidden border-b-2 border-black bg-gradient-to-b from-[#F5F3FF] to-white">
-        {/* Creative backgrounds: soft dark mesh grid overlay and gradient spheres */}
-        <div className="absolute inset-0 bg-[radial-gradient(#e5dff5_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-[0.35] pointer-events-none"></div>
-        <div className="absolute top-1/4 right-[-10%] w-[550px] h-[550px] rounded-full bg-[#834DFB]/5 blur-[120px] pointer-events-none z-0"></div>
-        <div className="absolute bottom-1/4 left-[-10%] w-[550px] h-[550px] rounded-full bg-[#C6FF3D]/5 blur-[120px] pointer-events-none z-0"></div>
+      {/* 3. FEATURE CARDS CAROUSEL (Converted to Sticky Scroll Cover Flow) */}
+      <div ref={featureScrollRef} className="relative h-[300vh] w-full bg-[#2563EB] border-b-2 border-black">
+        <section id="features" className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center">
+        {/* Background Texture: Huge Starbursts and Crosses */}
+        <div className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center opacity-10">
+           <svg viewBox="0 0 800 800" className="w-[80vw] h-[80vw] max-w-[1200px] text-white animate-[spin_120s_linear_infinite]" fill="currentColor">
+              <path d="M400,0 L430,370 L800,400 L430,430 L400,800 L370,430 L0,400 L370,370 Z" />
+           </svg>
+        </div>
+        <div className="absolute top-[10%] left-[10%] opacity-20 pointer-events-none z-0">
+           <Plus className="w-32 h-32 text-[#B4F481]" strokeWidth={3} />
+        </div>
+        <div className="absolute bottom-[10%] right-[10%] opacity-20 pointer-events-none z-0">
+           <Plus className="w-48 h-48 text-[#F0E100]" strokeWidth={2} />
+        </div>
         <AbstractCube className="absolute top-1/3 right-[5%] w-24 h-24 opacity-60 pointer-events-none animate-[bounce_10s_ease-in-out_infinite] z-0" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
@@ -378,7 +528,7 @@ export default function LandingClientPage({ user }: { user: any }) {
             className="max-w-3xl mb-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.6 }}
           >
             <span className="inline-block bg-[#18102B] text-[#F5F3FF] text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
@@ -387,129 +537,159 @@ export default function LandingClientPage({ user }: { user: any }) {
             <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-[#18102B] leading-tight">
               Everything a teacher needs to <span className="text-[#834DFB]">write once and teach everywhere</span> — without losing track.
             </h2>
-            <p className="text-xs text-slate-400 font-extrabold mt-3 uppercase tracking-wider">Swipe or Scroll Horizontally →</p>
+            <p className="text-xs text-[#18102B]/60 font-extrabold mt-3 uppercase tracking-wider">Keep Scrolling Down ↓</p>
           </motion.div>
 
-          {/* Horizontal snap carousel with zoom-out */}
-          <div className="relative w-full" style={{ perspective: '1200px' }}>
-            <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#F5F3FF] to-transparent z-10 pointer-events-none"></div>
-            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+          {/* 3D Cover Flow Carousel */}
+          <div className="relative w-full h-[550px] flex items-center justify-center" style={{ perspective: '1200px' }}>
             
-            <div className="flex gap-6 overflow-x-auto pb-10 px-4 snap-x snap-mandatory scroll-smooth scrollbar-thin scrollbar-thumb-slate-200">
-              {[
-                {
-                  bgClass: 'bg-[#C6FF3D]', // vibrant lime green
-                  tags: ['Curriculum', 'Reuse'],
-                  titleLine1: 'Public',
-                  titleLine2: 'Chapters',
-                  desc: 'Add another teacher\'s chapter to your class in one click. Content remains theirs, results stay yours.',
-                  img: 'media_1785836248967.jpg'
-                },
-                {
-                  bgClass: 'bg-[#F5F3FF]', // light cream/purple
-                  tags: ['Security', 'Access'],
-                  titleLine1: 'Private',
-                  titleLine2: 'Class Keys',
-                  desc: 'One key per class. Students join once, and stay linked automatically for every chapter you add later.',
-                  img: 'media_1785836415777.jpg'
-                },
-                {
-                  bgClass: 'bg-[#FF6B35]', // vibrant orange
-                  tags: ['Assessment', 'Exams'],
-                  titleLine1: 'Timed',
-                  titleLine2: 'Quizzes',
-                  desc: 'Mid-chapter quizzes for quick learning reinforcement, and a final evaluation quiz once the chapter is marked complete.',
-                  img: 'media_1785829776307.jpg'
-                },
-                {
-                  bgClass: 'bg-[#F0E100]', // bright yellow
-                  tags: ['Data', 'Tracking'],
-                  titleLine1: 'Per-Class',
-                  titleLine2: 'Analytics',
-                  desc: 'See only your own students\' scores — even on chapters shared with dozens of other classes. Clean separated rosters.',
-                  img: 'media_1785836479267.png'
-                },
-                {
-                  bgClass: 'bg-white',
-                  tags: ['Flexibility', 'Enrollment'],
-                  titleLine1: 'Multi-Class',
-                  titleLine2: 'Students',
-                  desc: 'Students can join more than one class at once — school, tuition, and extra classes are all tracked separately.',
-                  img: 'media_1785835644449.png'
-                },
-                {
-                  bgClass: 'bg-[#22D3EE]', // cyan
-                  tags: ['Records', 'Storage'],
-                  titleLine1: 'Attempt',
-                  titleLine2: 'History',
-                  desc: 'Every quiz attempt is saved with score, response records, and time taken, so progress history is never lost.',
-                  img: 'media_1785836459972.png'
-                }
-              ].map((card, index) => {
-                return (
-                  <motion.div
-                    key={index}
-                    className="flex-shrink-0 w-[300px] snap-center flex"
-                    initial={{ opacity: 0.75, scale: 0.92, y: 30 }}
-                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.65 }}
-                    transition={{ type: "spring", stiffness: 80, damping: 15 }}
-                  >
-                    <TiltWrapper className="w-full h-[460px] rounded-[32px] overflow-hidden flex flex-col relative group shadow-xl border-2 border-black hover:border-[#834DFB] transition-colors duration-300">
-                      {/* TOP HALF: Color block with text */}
-                      <div className={`p-8 pb-10 flex-1 flex flex-col gap-5 ${card.bgClass}`}>
-                        <div className="flex items-center gap-2 flex-wrap">
-                          {card.tags.map(tag => (
-                            <span key={tag} className="bg-white text-black px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest shadow-sm">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                        
-                        <div>
-                          <h3 className={`text-4xl font-black leading-[0.95] tracking-tight ${card.bgClass === 'bg-[#FF6B35]' ? 'text-white' : 'text-[#18102B]'}`}>
-                            {card.titleLine1}<br/>
-                            {card.titleLine2}
-                          </h3>
-                          <p className={`text-[13px] font-semibold mt-4 leading-relaxed line-clamp-3 ${card.bgClass === 'bg-[#FF6B35]' ? 'text-white/80' : 'text-[#18102B]/70'}`}>
-                            {card.desc}
-                          </p>
-                        </div>
+            {[
+              {
+                bgClass: 'bg-[#C6FF3D]', // vibrant lime green
+                tags: ['Curriculum', 'Reuse'],
+                titleLine1: 'Public',
+                titleLine2: 'Chapters',
+                desc: 'Add another teacher\'s chapter to your class in one click. Content remains theirs, results stay yours.',
+                img: 'media_1785836248967.jpg'
+              },
+              {
+                bgClass: 'bg-[#F5F3FF]', // light cream/purple
+                tags: ['Security', 'Access'],
+                titleLine1: 'Private',
+                titleLine2: 'Class Keys',
+                desc: 'One key per class. Students join once, and stay linked automatically for every chapter you add later.',
+                img: 'media_1785836415777.jpg'
+              },
+              {
+                bgClass: 'bg-[#FF6B35]', // vibrant orange
+                tags: ['Assessment', 'Exams'],
+                titleLine1: 'Timed',
+                titleLine2: 'Quizzes',
+                desc: 'Mid-chapter quizzes for quick learning reinforcement, and a final evaluation quiz once the chapter is marked complete.',
+                img: 'media_1785829776307.jpg'
+              },
+              {
+                bgClass: 'bg-[#F0E100]', // bright yellow
+                tags: ['Data', 'Tracking'],
+                titleLine1: 'Per-Class',
+                titleLine2: 'Analytics',
+                desc: 'See only your own students\' scores — even on chapters shared with dozens of other classes. Clean separated rosters.',
+                img: 'media_1785836479267.png'
+              },
+              {
+                bgClass: 'bg-white',
+                tags: ['Flexibility', 'Enrollment'],
+                titleLine1: 'Multi-Class',
+                titleLine2: 'Students',
+                desc: 'Students can join more than one class at once — school, tuition, and extra classes are all tracked separately.',
+                img: 'media_1785835644449.png'
+              },
+              {
+                bgClass: 'bg-[#22D3EE]', // cyan
+                tags: ['Records', 'Storage'],
+                titleLine1: 'Attempt',
+                titleLine2: 'History',
+                desc: 'Every quiz attempt is saved with score, response records, and time taken, so progress history is never lost.',
+                img: 'media_1785836459972.png'
+              }
+            ].map((card, idx, arr) => {
+              const offset = idx - activeFeature;
+              const absOffset = Math.abs(offset);
+              const isCenter = offset === 0;
+              const isLeft = offset < 0;
+              const isRight = offset > 0;
+              
+              if (absOffset > 4) return null; // Performance optimization
+
+              return (
+                <motion.div
+                  key={idx}
+                  className={`absolute w-[300px] md:w-[340px] flex-shrink-0 cursor-pointer ${isCenter ? 'z-40' : 'z-30'}`}
+                  initial={false}
+                  animate={{
+                    x: offset * 180, // Horizontal spread
+                    scale: isCenter ? 1 : Math.max(0.75, 1 - absOffset * 0.1), // Scale down siblings
+                    rotateY: isCenter ? 0 : isLeft ? 35 : -35, // 3D rotation
+                    zIndex: 40 - absOffset,
+                    opacity: isCenter ? 1 : Math.max(0.4, 1 - absOffset * 0.25),
+                    filter: isCenter ? 'blur(0px)' : `blur(${absOffset * 1.5}px)`
+                  }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  style={{ transformOrigin: 'center center' }}
+                  onClick={() => !isCenter && setActiveFeature(idx)}
+                >
+                  <div className={`w-full h-[480px] rounded-[32px] overflow-hidden flex flex-col relative group border-2 border-black transition-all duration-300 ${isCenter ? 'shadow-[12px_12px_0px_rgba(0,0,0,1)]' : 'shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-y-2 hover:shadow-[10px_10px_0px_rgba(0,0,0,1)]'}`}>
+                    {/* TOP HALF: Color block with text */}
+                    <div className={`p-8 pb-10 flex-1 flex flex-col gap-5 ${card.bgClass}`}>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {card.tags.map(tag => (
+                          <span key={tag} className="bg-white text-black px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest shadow-sm border border-black">
+                            {tag}
+                          </span>
+                        ))}
                       </div>
                       
-                      {/* BOTTOM HALF: Full-bleed image */}
-                      <div className="relative h-[220px] w-full flex-shrink-0 bg-[#18102B]">
-                        {/* Using standard img for local public file */}
-                        <img src={`/images/${card.img}`} alt={card.titleLine1} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                        
-                        {/* Gradient overlay for text readability at the bottom */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-                        
-                        {/* Read more pill button at bottom left over the image */}
-                        <div className="absolute bottom-5 left-5 z-10">
-                          <button className="bg-white/20 backdrop-blur-md border border-white/30 text-white pl-4 pr-1.5 py-1.5 rounded-full flex items-center gap-4 text-xs font-bold hover:bg-white/30 transition-colors shadow-lg">
-                            Read More 
-                            <span className="bg-white text-[#18102B] rounded-full w-7 h-7 flex items-center justify-center text-[10px]">→</span>
-                          </button>
-                        </div>
+                      <div>
+                        <h3 className={`text-4xl font-black leading-[0.95] tracking-tight ${card.bgClass === 'bg-[#FF6B35]' ? 'text-white' : 'text-[#18102B]'}`}>
+                          {card.titleLine1}<br/>
+                          {card.titleLine2}
+                        </h3>
+                        <p className={`text-[13px] font-semibold mt-4 leading-relaxed line-clamp-3 ${card.bgClass === 'bg-[#FF6B35]' ? 'text-white/80' : 'text-[#18102B]/70'}`}>
+                          {card.desc}
+                        </p>
                       </div>
+                    </div>
+                    
+                    {/* BOTTOM HALF: Full-bleed image */}
+                    <div className="relative h-[220px] w-full flex-shrink-0 bg-[#18102B]">
+                      <img src={`/images/${card.img}`} alt={card.titleLine1} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 pointer-events-none" />
                       
-                    </TiltWrapper>
-                  </motion.div>
-                );
-              })}
-            </div>
+                      {/* Gradient overlay for text readability at the bottom */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none"></div>
+                      
+                      {/* Read more pill button at bottom left over the image */}
+                      <div className="absolute bottom-5 left-5 z-10">
+                        <button className="bg-[#18102B] border-2 border-black text-[#CCFF00] pl-4 pr-1.5 py-1.5 rounded-full flex items-center gap-4 text-xs font-bold hover:bg-[#834DFB] hover:text-white active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-200 shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                          Read More 
+                          <span className="bg-[#CCFF00] text-[#18102B] border-2 border-black rounded-full w-7 h-7 flex items-center justify-center text-[10px] font-black">→</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Pagination Indicators */}
+          <div className="flex justify-center items-center gap-3 mt-8 relative z-50">
+            {[0, 1, 2, 3, 4, 5].map((idx) => (
+              <button 
+                key={idx}
+                onClick={() => setActiveFeature(idx)}
+                aria-label={`Go to slide ${idx + 1}`}
+                className={`w-3 h-3 rounded-full border-2 border-black transition-all duration-300 ${activeFeature === idx ? 'bg-[#CCFF00] scale-125' : 'bg-white/30 hover:bg-white/80'}`}
+              />
+            ))}
           </div>
         </div>
       </section>
+    </div>
 
       {/* 4. BIG STEPS SECTION WITH LIVE ANALYTICS CARD (Horizontal Drawer Reveal) */}
       <section className="relative bg-white py-24 border-y-2 border-black w-full px-6 overflow-hidden">
+        {/* Heavy Dark Blueprint Grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#18102B15_2px,transparent_2px),linear-gradient(to_bottom,#18102B15_2px,transparent_2px)] bg-[size:64px_64px] pointer-events-none z-0"></div>
+        
+        {/* Floating Geometric Shapes */}
+        <div className="absolute top-20 left-10 w-24 h-24 bg-[#B4F481] border-4 border-[#18102B] rounded-full opacity-50 shadow-[8px_8px_0px_#18102B] pointer-events-none -z-0"></div>
+        <div className="absolute bottom-20 right-10 w-32 h-32 bg-[#2563EB] border-4 border-[#18102B] opacity-30 rotate-12 shadow-[8px_8px_0px_#18102B] pointer-events-none -z-0"></div>
+
         {/* Decorative Blueprint Guide marks */}
-        <div className="absolute top-8 left-8 text-[9px] font-black tracking-widest text-[#B9B2C9] opacity-40 select-none uppercase">
+        <div className="absolute top-8 left-8 text-[9px] font-black tracking-widest text-[#18102B] opacity-60 select-none uppercase z-0">
           [cf.timeline.03 // global_rules]
         </div>
-        <div className="absolute bottom-8 right-8 text-[9px] font-black tracking-widest text-[#B9B2C9] opacity-40 select-none uppercase">
+        <div className="absolute bottom-8 right-8 text-[9px] font-black tracking-widest text-[#18102B] opacity-60 select-none uppercase z-0">
           [x_coordinate_grid.04]
         </div>
 
@@ -520,7 +700,7 @@ export default function LandingClientPage({ user }: { user: any }) {
             className="flex items-center justify-center relative"
             initial={{ opacity: 0, x: -100, rotate: -6 }}
             whileInView={{ opacity: 1, x: 0, rotate: 0 }}
-            viewport={{ once: false, amount: 0.15 }}
+            viewport={{ once: true, amount: 0.15 }}
             transition={{ type: "spring", stiffness: 60, damping: 12 }}
           >
             {/* Decorative background grid */}
@@ -528,7 +708,7 @@ export default function LandingClientPage({ user }: { user: any }) {
             
             {/* Visual Card */}
             <div className="w-[340px]">
-              <TiltWrapper className="relative bg-white rounded-[28px] border-2 border-black shadow-2xl p-8 shadow-[6px_6px_0px_rgba(0,0,0,1)]">
+              <TiltWrapper className="relative bg-white rounded-[28px] border-2 border-black p-8 shadow-[6px_6px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-300">
                 <div className="flex justify-between items-center text-xs font-bold text-[#6B6577] mb-6">
                   <span>Class Overview</span>
                   <span className="px-2 py-0.5 rounded-md bg-[#F5F3FF] text-[#834DFB] font-bold border border-black">LIVE DATA</span>
@@ -582,7 +762,7 @@ export default function LandingClientPage({ user }: { user: any }) {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.2 }}
+              viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5 }}
             >
               <span className="inline-block bg-[#F0E100] text-black text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-4 border-2 border-black">
@@ -596,100 +776,115 @@ export default function LandingClientPage({ user }: { user: any }) {
               </p>
             </motion.div>
 
-            <div className="space-y-5 pt-4">
+            <div className="space-y-6 pt-4">
               
-              {/* Card 1: Spec Filter Style */}
+              {/* Card 1: Dashboard Setup */}
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.2 }}
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="bg-white rounded-[32px] p-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] border border-slate-100 flex flex-col gap-5"
+                className="bg-[#22D3EE] rounded-[32px] p-6 sm:p-8 border-[3px] border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] flex flex-col gap-5 group hover:-translate-y-2 hover:shadow-[12px_12px_0px_rgba(0,0,0,1)] transition-all duration-300"
               >
                 <div className="flex items-center justify-between">
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Step 01</div>
-                  <div className="flex gap-2 text-[10px] font-bold uppercase tracking-wider bg-slate-50 p-1 rounded-full border border-slate-100 hidden sm:flex">
-                    <span className="bg-[#CCFF00] text-[#18102B] px-3 py-1.5 rounded-full shadow-sm">Dashboard</span>
-                    <span className="text-slate-500 px-3 py-1.5 rounded-full hover:bg-slate-200 transition-colors cursor-pointer">Security</span>
-                    <span className="text-slate-500 px-3 py-1.5 rounded-full hover:bg-slate-200 transition-colors cursor-pointer">Invites</span>
+                  <div className="bg-white text-[#18102B] px-4 py-1.5 rounded-full border-2 border-black font-black text-xs uppercase tracking-widest shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                    STEP 01
+                  </div>
+                  <div className="flex gap-2 text-[10px] font-bold uppercase tracking-wider hidden sm:flex">
+                    <span className="bg-[#18102B] text-[#CCFF00] px-4 py-2 rounded-full border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)]">Dashboard</span>
+                    <span className="bg-white text-[#18102B] px-4 py-2 rounded-full border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)]">Security</span>
                   </div>
                 </div>
                 
-                <div className="flex gap-5 items-center">
+                <div className="flex gap-6 items-center mt-2">
                   <div className="flex-1">
-                    <h4 className="text-xl font-bold text-[#18102B] leading-tight">Create a Class & Get Key</h4>
-                    <p className="text-[13px] text-[#6B6577] mt-2 font-medium leading-relaxed">Create your digital classroom dashboard in seconds and share the unique join key with your student group once.</p>
+                    <h4 className="text-2xl sm:text-3xl font-black text-[#18102B] leading-tight">Create a Class & Get Key</h4>
+                    <p className="text-[14px] sm:text-[15px] text-[#18102B]/80 mt-3 font-bold leading-relaxed">
+                      Create your digital classroom dashboard in seconds and share the unique join key with your student group once.
+                    </p>
                   </div>
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-slate-50 to-slate-100 rounded-[24px] flex-shrink-0 flex items-center justify-center p-3 shadow-inner border border-slate-200">
-                    <IconKey3D className="w-full h-full drop-shadow-md" />
-                  </div>
+                  <motion.div 
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    className="w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-[24px] flex-shrink-0 flex items-center justify-center p-4 border-[3px] border-black shadow-[6px_6px_0px_rgba(0,0,0,1)]"
+                  >
+                    <IconKey3D className="w-full h-full drop-shadow-xl" />
+                  </motion.div>
                 </div>
               </motion.div>
 
-              {/* Card 2: Review Card Style */}
+              {/* Card 2: Write/Link Chapters */}
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.2 }}
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="bg-white rounded-[32px] p-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] border border-slate-100 flex gap-4 sm:gap-5 items-center relative overflow-hidden"
+                className="bg-[#F0E100] rounded-[32px] p-6 sm:p-8 border-[3px] border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] flex gap-4 sm:gap-6 items-center relative overflow-hidden group hover:-translate-y-2 hover:shadow-[12px_12px_0px_rgba(0,0,0,1)] transition-all duration-300"
               >
-                {/* Floating blurred accent */}
-                <div className="absolute -left-10 -top-10 w-32 h-32 bg-[#CCFF00]/20 rounded-full blur-[40px] pointer-events-none"></div>
-
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#18102B] flex-shrink-0 flex items-center justify-center border-[3px] border-white shadow-md z-10 relative">
-                  <span className="text-lg sm:text-xl">👩‍🏫</span>
-                  <div className="absolute -bottom-1 -right-1 bg-[#CCFF00] text-[#18102B] w-5 h-5 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-black">2</div>
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white flex-shrink-0 flex items-center justify-center border-[3px] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] z-10 relative group-hover:bg-[#18102B] transition-colors duration-300">
+                  <div className="w-12 h-12 rounded-xl border-2 border-black bg-[#C6FF3D] flex items-center justify-center shadow-[2px_2px_0px_rgba(0,0,0,1)] group-hover:scale-110 transition-transform">
+                    <Presentation className="w-6 h-6 text-black" />
+                  </div>
+                  <div className="absolute -bottom-2 -right-2 bg-[#FF6B35] text-white w-8 h-8 rounded-full border-[3px] border-black flex items-center justify-center text-xs font-black shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                    2
+                  </div>
                 </div>
-                <div className="flex-1 z-10">
-                  <div className="flex justify-between items-center mb-1">
-                    <h4 className="text-base sm:text-lg font-bold text-[#18102B]">Write or Link Chapters</h4>
-                    {/* Stars to mimic the bike review card */}
-                    <div className="flex gap-0.5">
+                
+                <div className="flex-1 z-10 py-2">
+                  <div className="flex justify-between items-start sm:items-center mb-2 flex-col sm:flex-row gap-2">
+                    <h4 className="text-2xl sm:text-3xl font-black text-[#18102B] leading-tight">Write or Link Chapters</h4>
+                    <div className="flex gap-1 bg-white px-3 py-1.5 rounded-full border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)]">
                       {[...Array(5)].map((_, i) => (
-                        <svg key={i} className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#CCFF00]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        <svg key={i} className="w-4 h-4 text-[#FF6B35]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                       ))}
                     </div>
                   </div>
-                  <p className="text-[12px] sm:text-[13px] text-[#6B6577] font-medium leading-relaxed">Write your customized lessons using our modular block editor, or search public repository chapters to instantly link them.</p>
+                  <p className="text-[14px] sm:text-[15px] text-[#18102B]/80 font-bold leading-relaxed max-w-xl">
+                    Write your customized lessons using our modular block editor, or search public repository chapters to instantly link them.
+                  </p>
                 </div>
               </motion.div>
 
-              {/* Card 3: Frosted Glass / Evolution of the fastest Style with Avatar Stack */}
+              {/* Card 3: Live Analytics */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.2 }}
+                viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="relative bg-gradient-to-br from-white/90 to-white/50 backdrop-blur-xl rounded-[32px] p-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] border border-white flex flex-col gap-4 overflow-hidden"
+                className="relative bg-[#FF6B35] rounded-[32px] p-6 sm:p-8 border-[3px] border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] flex flex-col gap-6 overflow-hidden group hover:-translate-y-2 hover:shadow-[12px_12px_0px_rgba(0,0,0,1)] transition-all duration-300"
               >
-                <div className="absolute inset-0 bg-[#CCFF00]/10 pointer-events-none"></div>
+                {/* Background watermark */}
+                <div className="absolute right-0 bottom-0 text-[200px] font-black text-black/10 leading-none select-none pointer-events-none translate-x-10 translate-y-10">
+                  3
+                </div>
                 
                 <div className="flex justify-between items-start relative z-10">
                   <div className="flex-1">
-                    <div className="text-[#18102B]/60 text-[10px] font-bold uppercase tracking-wider mb-2 flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-[#CCFF00] inline-block shadow-[0_0_8px_#CCFF00] animate-pulse"></span>
+                    <div className="bg-white text-[#18102B] px-4 py-1.5 rounded-full border-2 border-black font-black text-xs uppercase tracking-widest shadow-[2px_2px_0px_rgba(0,0,0,1)] inline-flex items-center gap-2 mb-4">
+                      <span className="w-2 h-2 rounded-full bg-[#FF6B35] inline-block animate-pulse"></span>
                       Live Analytics
                     </div>
-                    <h4 className="text-xl font-extrabold text-[#18102B]">Students Learn, You Track</h4>
-                    <p className="text-[13px] text-[#18102B]/70 font-medium mt-2 leading-relaxed">
+                    <h4 className="text-2xl sm:text-3xl font-black text-white leading-tight">Students Learn, You Track</h4>
+                    <p className="text-[14px] sm:text-[15px] text-white/90 font-bold mt-3 leading-relaxed max-w-xl">
                       Students read, practice quizzes, and complete evaluations. All analytics report back to your private teacher roster automatically.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between mt-2 relative z-10">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="text-lg font-black text-[#18102B]">5K+</div>
-                    <div className="text-[9px] sm:text-[10px] text-[#18102B]/60 font-bold leading-tight uppercase hidden sm:block">Students<br/>Enrolled</div>
-                    <div className="flex -space-x-2 ml-1 sm:ml-2">
-                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white bg-blue-100 flex items-center justify-center text-[10px] shadow-sm z-30">🧑‍🎓</div>
-                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white bg-green-100 flex items-center justify-center text-[10px] shadow-sm z-20">👩‍🎓</div>
-                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white bg-yellow-100 flex items-center justify-center text-[10px] shadow-sm z-10">👨‍🎓</div>
+                <div className="flex items-center justify-between mt-4 relative z-10 flex-wrap gap-4">
+                  <div className="flex items-center gap-3 bg-white p-2 pr-6 rounded-full border-[3px] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                    <div className="flex -space-x-3 ml-2">
+                      <div className="w-10 h-10 rounded-full border-[3px] border-white bg-[#C6FF3D] flex items-center justify-center text-sm shadow-sm z-30">🧑‍🎓</div>
+                      <div className="w-10 h-10 rounded-full border-[3px] border-white bg-[#22D3EE] flex items-center justify-center text-sm shadow-sm z-20">👩‍🎓</div>
+                      <div className="w-10 h-10 rounded-full border-[3px] border-white bg-[#F0E100] flex items-center justify-center text-sm shadow-sm z-10">👨‍🎓</div>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-xl font-black text-[#18102B] leading-none">5K+</span>
+                      <span className="text-[9px] text-[#18102B]/60 font-bold uppercase tracking-wider">Enrolled</span>
                     </div>
                   </div>
-                  <div className="bg-[#18102B] text-white px-4 py-2.5 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg shadow-black/20 hover:bg-[#CCFF00] hover:text-[#18102B] transition-colors cursor-pointer group">
-                    View Roster <span className="transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+                  
+                  <div className="bg-[#18102B] text-[#C6FF3D] px-6 py-4 rounded-full text-sm font-black flex items-center gap-2 border-[3px] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:bg-[#C6FF3D] hover:text-[#18102B] transition-colors cursor-pointer group/btn">
+                    View Roster <span className="transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform">↗</span>
                   </div>
                 </div>
               </motion.div>
@@ -713,7 +908,7 @@ export default function LandingClientPage({ user }: { user: any }) {
             className="text-center max-w-2xl mx-auto mb-16"
             initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.6 }}
           >
             <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
@@ -734,7 +929,7 @@ export default function LandingClientPage({ user }: { user: any }) {
               className="w-full flex"
               initial={{ opacity: 0, x: -120, rotate: -4 }}
               whileInView={{ opacity: 1, x: 0, rotate: 0 }}
-              viewport={{ once: false, amount: 0.2 }}
+              viewport={{ once: true, amount: 0.2 }}
               transition={{ type: "spring", stiffness: 70, damping: 14 }}
             >
               <TiltWrapper className="bg-white rounded-[32px] border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] overflow-hidden w-full flex flex-col relative group">
@@ -761,7 +956,9 @@ export default function LandingClientPage({ user }: { user: any }) {
 
                 {/* Overlapping Avatar Badge */}
                 <div className="absolute left-8 top-[148px] w-20 h-20 rounded-full bg-[#18102B] border-[6px] border-white flex items-center justify-center shadow-md z-20 overflow-hidden">
-                  <span className="text-3xl">👩‍🏫</span>
+                  <div className="w-14 h-14 rounded-full border-2 border-black bg-[#C6FF3D] flex items-center justify-center shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                    <Presentation className="w-7 h-7 text-black" />
+                  </div>
                 </div>
 
                 {/* Bottom Content Section */}
@@ -816,7 +1013,7 @@ export default function LandingClientPage({ user }: { user: any }) {
               className="w-full flex"
               initial={{ opacity: 0, x: 120, rotate: 4 }}
               whileInView={{ opacity: 1, x: 0, rotate: 0 }}
-              viewport={{ once: false, amount: 0.2 }}
+              viewport={{ once: true, amount: 0.2 }}
               transition={{ type: "spring", stiffness: 70, damping: 14 }}
             >
               <TiltWrapper className="bg-white rounded-[32px] border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] overflow-hidden w-full flex flex-col relative group">
@@ -843,7 +1040,9 @@ export default function LandingClientPage({ user }: { user: any }) {
 
                 {/* Overlapping Avatar Badge */}
                 <div className="absolute left-8 top-[148px] w-20 h-20 rounded-full bg-[#18102B] border-[6px] border-white flex items-center justify-center shadow-md z-20 overflow-hidden">
-                  <span className="text-3xl">🧑‍🎓</span>
+                  <div className="w-14 h-14 rounded-full border-2 border-black bg-[#FF6B35] flex items-center justify-center shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                    <GraduationCap className="w-7 h-7 text-black" />
+                  </div>
                 </div>
 
                 {/* Bottom Content Section */}
@@ -898,16 +1097,19 @@ export default function LandingClientPage({ user }: { user: any }) {
       </section>
 
       {/* 6. COMPARISON TABLE (Row-by-Row Venetian Blinds Flips) */}
-      <section id="compare" className="relative max-w-7xl mx-auto px-6 py-24 w-full">
-        {/* Soft background floating light sphere */}
-        <div className="absolute top-[10%] right-[-15%] w-[450px] h-[450px] rounded-full bg-[#834DFB]/5 blur-[120px] pointer-events-none z-0"></div>
+      <section id="compare" className="relative w-full py-24 border-y-2 border-black bg-[#F0E100] overflow-hidden">
+        {/* Massive Typographic Watermarks */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-0 opacity-[0.07] overflow-hidden">
+          <div className="text-[18vw] font-black leading-[0.8] whitespace-nowrap text-[#18102B] transform -rotate-2 scale-110">DIFFERENT</div>
+          <div className="text-[18vw] font-black leading-[0.8] whitespace-nowrap text-[#18102B] transform rotate-1 scale-110">FASTER</div>
+        </div>
 
-        <div className="relative z-10">
+        <div className="relative max-w-7xl mx-auto px-6 z-10">
           <motion.div 
             className="text-center max-w-2xl mx-auto mb-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5 }}
           >
             <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
@@ -922,7 +1124,7 @@ export default function LandingClientPage({ user }: { user: any }) {
             className="w-full overflow-x-auto rounded-[32px] border-2 border-black bg-white shadow-[8px_8px_0px_rgba(0,0,0,1)] relative overflow-hidden"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.15 }}
+            viewport={{ once: true, amount: 0.15 }}
             transition={{ duration: 0.8 }}
           >
             {/* Window Header (Retro macOS/Browser Style) */}
@@ -964,7 +1166,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                     className="hover:bg-slate-50 transition-colors duration-200"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.1 }}
+                    viewport={{ once: true, amount: 0.1 }}
                     transition={{ duration: 0.5, delay: idx * 0.08 }}
                   >
                     <td className="p-6 text-base font-extrabold text-[#18102B] bg-slate-50/30 border-r-2 border-black max-w-[280px]">
@@ -1025,7 +1227,7 @@ export default function LandingClientPage({ user }: { user: any }) {
               className="text-center max-w-2xl mx-auto mb-16"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.2 }}
+              viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5 }}
             >
               <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
@@ -1038,35 +1240,85 @@ export default function LandingClientPage({ user }: { user: any }) {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
-                { icon: <IconDocument3D className="w-12 h-12" />, step: '01', title: 'Write or Reuse', desc: 'Create original text content chapter by chapter with our rich editor, or link a public chapter someone else already wrote.', glow: 'bg-[#834DFB]/10' },
-                { icon: <IconKey3D className="w-12 h-12" />, step: '02', title: 'Share Your Key', desc: 'Students join your class once using the key — no re-joining needed as you add new chapters and assignments.', glow: 'bg-[#CCFF00]/10' },
-                { icon: <IconChart3D className="w-12 h-12" />, step: '03', title: 'Track Results', desc: 'Every quiz attempt is tied to your class, so your analytics stay accurate and secure even on shared content.', glow: 'bg-[#FF6B35]/10' }
+                { 
+                  icon: <IconDocument3D className="w-16 h-16" />, 
+                  step: '1', 
+                  title: 'Write or Reuse', 
+                  desc: 'Create original text content chapter by chapter with our rich editor, or link a public chapter someone else already wrote.',
+                  bgClass: 'bg-[#C6FF3D]', // vibrant lime
+                  textColor: 'text-[#18102B]',
+                  descColor: 'text-[#18102B]/80',
+                  badgeBg: 'bg-white',
+                  badgeText: 'text-[#18102B]'
+                },
+                { 
+                  icon: <IconKey3D className="w-16 h-16 drop-shadow-xl" />, 
+                  step: '2', 
+                  title: 'Share Your Key', 
+                  desc: 'Students join your class once using the key — no re-joining needed as you add new chapters and assignments.',
+                  bgClass: 'bg-[#834DFB]', // deep purple
+                  textColor: 'text-white',
+                  descColor: 'text-white/80',
+                  badgeBg: 'bg-[#CCFF00]',
+                  badgeText: 'text-[#18102B]'
+                },
+                { 
+                  icon: <IconChart3D className="w-16 h-16" />, 
+                  step: '3', 
+                  title: 'Track Results', 
+                  desc: 'Every quiz attempt is tied to your class, so your analytics stay accurate and secure even on shared content.',
+                  bgClass: 'bg-[#FF6B35]', // vibrant orange
+                  textColor: 'text-white',
+                  descColor: 'text-white/90',
+                  badgeBg: 'bg-white',
+                  badgeText: 'text-[#18102B]'
+                }
               ].map((item, idx) => (
                 <motion.div 
                   key={idx} 
                   className="flex"
-                  initial={{ opacity: 0, y: 40, scale: 0.95 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: false, amount: 0.2 }}
-                  transition={{ type: "spring", stiffness: 80, damping: 14, delay: idx * 0.1 }}
+                  initial={{ opacity: 0, y: 50, rotateX: 10 }}
+                  whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ type: "spring", stiffness: 100, damping: 20, delay: idx * 0.15 }}
                 >
-                  <TiltWrapper className="bg-white rounded-[32px] p-8 border-2 border-black shadow-[6px_6px_0px_rgba(0,0,0,1)] relative overflow-hidden w-full flex flex-col justify-between group hover:border-[#834DFB] transition-colors duration-300">
-                    {/* Glowing background blob */}
-                    <div className={`absolute -right-10 -bottom-10 w-32 h-32 ${item.glow} rounded-full blur-[40px] pointer-events-none`}></div>
-                    
-                    <div className="relative z-10">
-                      <div className="flex justify-between items-start mb-8">
-                        <span className="bg-[#CCFF00] text-[#18102B] px-3.5 py-1.5 rounded-full text-xs font-black border border-black shadow-sm">
-                          Step {item.step}
-                        </span>
-                        <div className="w-16 h-16 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center p-2.5 shadow-inner transform group-hover:scale-110 transition-transform duration-300">
-                          {item.icon}
-                        </div>
-                      </div>
-                      <h3 className="text-2xl font-black text-[#18102B] mb-3 tracking-tight">{item.title}</h3>
-                      <p className="text-sm text-[#6B6577] font-semibold leading-relaxed">{item.desc}</p>
+                  <motion.div 
+                    whileHover={{ y: -10, scale: 1.02 }}
+                    className={`${item.bgClass} rounded-[40px] p-8 sm:p-10 border-4 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] hover:shadow-[16px_16px_0px_rgba(0,0,0,1)] relative overflow-hidden w-full flex flex-col justify-between group transition-all duration-300`}
+                  >
+                    {/* Giant Watermark Step Number */}
+                    <div className="absolute -bottom-10 -right-6 text-[180px] font-black opacity-10 pointer-events-none leading-none select-none mix-blend-overlay">
+                      {item.step}
                     </div>
-                  </TiltWrapper>
+                    
+                    {/* Top row: Badge and Icon */}
+                    <div className="relative z-10 flex flex-col gap-8 mb-8">
+                      <div className="flex justify-between items-start">
+                        <span className={`${item.badgeBg} ${item.badgeText} px-4 py-2 rounded-full text-xs font-black border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] tracking-wide`}>
+                          STEP {item.step}
+                        </span>
+                      </div>
+                      
+                      {/* Animated Floating Icon */}
+                      <motion.div 
+                        className="w-24 h-24 rounded-3xl bg-black/10 border-2 border-black/20 flex items-center justify-center shadow-inner backdrop-blur-sm group-hover:bg-white/20 transition-colors"
+                        animate={{ y: [0, -8, 0] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: idx * 0.5 }}
+                      >
+                        {item.icon}
+                      </motion.div>
+                    </div>
+                    
+                    {/* Bottom row: Text */}
+                    <div className="relative z-10 mt-auto">
+                      <h3 className={`text-3xl font-black ${item.textColor} mb-4 tracking-tight leading-none`}>
+                        {item.title}
+                      </h3>
+                      <p className={`text-[15px] ${item.descColor} font-bold leading-relaxed`}>
+                        {item.desc}
+                      </p>
+                    </div>
+                  </motion.div>
                 </motion.div>
               ))}
             </div>
@@ -1087,7 +1339,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                   className={`${statColors[idx]} rounded-[20px] p-6`}
                   initial={{ opacity: 0, y: 30, scale: 0.8 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: false, amount: 0.2 }}
+                  viewport={{ once: true, amount: 0.2 }}
                   transition={{ type: "spring", stiffness: 100, damping: 15, delay: idx * 0.1 }}
                 >
                   <div className="text-4xl font-extrabold tracking-tight">
@@ -1106,15 +1358,26 @@ export default function LandingClientPage({ user }: { user: any }) {
 
       {/* 8. TESTIMONIALS (Waterfall Parallax Slide) */}
       <section className="relative max-w-7xl mx-auto px-6 py-24 w-full overflow-hidden">
-        {/* Soft background light sphere */}
-        <div className="absolute top-[10%] left-[-15%] w-[450px] h-[450px] rounded-full bg-[#834DFB]/5 blur-[120px] pointer-events-none z-0"></div>
+        {/* Premium Vector Background for Testimonials */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+          
+          <div className="absolute top-[10%] left-[-15%] w-[450px] h-[450px] rounded-full bg-gradient-to-tr from-[#834DFB]/5 to-[#CCFF00]/5 blur-[120px] pointer-events-none z-0 animate-pulse"></div>
+
+          <div className="absolute top-[25%] left-[5%] w-72 h-72 opacity-[0.03] animate-[spin_60s_linear_infinite]">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-slate-800">
+              <rect x="20" y="20" width="160" height="160" stroke="currentColor" strokeWidth="1.5" strokeDasharray="8,8" />
+              <circle cx="100" cy="100" r="50" stroke="currentColor" strokeWidth="1.5" />
+            </svg>
+          </div>
+        </div>
 
         <div className="relative z-10">
           <motion.div 
             className="text-center max-w-2xl mx-auto mb-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5 }}
           >
             <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
@@ -1175,7 +1438,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                 className="flex"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.15 }}
+                viewport={{ once: true, amount: 0.15 }}
                 transition={{ type: "spring", stiffness: 80, damping: 14, delay: idx * 0.1 }}
               >
                 <TiltWrapper className={`relative w-full h-[240px] md:h-[260px] rounded-[24px] p-8 md:p-10 flex flex-col justify-between overflow-hidden shadow-[6px_6px_0px_rgba(0,0,0,1)] border-2 border-black hover:-translate-y-1 hover:shadow-[8px_8px_0px_rgba(0,0,0,1)] transition-all duration-300 ${item.bgClass}`}>
@@ -1212,19 +1475,19 @@ export default function LandingClientPage({ user }: { user: any }) {
       </section>
 
       {/* 9. PRICING & FAQ */}
-      <section id="pricing" className="relative bg-white py-24 border-t-2 border-black w-full px-6 overflow-hidden">
+      <section id="pricing" className="relative bg-[#18102B] py-24 border-t-2 border-black w-full px-6 overflow-hidden">
         {/* Premium Vector Background for Pricing & FAQ */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
           {/* Subtle grid pattern */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:40px_40px]"></div>
           
-          {/* Large gradient blur bubbles */}
-          <div className="absolute top-[20%] left-[-10%] w-[600px] h-[600px] bg-gradient-to-tr from-[#834DFB]/5 to-[#CCFF00]/5 rounded-full blur-[140px] animate-pulse"></div>
-          <div className="absolute bottom-[10%] right-[-10%] w-[500px] h-[500px] bg-gradient-to-br from-[#22D3EE]/5 to-[#834DFB]/8 rounded-full blur-[120px]"></div>
+          {/* Large glowing neon orbs */}
+          <div className="absolute top-[20%] left-[-10%] w-[600px] h-[600px] bg-[#B4F481] rounded-full blur-[140px] animate-[pulse_8s_ease-in-out_infinite] opacity-[0.15]"></div>
+          <div className="absolute bottom-[10%] right-[-10%] w-[500px] h-[500px] bg-[#834DFB] rounded-full blur-[120px] opacity-[0.2]"></div>
 
           {/* Floating abstract mathematical and geometry SVGs */}
-          <div className="absolute top-[15%] right-[15%] w-96 h-96 opacity-[0.03] animate-[spin_85s_linear_infinite_reverse]">
-            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-slate-800">
+          <div className="absolute top-[15%] right-[15%] w-96 h-96 opacity-[0.05] animate-[spin_85s_linear_infinite_reverse]">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-white">
               <circle cx="100" cy="100" r="80" stroke="currentColor" strokeWidth="1.5" />
               <rect x="40" y="40" width="120" height="120" stroke="currentColor" strokeWidth="1" />
               <line x1="0" y1="100" x2="200" y2="100" stroke="currentColor" strokeWidth="1" strokeDasharray="4,4" />
@@ -1232,8 +1495,8 @@ export default function LandingClientPage({ user }: { user: any }) {
             </svg>
           </div>
 
-          <div className="absolute bottom-[20%] left-[10%] w-[350px] h-[350px] opacity-[0.03] animate-[spin_55s_linear_infinite]">
-            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-[#834DFB]">
+          <div className="absolute bottom-[20%] left-[10%] w-[350px] h-[350px] opacity-[0.05] animate-[spin_55s_linear_infinite]">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-white">
               <polygon points="100,10 190,190 10,190" stroke="currentColor" strokeWidth="1.5" />
               <circle cx="100" cy="120" r="50" stroke="currentColor" strokeWidth="1.5" strokeDasharray="5,5" />
             </svg>
@@ -1247,13 +1510,13 @@ export default function LandingClientPage({ user }: { user: any }) {
             className="text-center max-w-2xl mx-auto mb-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
+            <span className="inline-block bg-[#B4F481] text-[#18102B] text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
               Pricing Plans
             </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-[#18102B]">
+            <h2 className="text-4xl md:text-5xl font-extrabold text-white">
               Free to start, upgrade anytime
             </h2>
           </motion.div>
@@ -1266,7 +1529,7 @@ export default function LandingClientPage({ user }: { user: any }) {
               className="flex"
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.15 }}
+              viewport={{ once: true, amount: 0.15 }}
               transition={{ type: "spring", stiffness: 70, damping: 14, delay: 0 }}
             >
               <TiltWrapper className="bg-white border-2 border-black rounded-[32px] shadow-[8px_8px_0px_rgba(0,0,0,1)] overflow-hidden w-full flex flex-col relative group">
@@ -1290,7 +1553,9 @@ export default function LandingClientPage({ user }: { user: any }) {
 
                 {/* Overlapping Avatar Badge */}
                 <div className="absolute left-8 top-[148px] w-20 h-20 rounded-full bg-[#18102B] border-[6px] border-white flex items-center justify-center shadow-md z-20 overflow-hidden">
-                  <span className="text-3xl">🧑‍🎓</span>
+                  <div className="w-14 h-14 rounded-full border-2 border-black bg-[#FF6B35] flex items-center justify-center shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                    <GraduationCap className="w-7 h-7 text-black" />
+                  </div>
                 </div>
 
                 {/* Bottom Content Section */}
@@ -1337,7 +1602,7 @@ export default function LandingClientPage({ user }: { user: any }) {
               className="flex"
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.15 }}
+              viewport={{ once: true, amount: 0.15 }}
               transition={{ type: "spring", stiffness: 70, damping: 14, delay: 0.15 }}
             >
               <TiltWrapper className="bg-white border-2 border-black rounded-[32px] shadow-[8px_8px_0px_rgba(0,0,0,1)] overflow-hidden w-full flex flex-col relative group">
@@ -1364,7 +1629,9 @@ export default function LandingClientPage({ user }: { user: any }) {
 
                 {/* Overlapping Avatar Badge */}
                 <div className="absolute left-8 top-[148px] w-20 h-20 rounded-full bg-[#18102B] border-[6px] border-white flex items-center justify-center shadow-md z-20 overflow-hidden">
-                  <span className="text-3xl">👩‍🏫</span>
+                  <div className="w-14 h-14 rounded-full border-2 border-black bg-[#C6FF3D] flex items-center justify-center shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                    <Presentation className="w-7 h-7 text-black" />
+                  </div>
                 </div>
 
                 {/* Bottom Content Section */}
@@ -1414,7 +1681,7 @@ export default function LandingClientPage({ user }: { user: any }) {
               className="flex"
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.15 }}
+              viewport={{ once: true, amount: 0.15 }}
               transition={{ type: "spring", stiffness: 70, damping: 14, delay: 0.3 }}
             >
               <TiltWrapper className="bg-white border-2 border-black rounded-[32px] shadow-[8px_8px_0px_rgba(0,0,0,1)] overflow-hidden w-full flex flex-col relative group">
@@ -1437,7 +1704,9 @@ export default function LandingClientPage({ user }: { user: any }) {
 
                 {/* Overlapping Avatar Badge */}
                 <div className="absolute left-8 top-[148px] w-20 h-20 rounded-full bg-[#18102B] border-[6px] border-white flex items-center justify-center shadow-md z-20 overflow-hidden">
-                  <span className="text-3xl">🏫</span>
+                  <div className="w-14 h-14 rounded-full border-2 border-black bg-[#834DFB] flex items-center justify-center shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                    <School className="w-7 h-7 text-white" />
+                  </div>
                 </div>
 
                 {/* Bottom Content Section */}
@@ -1508,7 +1777,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                     className={`bg-white rounded-[24px] border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] p-6 hover:border-[#834DFB] hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] transition-all duration-300 cursor-pointer relative overflow-hidden select-none ${isOpen ? 'border-[#834DFB] shadow-[6px_6px_0px_#834DFB]' : ''}`}
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.1 }}
+                    viewport={{ once: true, amount: 0.1 }}
                     transition={{ type: "spring", stiffness: 100, damping: 15, delay: idx * 0.05 }}
                   >
                     {/* Glowing highlight blob when open */}
@@ -1561,15 +1830,25 @@ export default function LandingClientPage({ user }: { user: any }) {
 
       {/* 10. RESOURCES / BLOG (With Uploaded Illustrations Cover Images) */}
       <section className="relative max-w-7xl mx-auto px-6 py-24 w-full border-t-2 border-black border-dashed overflow-hidden">
-        {/* Soft background light sphere */}
-        <div className="absolute top-[10%] left-[-15%] w-[450px] h-[450px] rounded-full bg-[#C6FF3D]/5 blur-[120px] pointer-events-none z-0"></div>
+        {/* Premium Vector Background for Resources */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+          <div className="absolute top-[10%] left-[-15%] w-[450px] h-[450px] rounded-full bg-gradient-to-br from-[#C6FF3D]/10 to-[#834DFB]/5 blur-[120px] pointer-events-none z-0"></div>
+          
+          <div className="absolute bottom-[15%] right-[5%] w-80 h-80 opacity-[0.03] animate-[spin_70s_linear_infinite_reverse]">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-[#834DFB]">
+              <path d="M100,0 L200,100 L100,200 L0,100 Z" stroke="currentColor" strokeWidth="1.5" />
+              <line x1="0" y1="0" x2="200" y2="200" stroke="currentColor" strokeWidth="1" strokeDasharray="4,4" />
+            </svg>
+          </div>
+        </div>
 
         <div className="relative z-10">
           <motion.div 
             className="max-w-3xl mb-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.5 }}
           >
             <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
@@ -1591,7 +1870,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                 className="flex"
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.15 }}
+                viewport={{ once: true, amount: 0.15 }}
                 transition={{ duration: 0.6, delay: idx * 0.12 }}
               >
                 <TiltWrapper className="w-full h-[480px] rounded-[32px] overflow-hidden flex flex-col relative group shadow-[6px_6px_0px_rgba(0,0,0,1)] border-2 border-black hover:border-[#834DFB] transition-colors duration-300 bg-white">
@@ -1622,9 +1901,9 @@ export default function LandingClientPage({ user }: { user: any }) {
                     
                     {/* CTA Pill button at bottom left over the image */}
                     <div className="absolute bottom-5 left-5 z-10">
-                      <button className="bg-white/20 backdrop-blur-md border border-white/30 text-white pl-4 pr-1.5 py-1.5 rounded-full flex items-center gap-4 text-xs font-bold hover:bg-white/30 transition-colors shadow-lg">
+                      <button className="bg-[#18102B] border-2 border-black text-[#FF6B35] pl-4 pr-1.5 py-1.5 rounded-full flex items-center gap-4 text-xs font-bold hover:bg-white hover:text-[#18102B] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-200 shadow-[4px_4px_0px_rgba(0,0,0,1)]">
                         Read Guide 
-                        <span className="bg-white text-[#18102B] rounded-full w-7 h-7 flex items-center justify-center text-[10px]">→</span>
+                        <span className="bg-[#FF6B35] text-white border-2 border-black rounded-full w-7 h-7 flex items-center justify-center text-[10px] font-black">→</span>
                       </button>
                     </div>
                   </div>
@@ -1638,44 +1917,47 @@ export default function LandingClientPage({ user }: { user: any }) {
       {/* 11. FINAL CTA */}
       <section className="max-w-7xl mx-auto px-6 pb-24 w-full">
         <motion.div 
-          className="bg-[#18102B] text-white rounded-[32px] p-10 md:p-16 text-center border-2 border-black shadow-2xl relative overflow-hidden shadow-[8px_8px_0px_rgba(0,0,0,1)]"
+          className="bg-[#F5F3FF] text-[#18102B] rounded-[32px] p-10 md:p-16 text-center border-2 border-black relative overflow-hidden shadow-[8px_8px_0px_rgba(0,0,0,1)]"
           initial={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
           whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           {/* Creative Dark Vector Background */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-            {/* Dark grid */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+            {/* Grid */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#18102B08_1px,transparent_1px),linear-gradient(to_bottom,#18102B08_1px,transparent_1px)] bg-[size:32px_32px]"></div>
             
             {/* Neon color blobs */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#834DFB]/15 rounded-full blur-[140px]"></div>
-            <div className="absolute -top-40 -left-40 w-96 h-96 bg-[#CCFF00]/10 rounded-full blur-[100px] animate-[pulse_8s_ease-in-out_infinite]"></div>
-            <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-[#FF6B35]/15 rounded-full blur-[100px] animate-[pulse_10s_ease-in-out_infinite]" style={{ animationDelay: '3s' }}></div>
+            <div className="absolute -top-40 -left-40 w-96 h-96 bg-[#B4F481]/30 rounded-full blur-[100px] animate-[pulse_8s_ease-in-out_infinite]"></div>
+            <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-[#22D3EE]/20 rounded-full blur-[100px] animate-[pulse_10s_ease-in-out_infinite]" style={{ animationDelay: '3s' }}></div>
 
             {/* Glowing tech blueprint lines */}
-            <svg className="absolute top-0 left-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
-              <line x1="0" y1="20%" x2="100%" y2="80%" stroke="white" strokeWidth="1.5" strokeDasharray="8,8" />
-              <line x1="0" y1="80%" x2="100%" y2="20%" stroke="white" strokeWidth="1.5" strokeDasharray="8,8" />
+            <svg className="absolute top-0 left-0 w-full h-full opacity-[0.05]" xmlns="http://www.w3.org/2000/svg">
+              <line x1="0" y1="20%" x2="100%" y2="80%" stroke="#18102B" strokeWidth="1.5" strokeDasharray="8,8" />
+              <line x1="0" y1="80%" x2="100%" y2="20%" stroke="#18102B" strokeWidth="1.5" strokeDasharray="8,8" />
             </svg>
           </div>
           
-          <h2 className="text-3xl md:text-5xl font-black mb-6 leading-tight max-w-2xl mx-auto uppercase">
+          <h2 className="text-3xl md:text-5xl font-black mb-6 leading-tight max-w-2xl mx-auto uppercase relative z-10">
             Ready to teach without rewriting everything?
           </h2>
-          <p className="text-[#A29CB0] text-sm md:text-base mb-10 max-w-md mx-auto font-semibold">
+          <p className="text-[#6B6577] text-sm md:text-base mb-10 max-w-md mx-auto font-semibold relative z-10">
             Create your first class, add a chapter, and share your key — setup takes less than five minutes.
           </p>
 
-          <Link href="/signup">
-            <button className="bg-[#F0E100] hover:bg-[#dcd000] text-[#18102B] font-black text-base px-10 py-4.5 rounded-full border-2 border-black transition-all duration-200 shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
+          <div className="relative z-10">
+            <Link href="/signup">
+              <button className="bg-[#18102B] hover:bg-black text-[#B4F481] font-black text-base px-10 py-4.5 rounded-full border-2 border-black transition-all duration-200 shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
               Get Started Free
-            </button>
-          </Link>
+              </button>
+            </Link>
+          </div>
         </motion.div>
       </section>
 
     </main>
+    </>
   );
 }

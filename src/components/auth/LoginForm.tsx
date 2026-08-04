@@ -6,7 +6,6 @@ import { ActionResult } from '@/lib/actions/class-actions';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useToast } from '@/components/ui/Toast';
-import Link from 'next/link';
 
 export function LoginForm() {
   const [state, formAction, isPending] = useActionState<ActionResult | null, FormData>(loginAction, null);
@@ -19,9 +18,9 @@ export function LoginForm() {
   }, [state?.error, toast]);
 
   return (
-    <form action={formAction} className="flex flex-col gap-4 w-full">
+    <form action={formAction} className="flex flex-col gap-6 w-full">
       <Input
-        label="Email"
+        label="Email Address"
         name="email"
         type="email"
         placeholder="you@example.com"
@@ -34,14 +33,9 @@ export function LoginForm() {
         placeholder="••••••••"
         required
       />
-      <Button type="submit" disabled={isPending} className="mt-2 w-full">
-        {isPending ? 'Logging in...' : 'Log in'}
+      <Button type="submit" disabled={isPending} className="mt-4 w-full" size="lg">
+        {isPending ? 'LOGGING IN...' : 'LOG IN'}
       </Button>
-      <div className="text-center mt-4">
-        <Link href="/signup" className="text-sm text-text-muted-light hover:text-text-default">
-          Don&apos;t have an account? Sign up
-        </Link>
-      </div>
     </form>
   );
 }

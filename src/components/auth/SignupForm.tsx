@@ -6,7 +6,6 @@ import { ActionResult } from '@/lib/actions/class-actions';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useToast } from '@/components/ui/Toast';
-import Link from 'next/link';
 import { GraduationCap, BookOpen } from 'lucide-react';
 
 export function SignupForm() {
@@ -23,41 +22,44 @@ export function SignupForm() {
   if (!role) {
     return (
       <div className="flex flex-col gap-6 w-full">
-        <h2 className="text-xl font-bold text-center text-text-default">Choose your role</h2>
-        <div className="flex flex-col sm:flex-row gap-4">
+        <h2 className="text-xl font-black text-center text-[#18102B] uppercase tracking-wider">Choose your path</h2>
+        <div className="flex flex-col sm:flex-row gap-6 mt-4">
           <button
             type="button"
             onClick={() => setRole('TEACHER')}
-            className="flex-1 bg-white text-navy p-6 rounded-3xl border-2 border-slate-200 hover:border-orange hover:bg-orange/5 transition-all flex flex-col items-center gap-3 shadow-sm hover:shadow-md"
+            className="flex-1 bg-white text-[#18102B] p-6 rounded-2xl border-[3px] border-black hover:bg-[#C6FF3D] transition-all flex flex-col items-center gap-3 shadow-[6px_6px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[8px_8px_0px_rgba(0,0,0,1)] active:translate-y-1 active:translate-x-1 active:shadow-none group"
           >
-            <GraduationCap className="w-10 h-10 text-indigo-500" />
-            <span className="font-bold">I want to teach</span>
+            <GraduationCap className="w-12 h-12 text-[#18102B] group-hover:scale-110 transition-transform" strokeWidth={2.5} />
+            <span className="font-black uppercase tracking-wider text-sm mt-2">Teacher</span>
           </button>
+          
           <button
             type="button"
             onClick={() => setRole('STUDENT')}
-            className="flex-1 bg-white text-navy p-6 rounded-3xl border-2 border-slate-200 hover:border-teal hover:bg-teal/5 transition-all flex flex-col items-center gap-3 shadow-sm hover:shadow-md"
+            className="flex-1 bg-white text-[#18102B] p-6 rounded-2xl border-[3px] border-black hover:bg-[#FF6B35] transition-all flex flex-col items-center gap-3 shadow-[6px_6px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[8px_8px_0px_rgba(0,0,0,1)] active:translate-y-1 active:translate-x-1 active:shadow-none group"
           >
-            <BookOpen className="w-10 h-10 text-emerald-500" />
-            <span className="font-bold">I want to learn</span>
+            <BookOpen className="w-12 h-12 text-[#18102B] group-hover:scale-110 transition-transform" strokeWidth={2.5} />
+            <span className="font-black uppercase tracking-wider text-sm mt-2">Student</span>
           </button>
-        </div>
-        <div className="text-center mt-4">
-          <Link href="/login" className="text-sm text-text-muted-light hover:text-text-default">
-            Already have an account? Log in
-          </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <form action={formAction} className="flex flex-col gap-4 w-full">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-text-muted-light">
-          Signing up as: <strong className="text-text-default">{role === 'TEACHER' ? 'Teacher' : 'Student'}</strong>
-        </span>
-        <button type="button" onClick={() => setRole(null)} className="text-xs text-accent hover:underline">
+    <form action={formAction} className="flex flex-col gap-6 w-full">
+      <div className="flex items-center justify-between mb-4 bg-slate-50 border-[2px] border-black p-3 rounded-xl shadow-[3px_3px_0px_rgba(0,0,0,1)]">
+        <div className="flex items-center gap-2">
+          {role === 'TEACHER' ? <GraduationCap className="w-5 h-5 text-[#834DFB]" /> : <BookOpen className="w-5 h-5 text-[#FF6B35]" />}
+          <span className="text-[11px] font-black uppercase tracking-widest text-[#18102B]">
+            Role: <strong className="text-[#834DFB]">{role === 'TEACHER' ? 'Teacher' : 'Student'}</strong>
+          </span>
+        </div>
+        <button 
+          type="button" 
+          onClick={() => setRole(null)} 
+          className="text-[10px] font-black bg-white border border-black px-3 py-1 rounded shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:bg-[#F0E100] active:translate-y-0.5 active:translate-x-0.5 active:shadow-none uppercase tracking-wider transition-all"
+        >
           Change
         </button>
       </div>
@@ -65,14 +67,14 @@ export function SignupForm() {
       <input type="hidden" name="role" value={role} />
       
       <Input
-        label="Name"
+        label="Full Name"
         name="name"
         type="text"
-        placeholder="John Doe"
+        placeholder="Jane Doe"
         required
       />
       <Input
-        label="Email"
+        label="Email Address"
         name="email"
         type="email"
         placeholder="you@example.com"
@@ -85,14 +87,9 @@ export function SignupForm() {
         placeholder="••••••••"
         required
       />
-      <Button type="submit" disabled={isPending} className="mt-2 w-full">
-        {isPending ? 'Creating Account...' : 'Create Account'}
+      <Button type="submit" disabled={isPending} className="mt-4 w-full" size="lg">
+        {isPending ? 'CREATING ACCOUNT...' : 'CREATE ACCOUNT'}
       </Button>
-      <div className="text-center mt-4">
-        <Link href="/login" className="text-sm text-text-muted-light hover:text-text-default">
-          Already have an account? Log in
-        </Link>
-      </div>
     </form>
   );
 }

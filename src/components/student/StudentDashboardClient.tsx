@@ -10,25 +10,32 @@ export function StudentDashboardClient() {
   const [state, formAction, isPending] = useActionState<ActionResult | null, FormData>(joinClass, null);
 
   return (
-    <Card className="max-w-md w-full bg-surface">
+    <Card className="w-full bg-white hoverable={false}">
       <div className="p-6">
-        <h2 className="text-xl font-bold text-text-light mb-4">Join a Class</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-6">
+          Join a Class
+        </h2>
         <form action={formAction} className="space-y-4">
           <div>
-            <label htmlFor="key" className="block text-sm font-medium text-text-light mb-1">Class Key</label>
-            <Input id="key" name="key" required placeholder="e.g. MATH101" />
+            <Input id="key" name="key" required placeholder="e.g. MATH101" label="Class Key" />
           </div>
           <div>
-            <label htmlFor="rollNo" className="block text-sm font-medium text-text-light mb-1">Roll Number</label>
-            <Input id="rollNo" name="rollNo" required placeholder="Your Roll Number" />
+            <Input id="rollNo" name="rollNo" required placeholder="Your Roll Number" label="Roll Number" />
           </div>
           <div>
-            <label htmlFor="school" className="block text-sm font-medium text-text-light mb-1">School</label>
-            <Input id="school" name="school" required placeholder="Your School Name" />
+            <Input id="school" name="school" required placeholder="Your School Name" label="School" />
           </div>
-          {state?.error && <p className="text-error text-sm">{state.error}</p>}
-          {state?.success && <p className="text-success text-sm">Successfully joined class!</p>}
-          <Button type="submit" className="w-full" disabled={isPending}>
+          {state?.error && (
+            <p className="text-red-600 bg-red-50 font-medium text-sm p-3 rounded-lg border border-red-200">
+              {state.error}
+            </p>
+          )}
+          {state?.success && (
+            <p className="text-green-600 bg-green-50 font-medium text-sm p-3 rounded-lg border border-green-200">
+              Successfully joined class!
+            </p>
+          )}
+          <Button type="submit" className="w-full mt-2" size="lg" disabled={isPending}>
             {isPending ? 'Joining...' : 'Join Class'}
           </Button>
         </form>

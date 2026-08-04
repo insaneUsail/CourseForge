@@ -1,5 +1,5 @@
 import { auth } from '@/lib/auth';
-import { Navbar } from '@/components/layout/Navbar';
+import { DashboardSidebar } from '@/components/layout/DashboardSidebar';
 import { redirect } from 'next/navigation';
 
 export default async function StudentLayout({ children }: { children: React.ReactNode }) {
@@ -20,9 +20,12 @@ export default async function StudentLayout({ children }: { children: React.Reac
   };
 
   return (
-    <div className="min-h-screen bg-bg-dark flex flex-col">
-      <Navbar user={user} />
-      <main className="flex-1 overflow-auto page-enter">
+    <div className="min-h-screen bg-white flex">
+      {/* Sidebar (fixed left) */}
+      <DashboardSidebar user={user} />
+      
+      {/* Main Content Area (padded left to account for fixed sidebar) */}
+      <main className="flex-1 ml-64 min-h-screen page-enter bg-[#F0E100]/5">
         {children}
       </main>
     </div>
