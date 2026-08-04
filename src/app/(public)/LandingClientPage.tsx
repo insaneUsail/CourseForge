@@ -2,16 +2,71 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { 
   Sparkles, ArrowRight, BookOpen, Users, Play, Check, 
   ChevronDown, HelpCircle, Layers, Settings, Eye, Target, 
   Globe, BarChart3, Award, Star, History, Clock, BookOpenCheck
 } from 'lucide-react';
+import { IconDocument3D, IconKey3D, IconChart3D, AbstractSphere, AbstractRing, AbstractCube, IconQuote3D, IconStar3D } from '@/components/ui/CustomIcons';
+
+// ===================================================================
+// Interactive 3D Mouse-Follow Tilt Wrapper Component
+// ===================================================================
+function TiltWrapper({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  // Smooth transformation mapping with springs
+  const rotateX = useSpring(useTransform(y, [-150, 150], [10, -10]), { stiffness: 120, damping: 18 });
+  const rotateY = useSpring(useTransform(x, [-150, 150], [-10, 10]), { stiffness: 120, damping: 18 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    const rect = el.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left - width / 2;
+    const mouseY = e.clientY - rect.top - height / 2;
+    x.set(mouseX);
+    y.set(mouseY);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+      }}
+      className={`transition-shadow duration-300 ease-out ${className}`}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export default function LandingClientPage({ user }: { user: any }) {
   // FAQ accordion state
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  // Cycling phrases for the hero section
+  const textPhrases = ["I ELEVATE CLASSES.", "I REACH EVERYONE.", "I TRACK RESULTS."];
+  const [phraseIdx, setPhraseIdx] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPhraseIdx((prev) => (prev + 1) % textPhrases.length);
+    }, 2800);
+    return () => clearInterval(interval);
+  }, []);
 
   // Counter targets
   const counters = [
@@ -22,176 +77,259 @@ export default function LandingClientPage({ user }: { user: any }) {
   ];
 
   return (
-    <main className="flex-1 flex flex-col bg-[#F5F3FF]">
+    <main className="flex-1 flex flex-col bg-[#F5F3FF] overflow-hidden" style={{ perspective: '1200px' }}>
       
-      {/* 1. HERO SECTION */}
-      <section className="relative w-full max-w-7xl mx-auto px-6 py-20 md:py-28 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        
-        {/* Left Column: Text & CTAs */}
-        <div className="space-y-8 flex flex-col justify-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-sm border border-[#E5DFF5] text-xs font-semibold text-[#834DFB] w-fit">
-            <Sparkles className="w-4 h-4 text-[#F0E100] fill-[#F0E100] animate-spin-slow" />
-            <span>Next Generation Education Space</span>
+      {/* 1. HERO SECTION (Redesigned with High-Contrast DEV/PIXEL Style) */}
+      <section className="relative w-full overflow-hidden border-b-2 border-black bg-gradient-to-b from-[#F5F3FF] to-white">
+        {/* Premium Code-Driven Vector Background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          {/* Blueprint Grid */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800d_1px,transparent_1px),linear-gradient(to_bottom,#8080800d_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+          
+          {/* Glowing Neon Aura Bubbles */}
+          <div className="absolute top-[5%] right-[-5%] w-[550px] h-[550px] bg-gradient-to-tr from-[#834DFB]/10 to-[#22D3EE]/15 rounded-full blur-[120px] animate-[pulse_8s_ease-in-out_infinite]"></div>
+          <div className="absolute bottom-[5%] left-[-10%] w-[500px] h-[500px] bg-gradient-to-br from-[#CCFF00]/10 to-[#FF6B35]/5 rounded-full blur-[140px] animate-[pulse_10s_ease-in-out_infinite]" style={{ animationDelay: '2s' }}></div>
+
+          {/* Spinning Vector Blueprint Geometry */}
+          <div className="absolute top-[15%] left-[25%] w-[450px] h-[450px] opacity-[0.04] animate-[spin_90s_linear_infinite]">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-slate-800">
+              <path d="M100 0 L200 100 L100 200 L0 100 Z" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4,4" />
+              <circle cx="100" cy="100" r="90" stroke="currentColor" strokeWidth="1.5" />
+              <rect x="35" y="35" width="130" height="130" stroke="currentColor" strokeWidth="1" />
+              <circle cx="100" cy="100" r="50" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2,2" />
+            </svg>
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-[#18102B] leading-[1.1]">
-            Your Partner in <span className="text-[#834DFB] underline decoration-[#F0E100] decoration-wavy decoration-3 underline-offset-8">Smarter</span> Class Learning
-          </h1>
-          
-          <p className="text-lg md:text-xl text-[#6B6577] max-w-xl leading-relaxed">
-            Write your own chapters, or reuse content already trusted by other teachers — and still track every one of your own students, separately, in one clean dashboard.
-          </p>
-          
-          <div className="flex flex-wrap gap-4">
-            <Link href={user ? (user.role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard') : '/signup'}>
-              <button className="group inline-flex items-center gap-2.5 px-8 py-4.5 rounded-full bg-[#834DFB] text-white font-bold text-base hover:bg-[#723ee6] active:scale-95 transition-all duration-200 shadow-lg shadow-[#834DFB]/35">
-                Get Started Free
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
-              </button>
-            </Link>
-            <a href="#how-it-works">
-              <button className="inline-flex items-center gap-2 px-8 py-4.5 rounded-full bg-transparent border-2 border-[#18102B] text-[#18102B] font-bold text-base hover:bg-[#18102B]/5 active:scale-95 transition-all duration-200">
-                See How It Works
-              </button>
-            </a>
+          <div className="absolute bottom-[10%] right-[20%] w-[380px] h-[380px] opacity-[0.06] animate-[spin_60s_linear_infinite_reverse]">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-[#834DFB]">
+              <polygon points="100,5 195,190 5,190" stroke="currentColor" strokeWidth="1.5" strokeDasharray="8,4" />
+              <circle cx="100" cy="125" r="60" stroke="currentColor" strokeWidth="1" />
+              <line x1="100" y1="5" x2="100" y2="190" stroke="currentColor" strokeWidth="0.5" />
+            </svg>
           </div>
 
-          <div className="flex flex-wrap gap-2.5 pt-4">
-            {['Public Chapters', 'Private Classes', 'Practice Quizzes', 'Class Analytics'].map((tag) => (
-              <span key={tag} className="border border-[#E5DFF5] bg-white/60 backdrop-blur-sm rounded-full px-4 py-1.5 text-xs font-semibold text-[#6B6577]">
-                {tag}
-              </span>
-            ))}
-          </div>
+          {/* Neon Star Pulsars */}
+          <div className="absolute top-[25%] right-[20%] w-2 h-2 bg-[#CCFF00] rounded-full shadow-[0_0_12px_#CCFF00] animate-ping" style={{ animationDuration: '3s' }}></div>
+          <div className="absolute bottom-[30%] left-[15%] w-1.5 h-1.5 bg-[#834DFB] rounded-full shadow-[0_0_10px_#834DFB] animate-ping" style={{ animationDuration: '4s', animationDelay: '1s' }}></div>
         </div>
 
-        {/* Right Column: Reference Image Styled Visuals */}
-        <div className="relative w-full h-[520px] flex items-center justify-center">
+        <AbstractSphere className="absolute top-[20%] right-[10%] w-32 h-32 opacity-80 pointer-events-none animate-[bounce_8s_ease-in-out_infinite] z-0" />
+        <AbstractRing className="absolute bottom-[15%] left-[5%] w-48 h-48 opacity-70 pointer-events-none animate-[pulse_6s_ease-in-out_infinite] z-0" />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 md:py-28 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           
-          {/* Card 1: Red/Orange Class Card (Marathon Shakeout style) */}
-          <div className="absolute top-0 left-6 w-[290px] bg-[#FF6B35] text-white rounded-[24px] shadow-2xl p-6 rotate-[-4deg] transition-all duration-300 hover:rotate-[0deg] hover:translate-y-[-8px] hover:scale-[1.02] border border-[#FF8A5C] z-20 group">
-            
-            {/* Corner Crosshairs */}
-            <span className="crosshair-corner crosshair-top-left">+</span>
-            <span className="crosshair-corner crosshair-top-right">+</span>
-            <span className="crosshair-corner crosshair-bottom-left">+</span>
-            <span className="crosshair-corner crosshair-bottom-right">+</span>
-
-            <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-orange-200 mb-6">
-              <span>Class Card</span>
-              <span className="w-2.5 h-2.5 rounded-full bg-[#F0E100] animate-pulse"></span>
-            </div>
-
-            <h3 className="text-3xl font-extrabold leading-tight tracking-tight mb-8">
-              Physics 101<br/>Shakeout
-            </h3>
-
-            {/* Custom stylized overlapping ovals */}
-            <div className="flex gap-1.5 mb-8 relative">
-              <div className="w-16 h-24 bg-white/20 rounded-full border border-white/40 overflow-hidden relative rotate-[-12deg] flex-shrink-0">
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/60 to-purple-600/60 mix-blend-overlay"></div>
-                <Users className="w-7 h-7 text-white absolute inset-0 m-auto opacity-75" />
-              </div>
-              <div className="w-16 h-24 bg-white/20 rounded-full border border-white/40 overflow-hidden relative rotate-[4deg] flex-shrink-0">
-                <div className="absolute inset-0 bg-gradient-to-br from-teal-400/60 to-emerald-600/60 mix-blend-overlay"></div>
-                <BookOpen className="w-7 h-7 text-white absolute inset-0 m-auto opacity-75" />
-              </div>
-              <div className="w-16 h-24 bg-[#18102B] rounded-full border border-white/40 overflow-hidden relative rotate-[16deg] flex-shrink-0 flex items-center justify-center text-[#F0E100] font-extrabold text-xl">
-                CF
-              </div>
-            </div>
-
-            {/* Dotted grid lines */}
-            <div className="border-t border-white/20 border-dashed py-3 flex justify-between items-center text-[11px] font-bold tracking-wide uppercase">
-              <span className="text-orange-200">Teacher</span>
-              <span className="text-white">Prof. Verma</span>
+          {/* Left Column: Text & Dynamic Phrase Cycling */}
+          <motion.div 
+            className="space-y-8 flex flex-col justify-center"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-sm border-2 border-black text-xs font-bold text-[#834DFB] w-fit">
+              <Sparkles className="w-4 h-4 text-[#F0E100] fill-[#F0E100] animate-pulse" />
+              <span>Next Generation Education Space</span>
             </div>
             
-            <div className="border-t border-white/20 border-dashed py-3 flex justify-between items-center text-[11px] font-bold tracking-wide uppercase">
-              <span className="text-orange-200">Join Key</span>
-              <span className="text-[#F0E100] font-mono">CF-93XQ</span>
-            </div>
-
-            {/* Custom simulated barcode at bottom */}
-            <div className="border-t border-white/20 border-dashed pt-4 flex justify-between items-center">
-              <span className="text-[10px] font-bold tracking-widest text-orange-200">E-TICKET CODE</span>
-              <div className="h-6 flex gap-[2px] items-center opacity-70">
-                {[1,3,2,1,4,2,1,3,2,1].map((w, i) => (
-                  <div key={i} className="h-full bg-white" style={{ width: `${w}px` }}></div>
-                ))}
+            <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-[#18102B] uppercase leading-[0.95] flex flex-col">
+              <span>I WRITE.</span>
+              <span>I TEACH.</span>
+              <div className="h-[75px] md:h-[95px] relative overflow-hidden mt-3">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={phraseIdx}
+                    className="absolute left-0 text-white bg-[#834DFB] px-5 py-2.5 transform -rotate-1 inline-block text-3xl md:text-5xl font-black rounded-xl border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] whitespace-nowrap"
+                    initial={{ y: 40, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -40, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  >
+                    {textPhrases[phraseIdx]}
+                  </motion.span>
+                </AnimatePresence>
               </div>
-            </div>
-          </div>
-
-          {/* Card 2: Dark Theme Ribbon Card (Lights Out Race style) */}
-          <div className="absolute bottom-4 right-6 w-[310px] bg-[#18102B] text-white rounded-[24px] shadow-2xl p-6 rotate-[3deg] transition-all duration-300 hover:rotate-[0deg] hover:translate-y-[-8px] hover:scale-[1.02] border border-[#30244D] z-15">
+            </h1>
             
-            {/* Angled Ribbon tags */}
-            <div className="absolute -top-3 left-6 flex flex-col gap-1.5 z-30">
-              <div className="bg-[#F0E100] text-black font-extrabold text-[10px] uppercase tracking-wider py-1 px-3 rounded-full transform -rotate-3 border border-[#18102B]">
-                24.03.2026 - Central Park
-              </div>
-              <div className="bg-[#834DFB] text-white font-extrabold text-[10px] uppercase tracking-wider py-1 px-3 rounded-full transform rotate-2 border border-[#18102B]">
-                Intro to Mechanics
-              </div>
+            <p className="text-lg md:text-xl text-[#6B6577] max-w-xl leading-relaxed font-semibold pt-4">
+              Write your own chapters, or reuse content already trusted by other teachers — and still track every one of your own students, separately, in one clean dashboard.
+            </p>
+            
+            <div className="flex flex-wrap gap-4">
+              <Link href={user ? (user.role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard') : '/signup'}>
+                <button className="group inline-flex items-center gap-2.5 px-8 py-4.5 rounded-full bg-[#834DFB] text-white font-bold text-base hover:bg-[#723ee6] active:scale-95 transition-all duration-200 border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] cursor-pointer">
+                  Get Started Free
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
+                </button>
+              </Link>
+              <a href="#how-it-works">
+                <button className="inline-flex items-center gap-2 px-8 py-4.5 rounded-full bg-white border-2 border-black text-[#18102B] font-bold text-base hover:bg-slate-50 active:scale-95 transition-all duration-200 shadow-[4px_4px_0px_rgba(0,0,0,1)] cursor-pointer">
+                  See How It Works
+                </button>
+              </a>
             </div>
 
-            <div className="pt-6 flex justify-between items-start mb-6">
-              <div>
-                <span className="text-[#F0E100] text-[11px] font-extrabold uppercase tracking-widest">Active Chapter</span>
-                <h4 className="text-2xl font-bold mt-1 tracking-tight">Kinematics & Motion</h4>
-              </div>
-              <BookOpenCheck className="w-8 h-8 text-[#834DFB] mt-1" />
+            <div className="flex flex-wrap gap-2.5 pt-4">
+              {['Public Chapters', 'Private Classes', 'Practice Quizzes', 'Class Analytics'].map((tag) => (
+                <span key={tag} className="border-2 border-black bg-white rounded-md px-4 py-1.5 text-xs font-bold text-[#18102B] shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                  {tag}
+                </span>
+              ))}
             </div>
+          </motion.div>
 
-            {/* Simulated registration fields */}
-            <div className="space-y-3 mb-6 pt-2">
-              <div className="bg-[#241B3B] rounded-lg p-3 border border-[#3B305C]">
-                <div className="text-[9px] text-[#A29CB0] uppercase font-bold">Module Topic</div>
-                <div className="text-xs font-bold text-white mt-0.5">Newtonian Gravity & Orbitals</div>
-              </div>
-              <div className="bg-[#241B3B] rounded-lg p-3 border border-[#3B305C]">
-                <div className="text-[9px] text-[#A29CB0] uppercase font-bold">Estimated Reading</div>
-                <div className="text-xs font-bold text-white mt-0.5 flex justify-between">
-                  <span>35 Minutes</span>
-                  <span className="text-[#F0E100]">2 Practice Quizzes</span>
+          {/* Right Column: Modern Clean Overlapping Cards with 3D Tilt */}
+          <motion.div 
+            className="relative w-full h-[520px] flex items-center justify-center"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            style={{ transformStyle: 'preserve-3d' }}
+          >
+            
+            {/* Card 1: Orange Modern Ticket Card */}
+            <motion.div 
+              className="absolute top-0 left-6 w-[290px] z-20"
+              initial={{ rotate: -12, y: 30 }}
+              animate={{ rotate: -4, y: 0 }}
+              transition={{ type: "spring", stiffness: 80, damping: 12, delay: 0.3 }}
+            >
+              <TiltWrapper className="bg-[#FF6B35] text-white rounded-2xl shadow-2xl p-6 border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] relative w-full h-full">
+                {/* Corner Crosshairs */}
+                <span className="crosshair-corner crosshair-top-left font-black text-black">+</span >
+                <span className="crosshair-corner crosshair-top-right font-black text-black">+</span >
+                <span className="crosshair-corner crosshair-bottom-left font-black text-black">+</span >
+                <span className="crosshair-corner crosshair-bottom-right font-black text-black">+</span >
+
+                <div className="flex justify-between items-center text-xs font-black uppercase tracking-wider text-[#18102B] mb-6">
+                  <span>Class Ticket</span>
+                  <span className="w-3 h-3 rounded-full bg-[#C6FF3D] border border-black animate-pulse"></span>
                 </div>
-              </div>
-            </div>
 
-            {/* Solid modern CTA button */}
-            <button className="w-full bg-white hover:bg-[#F0E100] text-[#18102B] font-extrabold text-xs uppercase tracking-widest py-3.5 rounded-xl transition-colors duration-200">
-              Join Class Now
-            </button>
-          </div>
+                <h3 className="text-3xl font-black leading-tight tracking-tighter text-[#18102B] mb-8">
+                  PHYSICS 101<br/>SHAKEOUT
+                </h3>
 
-          {/* Card 3: Mini Stat Dial Card (Weekly Progress style) */}
-          <div className="absolute top-12 right-20 bg-white rounded-[20px] p-5 shadow-xl border border-[#E5DFF5] rotate-[-8deg] z-25 hover:rotate-[0deg] hover:translate-y-[-4px] transition-all duration-300 flex items-center gap-4">
-            {/* Mini Concentric Gauge Ring SVG */}
-            <div className="relative w-12 h-12">
-              <svg className="w-full h-full transform -rotate-90">
-                <circle cx="24" cy="24" r="18" className="stroke-slate-100 fill-none" strokeWidth="4" />
-                <circle cx="24" cy="24" r="18" className="stroke-[#834DFB] fill-none" strokeWidth="4" strokeDasharray="113" strokeDashoffset="25" strokeLinecap="round" />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center font-extrabold text-xs text-[#18102B]">
-                78%
-              </div>
-            </div>
-            <div>
-              <div className="text-[10px] font-bold text-[#6B6577] uppercase tracking-wider">Class Average</div>
-              <div className="text-base font-extrabold text-[#18102B]">Outstanding!</div>
-            </div>
-          </div>
+                {/* Minimalist modern avatars containing new circle doodles */}
+                <div className="flex gap-2 mb-8">
+                  <div className="w-14 h-14 bg-black rounded-xl border-2 border-black overflow-hidden shadow-[2px_2px_0px_rgba(0,0,0,1)] relative flex-shrink-0">
+                    <img src="/circle_doodles.png" className="w-full h-full object-cover" alt="doodles circle logo" />
+                  </div>
+                  <div className="w-14 h-14 bg-[#C6FF3D] rounded-xl border-2 border-black flex items-center justify-center flex-shrink-0 shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                    <BookOpen className="w-6 h-6 text-black" />
+                  </div>
+                  <div className="w-14 h-14 bg-[#18102B] rounded-xl border-2 border-black flex items-center justify-center flex-shrink-0 shadow-[2px_2px_0px_rgba(0,0,0,1)] text-[#C6FF3D] font-black text-base">
+                    CF
+                  </div>
+                </div>
+
+                {/* Dotted grid lines */}
+                <div className="border-t-2 border-black border-dashed py-3 flex justify-between items-center text-[11px] font-black tracking-wide uppercase text-[#18102B]">
+                  <span>Teacher</span>
+                  <span>Prof. Verma</span>
+                </div>
+                
+                <div className="border-t-2 border-black border-dashed py-3 flex justify-between items-center text-[11px] font-black tracking-wide uppercase text-[#18102B]">
+                  <span>Join Key</span>
+                  <span className="bg-[#18102B] text-[#C6FF3D] px-2 py-0.5 rounded font-mono">CF-93XQ</span>
+                </div>
+
+                {/* Simulated barcode at bottom */}
+                <div className="border-t-2 border-black border-dashed pt-4 flex justify-between items-center">
+                  <span className="text-[10px] font-black tracking-widest text-[#18102B]">E-TICKET CODE</span>
+                  <div className="h-6 flex gap-[2px] items-center opacity-90">
+                    {[1,3,2,1,4,2,1,3,2,1].map((w, i) => (
+                      <div key={i} className="h-full bg-black" style={{ width: `${w}px` }}></div>
+                    ))}
+                  </div>
+                </div>
+              </TiltWrapper>
+            </motion.div>
+
+            {/* Card 2: Modern Dark Card with Lime Ribbon */}
+            <motion.div 
+              className="absolute bottom-4 right-6 w-[310px] z-15"
+              initial={{ rotate: 12, y: 30 }}
+              animate={{ rotate: 3, y: 0 }}
+              transition={{ type: "spring", stiffness: 80, damping: 12, delay: 0.4 }}
+            >
+              <TiltWrapper className="bg-[#18102B] text-white rounded-2xl shadow-2xl p-6 border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] relative w-full h-full">
+                {/* Angled Ribbon tags */}
+                <div className="absolute -top-3.5 left-6 flex flex-col gap-1 z-30">
+                  <div className="bg-[#C6FF3D] text-black font-black text-[10px] uppercase tracking-wider py-1 px-3 rounded-md border-2 border-black transform -rotate-3">
+                    ACTIVE CHAPTER
+                  </div>
+                </div>
+
+                <div className="pt-6 flex justify-between items-start mb-6">
+                  <div>
+                    <span className="text-[#C6FF3D] text-[11px] font-black uppercase tracking-widest">CHAPTER 04</span>
+                    <h4 className="text-2xl font-black mt-1 tracking-tight">Kinematics & Motion</h4>
+                  </div>
+                  <BookOpenCheck className="w-8 h-8 text-[#C6FF3D] mt-1" />
+                </div>
+
+                {/* Simulated registration fields */}
+                <div className="space-y-3 mb-6 pt-2">
+                  <div className="bg-[#241B3B] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                    <div className="text-[9px] text-[#A29CB0] uppercase font-black">Module Topic</div>
+                    <div className="text-xs font-bold text-white mt-0.5">Newtonian Gravity & Orbitals</div>
+                  </div>
+                  <div className="bg-[#241B3B] rounded-xl p-3 border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                    <div className="text-[9px] text-[#A29CB0] uppercase font-black">Estimated Reading</div>
+                    <div className="text-xs font-bold text-white mt-0.5 flex justify-between">
+                      <span>35 Minutes</span>
+                      <span className="text-[#C6FF3D]">2 Practice Quizzes</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Solid flat neon-lime button */}
+                <button className="w-full bg-[#C6FF3D] hover:bg-[#b0f020] text-black font-black text-xs uppercase tracking-widest py-3.5 rounded-xl border-2 border-black transition-all duration-200 shadow-[3px_3px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none cursor-pointer">
+                  Join Class Now
+                </button>
+              </TiltWrapper>
+            </motion.div>
+
+            {/* Card 3: Mini Stat Dial Card */}
+            <motion.div 
+              className="absolute top-12 right-20 z-25"
+              initial={{ rotate: -15, scale: 0.8 }}
+              animate={{ rotate: -8, scale: 1 }}
+              transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.5 }}
+            >
+              <TiltWrapper className="bg-white rounded-2xl p-5 shadow-2xl border-2 border-black flex items-center gap-4 shadow-[4px_4px_0px_rgba(0,0,0,1)] w-full h-full">
+                {/* Concentric Gauge SVG */}
+                <div className="relative w-12 h-12">
+                  <svg className="w-full h-full transform -rotate-90">
+                    <circle cx="24" cy="24" r="18" className="stroke-slate-200 fill-none" strokeWidth="4" />
+                    <circle cx="24" cy="24" r="18" className="stroke-[#834DFB] fill-none" strokeWidth="4" strokeDasharray="113" strokeDashoffset="25" strokeLinecap="round" />
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center font-black text-xs text-[#18102B]">
+                    78%
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[10px] font-black text-[#6B6577] uppercase tracking-wider">Class Average</div>
+                  <div className="text-base font-black text-[#18102B]">Outstanding!</div>
+                </div>
+              </TiltWrapper>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
-      {/* 2. RATING & PARTNER MARQUEE */}
-      <section className="bg-white border-y border-[#E5DFF5] py-12 px-6 overflow-hidden">
+      {/* 2. RATING & PARTNER MARQUEE (Shutter Scale vertical reveal) */}
+      <motion.section 
+        className="bg-white border-b-2 border-black py-12 px-6 overflow-hidden origin-center"
+        initial={{ opacity: 0, scaleY: 0.2 }}
+        whileInView={{ opacity: 1, scaleY: 1 }}
+        viewport={{ once: false, amount: 0.2 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12">
           
           {/* Left: Star ratings */}
           <div className="flex flex-col items-center lg:items-start gap-2 flex-shrink-0 text-center lg:text-left">
-            <span className="text-sm font-semibold text-[#6B6577] uppercase tracking-widest">PLATFORM RATING</span>
+            <span className="text-sm font-bold text-[#6B6577] uppercase tracking-widest">PLATFORM RATING</span>
             <div className="flex items-center gap-1.5 text-2xl font-extrabold text-[#18102B]">
               4,900+ Students
               <div className="flex gap-0.5 ml-2 text-[#F0E100] text-xl">
@@ -204,7 +342,6 @@ export default function LandingClientPage({ user }: { user: any }) {
 
           {/* Right: Scrolling Marquee of Schools */}
           <div className="flex-1 w-full overflow-hidden relative">
-            {/* Fade overlays for smooth scrolling transition */}
             <div className="absolute left-0 top-0 h-full w-12 bg-gradient-to-r from-white to-transparent z-10"></div>
             <div className="absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-white to-transparent z-10"></div>
             
@@ -226,391 +363,740 @@ export default function LandingClientPage({ user }: { user: any }) {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* 3. FEATURE CARDS GRID (6 cards matching design layout) */}
-      <section id="features" className="max-w-7xl mx-auto px-6 py-24 w-full">
-        <div className="max-w-3xl mb-16">
-          <span className="inline-block bg-[#18102B] text-[#F5F3FF] text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6">
-            Features
-          </span>
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-[#18102B] leading-tight">
-            Everything a teacher needs to <span className="text-[#834DFB]">write once and teach everywhere</span> — without losing track.
-          </h2>
-        </div>
+      {/* 3. FEATURE CARDS CAROUSEL (Converted to Horizontal Scroll Snapper with Zoom Out) */}
+      <section id="features" className="relative w-full py-24 overflow-hidden border-b-2 border-black bg-gradient-to-b from-[#F5F3FF] to-white">
+        {/* Creative backgrounds: soft dark mesh grid overlay and gradient spheres */}
+        <div className="absolute inset-0 bg-[radial-gradient(#e5dff5_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-[0.35] pointer-events-none"></div>
+        <div className="absolute top-1/4 right-[-10%] w-[550px] h-[550px] rounded-full bg-[#834DFB]/5 blur-[120px] pointer-events-none z-0"></div>
+        <div className="absolute bottom-1/4 left-[-10%] w-[550px] h-[550px] rounded-full bg-[#C6FF3D]/5 blur-[120px] pointer-events-none z-0"></div>
+        <AbstractCube className="absolute top-1/3 right-[5%] w-24 h-24 opacity-60 pointer-events-none animate-[bounce_10s_ease-in-out_infinite] z-0" />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          
-          {/* Card 1: Reuse Public Chapter (Gradient style with oval cutouts) */}
-          <div className="bg-gradient-to-br from-[#834DFB] to-[#5B2FD1] text-white rounded-[24px] p-8 flex flex-col justify-between min-h-[320px] border border-[#A67DFF] shadow-lg relative overflow-hidden group">
-            <span className="crosshair-corner crosshair-top-left">+</span>
-            <span className="crosshair-corner crosshair-top-right">+</span>
-            <span className="crosshair-corner crosshair-bottom-right">+</span>
+        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
+          <motion.div 
+            className="max-w-3xl mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="inline-block bg-[#18102B] text-[#F5F3FF] text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
+              Features Carousel
+            </span>
+            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-[#18102B] leading-tight">
+              Everything a teacher needs to <span className="text-[#834DFB]">write once and teach everywhere</span> — without losing track.
+            </h2>
+            <p className="text-xs text-slate-400 font-extrabold mt-3 uppercase tracking-wider">Swipe or Scroll Horizontally →</p>
+          </motion.div>
 
-            <div className="absolute right-[-10px] top-6 w-32 h-44 bg-white/10 rounded-full border border-white/20 transform rotate-12 flex items-center justify-center opacity-70 group-hover:scale-105 transition-transform duration-300">
-              <Globe className="w-12 h-12 text-white/55" />
-            </div>
-
-            <Layers className="w-10 h-10 text-[#F0E100] mb-6" />
-            <div className="relative z-10">
-              <h3 className="text-2xl font-bold mb-3">Reuse Any Public Chapter</h3>
-              <p className="text-slate-200 text-sm leading-relaxed max-w-[220px]">
-                Add another teacher's chapter to your class in one click — content remains theirs, results stay yours.
-              </p>
-            </div>
-          </div>
-
-          {/* Card 2: Private Class Keys (Dark theme with grid/layout) */}
-          <div className="bg-[#18102B] text-white rounded-[24px] p-8 flex flex-col justify-between min-h-[320px] border border-[#2D2342] shadow-lg relative">
-            <span className="crosshair-corner crosshair-top-left">+</span>
-            <span className="crosshair-corner crosshair-top-right">+</span>
-            <span className="crosshair-corner crosshair-bottom-left">+</span>
-            <span className="crosshair-corner crosshair-bottom-right">+</span>
-
-            <div className="flex justify-between items-center">
-              <Settings className="w-10 h-10 text-[#834DFB]" />
-              <span className="font-mono text-xs text-[#F0E100] bg-[#241B3B] px-2.5 py-1 rounded-md border border-[#3B305C]">CF-KEY</span>
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold mb-3">Private Class Keys</h3>
-              <p className="text-[#A29CB0] text-sm leading-relaxed">
-                One key per class. Students join once, and stay linked automatically for every chapter you add later.
-              </p>
-            </div>
-          </div>
-
-          {/* Card 3: Timed Practice Quizzes (Yellow theme) */}
-          <div className="bg-[#F0E100] text-[#18102B] rounded-[24px] p-8 flex flex-col justify-between min-h-[320px] border border-[#DCD000] shadow-lg relative overflow-hidden group">
-            <div className="absolute right-6 top-6 opacity-10 group-hover:rotate-12 transition-transform duration-300">
-              <Award className="w-28 h-28" />
-            </div>
-
-            <Target className="w-10 h-10 text-[#834DFB]" />
-            <div>
-              <h3 className="text-2xl font-extrabold mb-3">Timed Practice Quizzes</h3>
-              <p className="text-[#18102B]/80 text-sm font-semibold leading-relaxed">
-                Mid-chapter quizzes for quick learning reinforcement, and a final evaluation quiz once the chapter is marked complete.
-              </p>
-            </div>
-          </div>
-
-          {/* Card 4: Per-Class Analytics (Chalk Outline) */}
-          <div className="bg-white text-[#18102B] rounded-[24px] p-8 flex flex-col justify-between min-h-[320px] border-2 border-[#E5DFF5] shadow-sm hover:border-[#834DFB] transition-colors duration-300">
-            <BarChart3 className="w-10 h-10 text-[#834DFB]" />
-            <div>
-              <h3 className="text-2xl font-bold mb-3">Per-Class Analytics</h3>
-              <p className="text-[#6B6577] text-sm leading-relaxed">
-                See only your own students' scores — even on chapters shared with dozens of other classes. Clean separated rosters.
-              </p>
-            </div>
-          </div>
-
-          {/* Card 5: Multi-Class Students (Chalk Outline) */}
-          <div className="bg-white text-[#18102B] rounded-[24px] p-8 flex flex-col justify-between min-h-[320px] border-2 border-[#E5DFF5] shadow-sm hover:border-[#834DFB] transition-colors duration-300">
-            <Users className="w-10 h-10 text-[#834DFB]" />
-            <div>
-              <h3 className="text-2xl font-bold mb-3">Multi-Class Students</h3>
-              <p className="text-[#6B6577] text-sm leading-relaxed">
-                Students can join more than one class at once — school, tuition, and extra classes are all tracked separately in their portals.
-              </p>
-            </div>
-          </div>
-
-          {/* Card 6: Full Attempt History (Dark theme with DOT Activity indicator) */}
-          <div className="bg-[#18102B] text-white rounded-[24px] p-8 flex flex-col justify-between min-h-[320px] border border-[#2D2342] shadow-lg relative overflow-hidden">
-            <span className="crosshair-corner crosshair-top-left">+</span>
-            <span className="crosshair-corner crosshair-bottom-right">+</span>
+          {/* Horizontal snap carousel with zoom-out */}
+          <div className="relative w-full" style={{ perspective: '1200px' }}>
+            <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#F5F3FF] to-transparent z-10 pointer-events-none"></div>
+            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
             
-            <div className="flex justify-between items-center">
-              <History className="w-10 h-10 text-[#F0E100]" />
-              {/* Dot grid indicating completions like Github/Running Grid */}
-              <div className="grid grid-cols-5 gap-1 opacity-60">
-                {[1,1,1,1,0,1,1,0,1,1,1,1,1,1,1].map((dot, idx) => (
-                  <div key={idx} className={`w-2 h-2 rounded-full ${dot ? 'bg-[#F0E100]' : 'bg-[#3A3056]'}`}></div>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold mb-3">Full Attempt History</h3>
-              <p className="text-[#A29CB0] text-sm leading-relaxed">
-                Every quiz attempt is saved with score, response records, and time taken, so progress history is never lost.
-              </p>
+            <div className="flex gap-6 overflow-x-auto pb-10 px-4 snap-x snap-mandatory scroll-smooth scrollbar-thin scrollbar-thumb-slate-200">
+              {[
+                {
+                  bgClass: 'bg-[#C6FF3D]', // vibrant lime green
+                  tags: ['Curriculum', 'Reuse'],
+                  titleLine1: 'Public',
+                  titleLine2: 'Chapters',
+                  desc: 'Add another teacher\'s chapter to your class in one click. Content remains theirs, results stay yours.',
+                  img: 'media_1785836248967.jpg'
+                },
+                {
+                  bgClass: 'bg-[#F5F3FF]', // light cream/purple
+                  tags: ['Security', 'Access'],
+                  titleLine1: 'Private',
+                  titleLine2: 'Class Keys',
+                  desc: 'One key per class. Students join once, and stay linked automatically for every chapter you add later.',
+                  img: 'media_1785836415777.jpg'
+                },
+                {
+                  bgClass: 'bg-[#FF6B35]', // vibrant orange
+                  tags: ['Assessment', 'Exams'],
+                  titleLine1: 'Timed',
+                  titleLine2: 'Quizzes',
+                  desc: 'Mid-chapter quizzes for quick learning reinforcement, and a final evaluation quiz once the chapter is marked complete.',
+                  img: 'media_1785829776307.jpg'
+                },
+                {
+                  bgClass: 'bg-[#F0E100]', // bright yellow
+                  tags: ['Data', 'Tracking'],
+                  titleLine1: 'Per-Class',
+                  titleLine2: 'Analytics',
+                  desc: 'See only your own students\' scores — even on chapters shared with dozens of other classes. Clean separated rosters.',
+                  img: 'media_1785836479267.png'
+                },
+                {
+                  bgClass: 'bg-white',
+                  tags: ['Flexibility', 'Enrollment'],
+                  titleLine1: 'Multi-Class',
+                  titleLine2: 'Students',
+                  desc: 'Students can join more than one class at once — school, tuition, and extra classes are all tracked separately.',
+                  img: 'media_1785835644449.png'
+                },
+                {
+                  bgClass: 'bg-[#22D3EE]', // cyan
+                  tags: ['Records', 'Storage'],
+                  titleLine1: 'Attempt',
+                  titleLine2: 'History',
+                  desc: 'Every quiz attempt is saved with score, response records, and time taken, so progress history is never lost.',
+                  img: 'media_1785836459972.png'
+                }
+              ].map((card, index) => {
+                return (
+                  <motion.div
+                    key={index}
+                    className="flex-shrink-0 w-[300px] snap-center flex"
+                    initial={{ opacity: 0.75, scale: 0.92, y: 30 }}
+                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.65 }}
+                    transition={{ type: "spring", stiffness: 80, damping: 15 }}
+                  >
+                    <TiltWrapper className="w-full h-[460px] rounded-[32px] overflow-hidden flex flex-col relative group shadow-xl border-2 border-black hover:border-[#834DFB] transition-colors duration-300">
+                      {/* TOP HALF: Color block with text */}
+                      <div className={`p-8 pb-10 flex-1 flex flex-col gap-5 ${card.bgClass}`}>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {card.tags.map(tag => (
+                            <span key={tag} className="bg-white text-black px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest shadow-sm">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                        
+                        <div>
+                          <h3 className={`text-4xl font-black leading-[0.95] tracking-tight ${card.bgClass === 'bg-[#FF6B35]' ? 'text-white' : 'text-[#18102B]'}`}>
+                            {card.titleLine1}<br/>
+                            {card.titleLine2}
+                          </h3>
+                          <p className={`text-[13px] font-semibold mt-4 leading-relaxed line-clamp-3 ${card.bgClass === 'bg-[#FF6B35]' ? 'text-white/80' : 'text-[#18102B]/70'}`}>
+                            {card.desc}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {/* BOTTOM HALF: Full-bleed image */}
+                      <div className="relative h-[220px] w-full flex-shrink-0 bg-[#18102B]">
+                        {/* Using standard img for local public file */}
+                        <img src={`/images/${card.img}`} alt={card.titleLine1} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                        
+                        {/* Gradient overlay for text readability at the bottom */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+                        
+                        {/* Read more pill button at bottom left over the image */}
+                        <div className="absolute bottom-5 left-5 z-10">
+                          <button className="bg-white/20 backdrop-blur-md border border-white/30 text-white pl-4 pr-1.5 py-1.5 rounded-full flex items-center gap-4 text-xs font-bold hover:bg-white/30 transition-colors shadow-lg">
+                            Read More 
+                            <span className="bg-white text-[#18102B] rounded-full w-7 h-7 flex items-center justify-center text-[10px]">→</span>
+                          </button>
+                        </div>
+                      </div>
+                      
+                    </TiltWrapper>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
-
         </div>
       </section>
 
-      {/* 4. BIG STEPS SECTION WITH LIVE ANALYTICS CARD (Marathon LSD/Training style) */}
-      <section className="bg-white py-24 border-y border-[#E5DFF5] w-full px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      {/* 4. BIG STEPS SECTION WITH LIVE ANALYTICS CARD (Horizontal Drawer Reveal) */}
+      <section className="relative bg-white py-24 border-y-2 border-black w-full px-6 overflow-hidden">
+        {/* Decorative Blueprint Guide marks */}
+        <div className="absolute top-8 left-8 text-[9px] font-black tracking-widest text-[#B9B2C9] opacity-40 select-none uppercase">
+          [cf.timeline.03 // global_rules]
+        </div>
+        <div className="absolute bottom-8 right-8 text-[9px] font-black tracking-widest text-[#B9B2C9] opacity-40 select-none uppercase">
+          [x_coordinate_grid.04]
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           
           {/* Left Side: Mock Live Class Analytics Card */}
-          <div className="flex items-center justify-center relative">
+          <motion.div 
+            className="flex items-center justify-center relative"
+            initial={{ opacity: 0, x: -100, rotate: -6 }}
+            whileInView={{ opacity: 1, x: 0, rotate: 0 }}
+            viewport={{ once: false, amount: 0.15 }}
+            transition={{ type: "spring", stiffness: 60, damping: 12 }}
+          >
             {/* Decorative background grid */}
             <div className="absolute inset-0 bg-grid-slate-100 opacity-50 [mask-image:radial-gradient(ellipse_at_center,white_30%,transparent_70%)]"></div>
             
-            {/* Visual Card (Marathon Training style) */}
-            <div className="relative w-[340px] bg-white rounded-[28px] border-2 border-[#E5DFF5] shadow-2xl p-8 z-10">
-              <div className="flex justify-between items-center text-xs font-bold text-[#6B6577] mb-6">
-                <span>Class Overview</span>
-                <span className="px-2 py-0.5 rounded-md bg-[#F5F3FF] text-[#834DFB]">LIVE DATA</span>
-              </div>
+            {/* Visual Card */}
+            <div className="w-[340px]">
+              <TiltWrapper className="relative bg-white rounded-[28px] border-2 border-black shadow-2xl p-8 shadow-[6px_6px_0px_rgba(0,0,0,1)]">
+                <div className="flex justify-between items-center text-xs font-bold text-[#6B6577] mb-6">
+                  <span>Class Overview</span>
+                  <span className="px-2 py-0.5 rounded-md bg-[#F5F3FF] text-[#834DFB] font-bold border border-black">LIVE DATA</span>
+                </div>
 
-              {/* Weekly Concentric Progress Arc Visual */}
-              <div className="flex flex-col items-center justify-center py-6 mb-6 bg-[#F5F3FF] rounded-2xl border border-[#E5DFF5]">
-                <div className="relative w-28 h-28 flex items-center justify-center">
-                  <svg className="w-full h-full transform -rotate-90">
-                    {/* Ring 1: Progress */}
-                    <circle cx="56" cy="56" r="44" className="stroke-slate-200 fill-none" strokeWidth="6" />
-                    <circle cx="56" cy="56" r="44" className="stroke-[#834DFB] fill-none" strokeWidth="6" strokeDasharray="276" strokeDashoffset="75" strokeLinecap="round" />
-                    
-                    {/* Ring 2: Nested Progress */}
-                    <circle cx="56" cy="56" r="32" className="stroke-slate-200 fill-none" strokeWidth="6" />
-                    <circle cx="56" cy="56" r="32" className="stroke-[#F0E100] fill-none" strokeWidth="6" strokeDasharray="201" strokeDashoffset="40" strokeLinecap="round" stroke-linecap="round" />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-2xl font-extrabold text-[#18102B]">74%</span>
-                    <span className="text-[8px] font-bold text-[#6B6577] uppercase tracking-wider">Avg Score</span>
+                {/* Watercolor Globe illustration */}
+                <div className="flex flex-col items-center justify-center py-6 mb-6 bg-white rounded-2xl border-2 border-black overflow-hidden relative shadow-[3px_3px_0px_rgba(0,0,0,1)]">
+                  <img src="/globe_education.png" className="h-40 object-contain" alt="Globe Education" />
+                </div>
+
+                <h4 className="text-xl font-bold text-[#18102B] mb-2">Class 10 — Physics</h4>
+                <p className="text-xs text-[#6B6577] mb-6">Active learning tracking across modules.</p>
+
+                {/* Progress items */}
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between text-xs font-bold text-[#18102B] mb-1">
+                      <span>Chapter Completion</span>
+                      <span>74%</span>
+                    </div>
+                    <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-[#834DFB] rounded-full" style={{ width: '74%' }}></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-xs font-bold text-[#18102B] mb-1">
+                      <span>Quiz Performance</span>
+                      <span>85%</span>
+                    </div>
+                    <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-[#F0E100] rounded-full" style={{ width: '85%' }}></div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <h4 className="text-xl font-bold text-[#18102B] mb-2">Class 10 — Physics</h4>
-              <p className="text-xs text-[#6B6577] mb-6">Active learning tracking across modules.</p>
-
-              {/* Progress items */}
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between text-xs font-bold text-[#18102B] mb-1">
-                    <span>Chapter Completion</span>
-                    <span>74%</span>
-                  </div>
-                  <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-[#834DFB] rounded-full" style={{ width: '74%' }}></div>
-                  </div>
+                {/* Action row */}
+                <div className="flex gap-2.5 mt-8 border-t-2 border-black pt-5">
+                  <button className="flex-1 bg-[#18102B] hover:bg-[#834DFB] text-white font-bold text-xs uppercase tracking-widest py-3 rounded-lg border border-black shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                    View Roster
+                  </button>
+                  <button className="flex-1 border-2 border-black hover:bg-slate-50 text-[#18102B] font-bold text-xs uppercase tracking-widest py-3 rounded-lg shadow-[2px_2px_0px_rgba(0,0,0,1)] bg-white">
+                    + Add Chapter
+                  </button>
                 </div>
-                <div>
-                  <div className="flex justify-between text-xs font-bold text-[#18102B] mb-1">
-                    <span>Quiz Performance</span>
-                    <span>85%</span>
-                  </div>
-                  <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-[#F0E100] rounded-full" style={{ width: '85%' }}></div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action row */}
-              <div className="flex gap-2.5 mt-8 border-t border-[#E5DFF5] pt-5">
-                <button className="flex-1 bg-[#18102B] hover:bg-[#834DFB] text-white font-bold text-xs uppercase tracking-widest py-3 rounded-lg transition-colors">
-                  View Roster
-                </button>
-                <button className="flex-1 border border-[#E5DFF5] hover:bg-slate-50 text-[#18102B] font-bold text-xs uppercase tracking-widest py-3 rounded-lg transition-colors">
-                  + Add Chapter
-                </button>
-              </div>
+              </TiltWrapper>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Side: Step descriptions */}
           <div className="space-y-8">
-            <span className="inline-block bg-[#F0E100] text-black text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full">
-              Start Teaching
-            </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-[#18102B]">
-              Start Teaching in 3 Easy Steps
-            </h2>
-            <p className="text-lg text-[#6B6577]">
-              CourseForge is designed to remove the friction of content creation and administration. You build the content once, and direct it to multiple cohorts with ease.
-            </p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.2 }}
+              transition={{ duration: 0.5 }}
+            >
+              <span className="inline-block bg-[#F0E100] text-black text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-4 border-2 border-black">
+                Start Teaching
+              </span>
+              <h2 className="text-4xl md:text-5xl font-extrabold text-[#18102B]">
+                Start Teaching in 3 Easy Steps
+              </h2>
+              <p className="text-lg text-[#6B6577] mt-2 font-medium">
+                CourseForge is designed to remove the friction of content creation and administration. You build the content once, and direct it to multiple cohorts with ease.
+              </p>
+            </motion.div>
 
-            <div className="space-y-6 pt-4">
-              {[
-                { step: 1, title: 'Create a Class & Get Key', desc: 'Create your digital classroom dashboard in seconds and share the unique join key with your student group once.' },
-                { step: 2, title: 'Write or Link Chapters', desc: 'Write your customized lessons using our modular block editor, or search public repository chapters to instantly link them.' },
-                { step: 3, title: 'Students Learn, You Track', desc: 'Students read, practice quizzes, and complete evaluations. All analytics report back to your private teacher roster automatically.' }
-              ].map((item) => (
-                <div key={item.step} className="flex gap-4 items-start">
-                  <div className="w-10 h-10 rounded-full bg-[#F0E100] text-[#18102B] font-extrabold flex items-center justify-center text-base border-2 border-[#18102B] shadow-sm flex-shrink-0">
-                    {item.step}
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-bold text-[#18102B]">{item.title}</h4>
-                    <p className="text-sm text-[#6B6577] mt-1">{item.desc}</p>
+            <div className="space-y-5 pt-4">
+              
+              {/* Card 1: Spec Filter Style */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="bg-white rounded-[32px] p-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] border border-slate-100 flex flex-col gap-5"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Step 01</div>
+                  <div className="flex gap-2 text-[10px] font-bold uppercase tracking-wider bg-slate-50 p-1 rounded-full border border-slate-100 hidden sm:flex">
+                    <span className="bg-[#CCFF00] text-[#18102B] px-3 py-1.5 rounded-full shadow-sm">Dashboard</span>
+                    <span className="text-slate-500 px-3 py-1.5 rounded-full hover:bg-slate-200 transition-colors cursor-pointer">Security</span>
+                    <span className="text-slate-500 px-3 py-1.5 rounded-full hover:bg-slate-200 transition-colors cursor-pointer">Invites</span>
                   </div>
                 </div>
-              ))}
+                
+                <div className="flex gap-5 items-center">
+                  <div className="flex-1">
+                    <h4 className="text-xl font-bold text-[#18102B] leading-tight">Create a Class & Get Key</h4>
+                    <p className="text-[13px] text-[#6B6577] mt-2 font-medium leading-relaxed">Create your digital classroom dashboard in seconds and share the unique join key with your student group once.</p>
+                  </div>
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-slate-50 to-slate-100 rounded-[24px] flex-shrink-0 flex items-center justify-center p-3 shadow-inner border border-slate-200">
+                    <IconKey3D className="w-full h-full drop-shadow-md" />
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Card 2: Review Card Style */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="bg-white rounded-[32px] p-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] border border-slate-100 flex gap-4 sm:gap-5 items-center relative overflow-hidden"
+              >
+                {/* Floating blurred accent */}
+                <div className="absolute -left-10 -top-10 w-32 h-32 bg-[#CCFF00]/20 rounded-full blur-[40px] pointer-events-none"></div>
+
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#18102B] flex-shrink-0 flex items-center justify-center border-[3px] border-white shadow-md z-10 relative">
+                  <span className="text-lg sm:text-xl">👩‍🏫</span>
+                  <div className="absolute -bottom-1 -right-1 bg-[#CCFF00] text-[#18102B] w-5 h-5 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-black">2</div>
+                </div>
+                <div className="flex-1 z-10">
+                  <div className="flex justify-between items-center mb-1">
+                    <h4 className="text-base sm:text-lg font-bold text-[#18102B]">Write or Link Chapters</h4>
+                    {/* Stars to mimic the bike review card */}
+                    <div className="flex gap-0.5">
+                      {[...Array(5)].map((_, i) => (
+                        <svg key={i} className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#CCFF00]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-[12px] sm:text-[13px] text-[#6B6577] font-medium leading-relaxed">Write your customized lessons using our modular block editor, or search public repository chapters to instantly link them.</p>
+                </div>
+              </motion.div>
+
+              {/* Card 3: Frosted Glass / Evolution of the fastest Style with Avatar Stack */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="relative bg-gradient-to-br from-white/90 to-white/50 backdrop-blur-xl rounded-[32px] p-6 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] border border-white flex flex-col gap-4 overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-[#CCFF00]/10 pointer-events-none"></div>
+                
+                <div className="flex justify-between items-start relative z-10">
+                  <div className="flex-1">
+                    <div className="text-[#18102B]/60 text-[10px] font-bold uppercase tracking-wider mb-2 flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[#CCFF00] inline-block shadow-[0_0_8px_#CCFF00] animate-pulse"></span>
+                      Live Analytics
+                    </div>
+                    <h4 className="text-xl font-extrabold text-[#18102B]">Students Learn, You Track</h4>
+                    <p className="text-[13px] text-[#18102B]/70 font-medium mt-2 leading-relaxed">
+                      Students read, practice quizzes, and complete evaluations. All analytics report back to your private teacher roster automatically.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between mt-2 relative z-10">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="text-lg font-black text-[#18102B]">5K+</div>
+                    <div className="text-[9px] sm:text-[10px] text-[#18102B]/60 font-bold leading-tight uppercase hidden sm:block">Students<br/>Enrolled</div>
+                    <div className="flex -space-x-2 ml-1 sm:ml-2">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white bg-blue-100 flex items-center justify-center text-[10px] shadow-sm z-30">🧑‍🎓</div>
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white bg-green-100 flex items-center justify-center text-[10px] shadow-sm z-20">👩‍🎓</div>
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white bg-yellow-100 flex items-center justify-center text-[10px] shadow-sm z-10">👨‍🎓</div>
+                    </div>
+                  </div>
+                  <div className="bg-[#18102B] text-white px-4 py-2.5 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg shadow-black/20 hover:bg-[#CCFF00] hover:text-[#18102B] transition-colors cursor-pointer group">
+                    View Roster <span className="transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+                  </div>
+                </div>
+              </motion.div>
+
             </div>
           </div>
 
         </div>
       </section>
 
-      {/* 5. ROLE SPECIFIC FLOWS */}
-      <section className="max-w-7xl mx-auto px-6 py-24 w-full">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6">
-            Two Sides, One Platform
-          </span>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-[#18102B]">
-            Built differently for <span className="text-[#834DFB]">teachers</span> and <span className="text-[#834DFB]">students</span>
-          </h2>
-          <p className="text-base text-[#6B6577] mt-4">
-            Teachers get powerful authoring and roster control. Students get a distraction-free learning space with self-guided reviews.
-          </p>
-        </div>
+      {/* 5. ROLE SPECIFIC FLOWS (Split Shutter Magnetic Slide) */}
+      <section className="relative w-full py-24 overflow-hidden bg-gradient-to-b from-white to-[#F5F3FF]">
+        {/* Creative mesh overlay background and blur bubble */}
+        <div className="absolute inset-0 bg-[radial-gradient(#e5dff5_1.5px,transparent_1.5px)] [background-size:32px_32px] opacity-[0.25] pointer-events-none"></div>
+        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full bg-[#834DFB]/5 blur-[120px] pointer-events-none z-0"></div>
+        <AbstractSphere className="absolute bottom-1/4 right-1/4 w-40 h-40 opacity-50 pointer-events-none animate-[pulse_8s_ease-in-out_infinite] z-0" />
+        <AbstractRing className="absolute top-1/4 left-[10%] w-20 h-20 opacity-60 pointer-events-none animate-[bounce_6s_ease-in-out_infinite] z-0" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
-          {/* Teacher flow card */}
-          <div className="bg-white rounded-[28px] p-8 md:p-10 border-2 border-[#E5DFF5] shadow-sm relative overflow-hidden group hover:border-[#834DFB] transition-colors duration-300">
-            <div className="w-14 h-14 rounded-2xl bg-[#F5F3FF] flex items-center justify-center mb-6">
-              <Award className="w-8 h-8 text-[#834DFB]" />
-            </div>
-            
-            <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#834DFB] bg-[#F5F3FF] px-3 py-1 rounded-full">
-              For Teachers
+        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
+          <motion.div 
+            className="text-center max-w-2xl mx-auto mb-16"
+            initial={{ opacity: 0, y: 35 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
+              Two Sides, One Platform
             </span>
-            <h3 className="text-2xl font-bold text-[#18102B] mt-4 mb-6">Your class, your way</h3>
-            
-            <ul className="space-y-4">
-              {[
-                'Create a class and get a shareable key in seconds',
-                'Write original chapters or reuse public ones you trust',
-                'Add practice quizzes, then unlock a final evaluation',
-                'Watch your class-only analytics update in real time'
-              ].map((step, idx) => (
-                <li key={idx} className="flex gap-3 text-sm text-[#6B6577] font-medium items-start">
-                  <span className="w-2 h-2 rounded-full bg-[#834DFB] mt-2 flex-shrink-0"></span>
-                  <span>{step}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-[#18102B]">
+              Built differently for <span className="text-[#834DFB]">teachers</span> and <span className="text-[#834DFB]">students</span>
+            </h2>
+            <p className="text-base text-[#6B6577] mt-4 font-medium">
+              Teachers get powerful authoring and roster control. Students get a distraction-free learning space with self-guided reviews.
+            </p>
+          </motion.div>
 
-          {/* Student flow card */}
-          <div className="bg-white rounded-[28px] p-8 md:p-10 border-2 border-[#E5DFF5] shadow-sm relative overflow-hidden group hover:border-[#834DFB] transition-colors duration-300">
-            <div className="w-14 h-14 rounded-2xl bg-[#FFFDF0] flex items-center justify-center mb-6">
-              <BookOpen className="w-8 h-8 text-[#FF6B35]" />
-            </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
-            <span className="text-[10px] font-extrabold uppercase tracking-widest text-orange-600 bg-orange-50 px-3 py-1 rounded-full">
-              For Students
-            </span>
-            <h3 className="text-2xl font-bold text-[#18102B] mt-4 mb-6">Learn at your pace</h3>
-            
-            <ul className="space-y-4">
-              {[
-                'Join one class, or several, using a simple join key',
-                'Read public chapters anytime, no account creation required',
-                'Practice with unlimited mid-chapter quizzes',
-                'Track your own scores and attempt history over time'
-              ].map((step, idx) => (
-                <li key={idx} className="flex gap-3 text-sm text-[#6B6577] font-medium items-start">
-                  <span className="w-2 h-2 rounded-full bg-[#F0E100] border border-[#18102B] mt-2 flex-shrink-0"></span>
-                  <span>{step}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+            {/* Teacher flow card */}
+            <motion.div 
+              className="w-full flex"
+              initial={{ opacity: 0, x: -120, rotate: -4 }}
+              whileInView={{ opacity: 1, x: 0, rotate: 0 }}
+              viewport={{ once: false, amount: 0.2 }}
+              transition={{ type: "spring", stiffness: 70, damping: 14 }}
+            >
+              <TiltWrapper className="bg-white rounded-[32px] border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] overflow-hidden w-full flex flex-col relative group">
+                {/* Top Green Section */}
+                <div className="bg-[#CCFF00] p-8 pb-12 relative overflow-hidden border-b-2 border-black h-48 flex flex-col justify-between">
+                  {/* Subtle geometric line art background */}
+                  <div className="absolute inset-0 opacity-10 pointer-events-none">
+                    <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                      <line x1="0" y1="0" x2="100" y2="100" stroke="black" strokeWidth="1.5" />
+                      <line x1="100" y1="0" x2="0" y2="100" stroke="black" strokeWidth="1.5" />
+                      <circle cx="50" cy="50" r="40" stroke="black" strokeWidth="1.5" fill="none" />
+                    </svg>
+                  </div>
+                  
+                  <div className="flex justify-between items-start z-10 w-full">
+                    <h3 className="text-3xl font-black text-[#18102B] leading-[0.95] tracking-tight max-w-[220px]">
+                      Build, Author, & Roster Control.
+                    </h3>
+                    <div className="text-[#18102B]">
+                      <IconDocument3D className="w-8 h-8" />
+                    </div>
+                  </div>
+                </div>
 
+                {/* Overlapping Avatar Badge */}
+                <div className="absolute left-8 top-[148px] w-20 h-20 rounded-full bg-[#18102B] border-[6px] border-white flex items-center justify-center shadow-md z-20 overflow-hidden">
+                  <span className="text-3xl">👩‍🏫</span>
+                </div>
+
+                {/* Bottom Content Section */}
+                <div className="p-8 pt-12 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-start mb-6">
+                      <div>
+                        <h4 className="text-2xl font-black text-[#18102B] leading-none tracking-tight">For Teachers</h4>
+                        <span className="text-xs font-bold text-[#6B6577]/60">@courseforge.teacher</span>
+                      </div>
+                      <button className="bg-[#18102B] text-white hover:bg-slate-800 text-xs font-bold px-6 py-2.5 rounded-full transition-colors">
+                        Start Free
+                      </button>
+                    </div>
+
+                    <p className="text-[14px] text-[#6B6577] font-semibold leading-relaxed mb-6">
+                      Teachers get powerful authoring tools and roster controls. Build modular content once and distribute it across multiple cohorts seamlessly.
+                    </p>
+
+                    <ul className="space-y-3 mb-8">
+                      {[
+                        'Create a class and get a shareable key in seconds',
+                        'Write original chapters or reuse public ones you trust',
+                        'Add practice quizzes, then unlock a final evaluation',
+                        'Watch your class-only analytics update in real time'
+                      ].map((step, idx) => (
+                        <li key={idx} className="flex gap-3 text-xs text-[#18102B] font-extrabold items-center">
+                          <span className="w-2 h-2 rounded-full bg-[#CCFF00] border border-black flex-shrink-0"></span>
+                          <span>{step}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Bottom Meta Row */}
+                  <div className="border-t border-slate-100 pt-5 flex justify-between items-center text-[11px] font-bold text-slate-400">
+                    <span>100% Free</span>
+                    <span>Real-Time Analytics</span>
+                    <a href="https://courseforge.co" className="flex items-center gap-1 hover:text-[#834DFB] transition-colors">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                      </svg>
+                      courseforge.co
+                    </a>
+                  </div>
+                </div>
+              </TiltWrapper>
+            </motion.div>
+
+            {/* Student flow card */}
+            <motion.div 
+              className="w-full flex"
+              initial={{ opacity: 0, x: 120, rotate: 4 }}
+              whileInView={{ opacity: 1, x: 0, rotate: 0 }}
+              viewport={{ once: false, amount: 0.2 }}
+              transition={{ type: "spring", stiffness: 70, damping: 14 }}
+            >
+              <TiltWrapper className="bg-white rounded-[32px] border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] overflow-hidden w-full flex flex-col relative group">
+                {/* Top Green Section */}
+                <div className="bg-[#CCFF00] p-8 pb-12 relative overflow-hidden border-b-2 border-black h-48 flex flex-col justify-between">
+                  {/* Subtle geometric line art background */}
+                  <div className="absolute inset-0 opacity-10 pointer-events-none">
+                    <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                      <line x1="0" y1="0" x2="100" y2="100" stroke="black" strokeWidth="1.5" />
+                      <line x1="100" y1="0" x2="0" y2="100" stroke="black" strokeWidth="1.5" />
+                      <circle cx="30" cy="30" r="25" stroke="black" strokeWidth="1.5" fill="none" />
+                    </svg>
+                  </div>
+                  
+                  <div className="flex justify-between items-start z-10 w-full">
+                    <h3 className="text-3xl font-black text-[#18102B] leading-[0.95] tracking-tight max-w-[220px]">
+                      Distraction-Free Self Learning.
+                    </h3>
+                    <div className="text-[#18102B]">
+                      <IconChart3D className="w-8 h-8" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Overlapping Avatar Badge */}
+                <div className="absolute left-8 top-[148px] w-20 h-20 rounded-full bg-[#18102B] border-[6px] border-white flex items-center justify-center shadow-md z-20 overflow-hidden">
+                  <span className="text-3xl">🧑‍🎓</span>
+                </div>
+
+                {/* Bottom Content Section */}
+                <div className="p-8 pt-12 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-start mb-6">
+                      <div>
+                        <h4 className="text-2xl font-black text-[#18102B] leading-none tracking-tight">For Students</h4>
+                        <span className="text-xs font-bold text-[#6B6577]/60">@courseforge.student</span>
+                      </div>
+                      <button className="bg-[#18102B] text-white hover:bg-slate-800 text-xs font-bold px-6 py-2.5 rounded-full transition-colors">
+                        Join Class
+                      </button>
+                    </div>
+
+                    <p className="text-[14px] text-[#6B6577] font-semibold leading-relaxed mb-6">
+                      Students get an ad-free, distraction-free layout to read chapters, take unlimited mock quizzes, and automatically track scores.
+                    </p>
+
+                    <ul className="space-y-3 mb-8">
+                      {[
+                        'Join one class, or several, using a simple join key',
+                        'Read public chapters anytime, no account creation required',
+                        'Practice with unlimited mid-chapter quizzes',
+                        'Track your own scores and attempt history over time'
+                      ].map((step, idx) => (
+                        <li key={idx} className="flex gap-3 text-xs text-[#18102B] font-extrabold items-center">
+                          <span className="w-2 h-2 rounded-full bg-[#CCFF00] border border-black flex-shrink-0"></span>
+                          <span>{step}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Bottom Meta Row */}
+                  <div className="border-t border-slate-100 pt-5 flex justify-between items-center text-[11px] font-bold text-slate-400">
+                    <span>No Signup Required</span>
+                    <span>Practice Mode</span>
+                    <a href="https://courseforge.co" className="flex items-center gap-1 hover:text-[#834DFB] transition-colors">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                      </svg>
+                      courseforge.co
+                    </a>
+                  </div>
+                </div>
+              </TiltWrapper>
+            </motion.div>
+
+          </div>
         </div>
       </section>
 
-      {/* 6. COMPARISON TABLE */}
-      <section id="compare" className="max-w-7xl mx-auto px-6 py-24 w-full">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6">
-            Why CourseForge
-          </span>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-[#18102B]">
-            How it's different from what you know
-          </h2>
-        </div>
+      {/* 6. COMPARISON TABLE (Row-by-Row Venetian Blinds Flips) */}
+      <section id="compare" className="relative max-w-7xl mx-auto px-6 py-24 w-full">
+        {/* Soft background floating light sphere */}
+        <div className="absolute top-[10%] right-[-15%] w-[450px] h-[450px] rounded-full bg-[#834DFB]/5 blur-[120px] pointer-events-none z-0"></div>
 
-        <div className="w-full overflow-x-auto rounded-[24px] border-2 border-[#E5DFF5] shadow-sm bg-white">
-          <table className="w-full text-left border-collapse min-w-[700px]">
-            <thead>
-              <tr className="bg-[#18102B] text-white">
-                <th className="p-5 text-xs font-bold uppercase tracking-wider">Capability</th>
-                <th className="p-5 text-xs font-bold uppercase tracking-wider">Content Sites (GFG-style)</th>
-                <th className="p-5 text-xs font-bold uppercase tracking-wider">Classroom Tools</th>
-                <th className="p-5 text-xs font-bold uppercase tracking-wider bg-[#834DFB]">CourseForge</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#E5DFF5] text-sm text-[#18102B] font-semibold">
-              {[
-                { cap: 'Public, reusable content', c1: 'Yes', c2: 'No', cf: 'Yes', highlight: false },
-                { cap: 'Private, trackable classes', c1: 'No', c2: 'Yes', cf: 'Yes', highlight: false },
-                { cap: 'Reuse another teacher\'s content', c1: 'No', c2: 'No', cf: 'Yes', highlight: false },
-                { cap: 'Per-teacher analytics on shared content', c1: 'No', c2: 'No', cf: 'Yes', highlight: true },
-                { cap: 'Students join multiple classes easily', c1: 'No', c2: 'Limited', cf: 'Yes', highlight: false }
-              ].map((row, idx) => (
-                <tr key={idx} className="hover:bg-slate-50 transition-colors">
-                  <td className="p-5 text-[#6B6577]">{row.cap}</td>
-                  <td className={`p-5 ${row.c1 === 'Yes' ? 'text-[#834DFB] font-bold' : 'text-[#C7C1D6]'}`}>{row.c1}</td>
-                  <td className={`p-5 ${row.c2 === 'Yes' ? 'text-[#834DFB] font-bold' : 'text-[#C7C1D6]'}`}>{row.c2}</td>
-                  <td className={`p-5 bg-purple-50/50 ${row.cf === 'Yes' ? 'text-[#834DFB] font-bold' : 'text-[#C7C1D6]'} ${row.highlight ? 'bg-purple-50 font-bold border-x border-[#E5DFF5]' : ''}`}>
-                    {row.cf}
-                  </td>
+        <div className="relative z-10">
+          <motion.div 
+            className="text-center max-w-2xl mx-auto mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+          >
+            <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
+              Why CourseForge
+            </span>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-[#18102B]">
+              How it's different from what you know
+            </h2>
+          </motion.div>
+
+          <motion.div 
+            className="w-full overflow-x-auto rounded-[32px] border-2 border-black bg-white shadow-[8px_8px_0px_rgba(0,0,0,1)] relative overflow-hidden"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.15 }}
+            transition={{ duration: 0.8 }}
+          >
+            {/* Window Header (Retro macOS/Browser Style) */}
+            <div className="bg-[#18102B] px-6 py-4 flex items-center justify-between border-b-2 border-black select-none">
+              {/* Window dots */}
+              <div className="flex gap-2">
+                <span className="w-3.5 h-3.5 rounded-full bg-[#FF6B35] border border-black shadow-sm"></span>
+                <span className="w-3.5 h-3.5 rounded-full bg-[#F0E100] border border-black shadow-sm"></span>
+                <span className="w-3.5 h-3.5 rounded-full bg-[#CCFF00] border border-black shadow-sm"></span>
+              </div>
+              {/* Search bar URL */}
+              <div className="bg-white/10 backdrop-blur-md rounded-full px-8 py-1.5 text-xs text-slate-300 font-mono tracking-wider border border-white/20 hidden sm:block w-[320px] text-center select-none truncate">
+                https://courseforge.co/compare
+              </div>
+              <div className="text-[10px] font-black text-[#CCFF00] tracking-widest uppercase">
+                Capability Matrix
+              </div>
+            </div>
+
+            <table className="w-full text-left border-collapse min-w-[750px]">
+              <thead>
+                <tr className="bg-[#18102B] text-white border-b-2 border-black text-xs font-bold uppercase tracking-wider">
+                  <th className="p-6 border-r border-white/10">Capability</th>
+                  <th className="p-6 border-r border-white/10 text-center">Content Sites (GFG-style)</th>
+                  <th className="p-6 border-r border-white/10 text-center">Classroom Tools</th>
+                  <th className="p-6 bg-[#834DFB] text-center border-l-2 border-black">CourseForge</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-black text-sm text-[#18102B] font-bold">
+                {[
+                  { cap: 'Public, reusable content', c1: 'Yes', c2: 'No', cf: 'Yes', highlight: false },
+                  { cap: 'Private, trackable classes', c1: 'No', c2: 'Yes', cf: 'Yes', highlight: false },
+                  { cap: 'Reuse another teacher\'s content', c1: 'No', c2: 'No', cf: 'Yes', highlight: false },
+                  { cap: 'Per-teacher analytics on shared content', c1: 'No', c2: 'No', cf: 'Yes', highlight: true },
+                  { cap: 'Students join multiple classes easily', c1: 'No', c2: 'Limited', cf: 'Yes', highlight: false }
+                ].map((row, idx) => (
+                  <motion.tr 
+                    key={idx} 
+                    className="hover:bg-slate-50 transition-colors duration-200"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.1 }}
+                    transition={{ duration: 0.5, delay: idx * 0.08 }}
+                  >
+                    <td className="p-6 text-base font-extrabold text-[#18102B] bg-slate-50/30 border-r-2 border-black max-w-[280px]">
+                      {row.cap}
+                    </td>
+                    
+                    <td className="p-6 text-center border-r-2 border-black">
+                      {row.c1 === 'Yes' ? (
+                        <span className="bg-slate-100 text-[#18102B] px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider border border-slate-300 shadow-sm">
+                          Yes
+                        </span>
+                      ) : (
+                        <span className="bg-rose-50/50 text-rose-500 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider border border-rose-200">
+                          ✕ No
+                        </span>
+                      )}
+                    </td>
+                    
+                    <td className="p-6 text-center border-r-2 border-black">
+                      {row.c2 === 'Yes' ? (
+                        <span className="bg-slate-100 text-[#18102B] px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider border border-slate-300 shadow-sm">
+                          Yes
+                        </span>
+                      ) : row.c2 === 'Limited' ? (
+                        <span className="bg-amber-50 text-amber-600 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider border border-amber-200">
+                          ⚠ Limited
+                        </span>
+                      ) : (
+                        <span className="bg-rose-50/50 text-rose-500 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider border border-rose-200">
+                          ✕ No
+                        </span>
+                      )}
+                    </td>
+
+                    <td className={`p-6 text-center bg-[#F5F3FF]/40 border-l-2 border-black transition-all ${row.highlight ? 'bg-[#CCFF00]/10' : ''}`}>
+                      <span className="bg-[#CCFF00] text-[#18102B] px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5 transform hover:scale-105 transition-transform duration-200 select-none">
+                        ✓ YES
+                      </span>
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </motion.div>
         </div>
       </section>
 
-      {/* 7. HOW IT WORKS & STATS GRID */}
-      <section id="how-it-works" className="bg-white py-24 border-y border-[#E5DFF5] w-full px-6">
-        <div className="max-w-7xl mx-auto">
+      {/* 7. HOW IT WORKS & STATS GRID (3D Reveal Zooms) */}
+      <section id="how-it-works" className="relative bg-white py-24 border-y-2 border-black w-full px-6 overflow-hidden">
+        {/* Soft background light sphere */}
+        <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-[#F0E100]/5 blur-[120px] pointer-events-none z-0"></div>
+
+        <div className="relative z-10 max-w-7xl mx-auto">
           
           {/* How it works grid */}
           <div className="mb-20">
-            <div className="text-center max-w-2xl mx-auto mb-16">
-              <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6">
+            <motion.div 
+              className="text-center max-w-2xl mx-auto mb-16"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.2 }}
+              transition={{ duration: 0.5 }}
+            >
+              <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
                 Workflow
               </span>
               <h2 className="text-4xl md:text-5xl font-extrabold text-[#18102B]">
                 From blank chapter to tracked results
               </h2>
-            </div>
+            </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
-                { icon: '📝', title: 'Write or Reuse', desc: 'Create original text content chapter by chapter with our rich editor, or link a public chapter someone else already wrote.' },
-                { icon: '🔑', title: 'Share Your Key', desc: 'Students join your class once using the key — no re-joining needed as you add new chapters and assignments.' },
-                { icon: '📊', title: 'Track Results', desc: 'Every quiz attempt is tied to your class, so your analytics stay accurate and secure even on shared content.' }
+                { icon: <IconDocument3D className="w-12 h-12" />, step: '01', title: 'Write or Reuse', desc: 'Create original text content chapter by chapter with our rich editor, or link a public chapter someone else already wrote.', glow: 'bg-[#834DFB]/10' },
+                { icon: <IconKey3D className="w-12 h-12" />, step: '02', title: 'Share Your Key', desc: 'Students join your class once using the key — no re-joining needed as you add new chapters and assignments.', glow: 'bg-[#CCFF00]/10' },
+                { icon: <IconChart3D className="w-12 h-12" />, step: '03', title: 'Track Results', desc: 'Every quiz attempt is tied to your class, so your analytics stay accurate and secure even on shared content.', glow: 'bg-[#FF6B35]/10' }
               ].map((item, idx) => (
-                <div key={idx} className="bg-white rounded-[24px] p-8 border-2 border-[#E5DFF5] shadow-sm hover:translate-y-[-4px] transition-transform duration-300">
-                  <div className="w-12 h-12 rounded-xl bg-[#F5F3FF] flex items-center justify-center text-2xl mb-6">
-                    {item.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-[#18102B] mb-2">{item.title}</h3>
-                  <p className="text-sm text-[#6B6577] leading-relaxed">{item.desc}</p>
-                </div>
+                <motion.div 
+                  key={idx} 
+                  className="flex"
+                  initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: false, amount: 0.2 }}
+                  transition={{ type: "spring", stiffness: 80, damping: 14, delay: idx * 0.1 }}
+                >
+                  <TiltWrapper className="bg-white rounded-[32px] p-8 border-2 border-black shadow-[6px_6px_0px_rgba(0,0,0,1)] relative overflow-hidden w-full flex flex-col justify-between group hover:border-[#834DFB] transition-colors duration-300">
+                    {/* Glowing background blob */}
+                    <div className={`absolute -right-10 -bottom-10 w-32 h-32 ${item.glow} rounded-full blur-[40px] pointer-events-none`}></div>
+                    
+                    <div className="relative z-10">
+                      <div className="flex justify-between items-start mb-8">
+                        <span className="bg-[#CCFF00] text-[#18102B] px-3.5 py-1.5 rounded-full text-xs font-black border border-black shadow-sm">
+                          Step {item.step}
+                        </span>
+                        <div className="w-16 h-16 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center p-2.5 shadow-inner transform group-hover:scale-110 transition-transform duration-300">
+                          {item.icon}
+                        </div>
+                      </div>
+                      <h3 className="text-2xl font-black text-[#18102B] mb-3 tracking-tight">{item.title}</h3>
+                      <p className="text-sm text-[#6B6577] font-semibold leading-relaxed">{item.desc}</p>
+                    </div>
+                  </TiltWrapper>
+                </motion.div>
               ))}
             </div>
           </div>
 
           {/* Stats grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-12 border-t border-[#E5DFF5]">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-12 border-t-2 border-black border-dashed">
             {counters.map((counter, idx) => {
               const statColors = [
-                'bg-white border border-[#E5DFF5] text-[#18102B]',
-                'bg-[#834DFB] text-white border border-transparent',
-                'bg-[#F0E100] text-[#18102B] border border-transparent',
-                'bg-[#18102B] text-white border border-transparent'
+                'bg-white border-2 border-black text-[#18102B] shadow-[4px_4px_0px_rgba(0,0,0,1)]',
+                'bg-[#834DFB] text-white border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)]',
+                'bg-[#F0E100] text-[#18102B] border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)]',
+                'bg-[#18102B] text-white border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)]'
               ];
               return (
-                <div key={idx} className={`${statColors[idx]} rounded-[20px] p-6 shadow-sm`}>
+                <motion.div 
+                  key={idx} 
+                  className={`${statColors[idx]} rounded-[20px] p-6`}
+                  initial={{ opacity: 0, y: 30, scale: 0.8 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: false, amount: 0.2 }}
+                  transition={{ type: "spring", stiffness: 100, damping: 15, delay: idx * 0.1 }}
+                >
                   <div className="text-4xl font-extrabold tracking-tight">
                     {counter.target}{counter.suffix}
                   </div>
                   <div className="text-xs uppercase tracking-wider font-bold opacity-80 mt-2">
                     {counter.label}
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
@@ -618,131 +1104,386 @@ export default function LandingClientPage({ user }: { user: any }) {
         </div>
       </section>
 
-      {/* 8. TESTIMONIALS */}
-      <section className="max-w-7xl mx-auto px-6 py-24 w-full">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6">
-            Testimonials
-          </span>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-[#18102B]">
-            Teachers already teaching smarter
-          </h2>
-        </div>
+      {/* 8. TESTIMONIALS (Waterfall Parallax Slide) */}
+      <section className="relative max-w-7xl mx-auto px-6 py-24 w-full overflow-hidden">
+        {/* Soft background light sphere */}
+        <div className="absolute top-[10%] left-[-15%] w-[450px] h-[450px] rounded-full bg-[#834DFB]/5 blur-[120px] pointer-events-none z-0"></div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            { quote: 'I stopped rewriting the same chapter every term. I just reuse what\'s already public and my class scores stay completely separate and private.', author: 'R. Sharma', role: 'Physics Teacher', initial: 'RS' },
-            { quote: 'My students join once with a key and I never have to resend it — even after I add five more chapters. It is remarkably frictionless.', author: 'A. Verma', role: 'Python Tutor', initial: 'AV' },
-            { quote: 'The analytics only show my own students, which is exactly what I needed when using shared public curriculum chapters.', author: 'K. Iyer', role: 'School Coordinator', initial: 'KI' }
-          ].map((item, idx) => (
-            <div key={idx} className="bg-white rounded-[24px] p-8 border-2 border-[#E5DFF5] shadow-sm flex flex-col justify-between hover:border-[#834DFB] transition-colors duration-300">
-              <p className="text-sm text-[#18102B] leading-relaxed font-semibold italic mb-8">
-                "{item.quote}"
-              </p>
-              
-              <div className="flex items-center gap-3.5 pt-4 border-t border-[#F5F3FF]">
-                <div className="w-10 h-10 rounded-full bg-[#834DFB] text-white font-bold flex items-center justify-center text-sm">
-                  {item.initial}
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-[#18102B]">{item.author}</h4>
-                  <p className="text-[11px] text-[#6B6577] font-semibold">{item.role}</p>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="relative z-10">
+          <motion.div 
+            className="text-center max-w-2xl mx-auto mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+          >
+            <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
+              Testimonials
+            </span>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-[#18102B]">
+              Teachers already teaching smarter
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8" style={{ perspective: '1200px' }}>
+            {[
+              { 
+                bgClass: 'bg-white', 
+                textClass: 'text-[#18102B]', 
+                subTextClass: 'text-slate-400',
+                btnClass: 'bg-[#18102B] text-white',
+                quote: 'I stopped rewriting the same chapter every term.',
+                author: 'Raj Sharma', 
+                role: 'Physics', 
+                Icon: IconQuote3D 
+              },
+              { 
+                bgClass: 'bg-gradient-to-br from-[#FF6B35] to-[#f59e0b]', 
+                textClass: 'text-white', 
+                subTextClass: 'text-white/70',
+                btnClass: 'bg-white text-[#FF6B35]',
+                quote: 'My students join once with a key and I never resend it.',
+                author: 'Anita Verma', 
+                role: 'Python', 
+                Icon: IconChart3D 
+              },
+              { 
+                bgClass: 'bg-[#18102B]', 
+                textClass: 'text-white', 
+                subTextClass: 'text-[#A29CB0]',
+                btnClass: 'bg-white text-black',
+                quote: 'Analytics only show my own students, exactly what I needed.',
+                author: 'K. Iyer', 
+                role: 'Coordinator', 
+                Icon: IconStar3D 
+              },
+              { 
+                bgClass: 'bg-white', 
+                textClass: 'text-[#18102B]', 
+                subTextClass: 'text-slate-400',
+                btnClass: 'bg-[#18102B] text-white',
+                quote: 'Everything is tracked automatically across multiple cohorts.',
+                author: 'S. Patel', 
+                role: 'Maths', 
+                Icon: IconDocument3D 
+              }
+            ].map((item, idx) => {
+              const Icon = item.Icon;
+              return (
+              <motion.div 
+                key={idx} 
+                className="flex"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.15 }}
+                transition={{ type: "spring", stiffness: 80, damping: 14, delay: idx * 0.1 }}
+              >
+                <TiltWrapper className={`relative w-full h-[240px] md:h-[260px] rounded-[24px] p-8 md:p-10 flex flex-col justify-between overflow-hidden shadow-[6px_6px_0px_rgba(0,0,0,1)] border-2 border-black hover:-translate-y-1 hover:shadow-[8px_8px_0px_rgba(0,0,0,1)] transition-all duration-300 ${item.bgClass}`}>
+                  {/* Giant 3D Icon Overlay on Right */}
+                  <div className="absolute -right-12 top-1/2 -translate-y-1/2 w-[220px] h-[220px] opacity-90 z-0 pointer-events-none drop-shadow-2xl">
+                    <Icon className="w-full h-full" />
+                  </div>
+                  
+                  {/* Content (Z-10 keeps it above icon) */}
+                  <div className={`relative z-10 max-w-[65%] md:max-w-[55%] ${item.textClass}`}>
+                    <h3 className="text-3xl md:text-4xl font-black mb-1 tracking-tight leading-none">
+                      {item.author.split(' ')[0]} <br/>
+                      <span className={item.subTextClass}>{item.role}</span>
+                    </h3>
+                    <p className={`text-xs md:text-sm mt-4 font-semibold italic opacity-90 line-clamp-3 leading-relaxed`}>
+                      "{item.quote}"
+                    </p>
+                  </div>
+                  
+                  {/* Button */}
+                  <div className="relative z-10 mt-6">
+                    <button className="flex items-center gap-2 text-[10px] md:text-xs font-black tracking-widest uppercase hover:opacity-80 transition-opacity">
+                      <span className={`w-8 h-8 rounded-full flex items-center justify-center shadow-sm ${item.btnClass}`}>
+                        ↗
+                      </span>
+                      <span className={item.textClass}>READ STORY</span>
+                    </button>
+                  </div>
+                </TiltWrapper>
+              </motion.div>
+            )})}
+          </div>
         </div>
       </section>
 
       {/* 9. PRICING & FAQ */}
-      <section id="pricing" className="bg-white py-24 border-t border-[#E5DFF5] w-full px-6">
-        <div className="max-w-7xl mx-auto">
+      <section id="pricing" className="relative bg-white py-24 border-t-2 border-black w-full px-6 overflow-hidden">
+        {/* Premium Vector Background for Pricing & FAQ */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          {/* Subtle grid pattern */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+          
+          {/* Large gradient blur bubbles */}
+          <div className="absolute top-[20%] left-[-10%] w-[600px] h-[600px] bg-gradient-to-tr from-[#834DFB]/5 to-[#CCFF00]/5 rounded-full blur-[140px] animate-pulse"></div>
+          <div className="absolute bottom-[10%] right-[-10%] w-[500px] h-[500px] bg-gradient-to-br from-[#22D3EE]/5 to-[#834DFB]/8 rounded-full blur-[120px]"></div>
+
+          {/* Floating abstract mathematical and geometry SVGs */}
+          <div className="absolute top-[15%] right-[15%] w-96 h-96 opacity-[0.03] animate-[spin_85s_linear_infinite_reverse]">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-slate-800">
+              <circle cx="100" cy="100" r="80" stroke="currentColor" strokeWidth="1.5" />
+              <rect x="40" y="40" width="120" height="120" stroke="currentColor" strokeWidth="1" />
+              <line x1="0" y1="100" x2="200" y2="100" stroke="currentColor" strokeWidth="1" strokeDasharray="4,4" />
+              <line x1="100" y1="0" x2="100" y2="200" stroke="currentColor" strokeWidth="1" strokeDasharray="4,4" />
+            </svg>
+          </div>
+
+          <div className="absolute bottom-[20%] left-[10%] w-[350px] h-[350px] opacity-[0.03] animate-[spin_55s_linear_infinite]">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-[#834DFB]">
+              <polygon points="100,10 190,190 10,190" stroke="currentColor" strokeWidth="1.5" />
+              <circle cx="100" cy="120" r="50" stroke="currentColor" strokeWidth="1.5" strokeDasharray="5,5" />
+            </svg>
+          </div>
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto">
           
           {/* Pricing header */}
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6">
+          <motion.div 
+            className="text-center max-w-2xl mx-auto mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+          >
+            <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
               Pricing Plans
             </span>
             <h2 className="text-4xl md:text-5xl font-extrabold text-[#18102B]">
               Free to start, upgrade anytime
             </h2>
-          </div>
+          </motion.div>
 
           {/* Pricing Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
             
             {/* Plan 1: Student */}
-            <div className="bg-white border-2 border-[#E5DFF5] rounded-[24px] p-8 flex flex-col justify-between hover:border-[#834DFB] transition-colors duration-300">
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-[#834DFB]">Student</span>
-                <div className="text-4xl font-extrabold text-[#18102B] mt-4 mb-6">Free</div>
-                
-                <ul className="space-y-3.5 mb-8 text-sm text-[#6B6577] font-semibold">
-                  <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#834DFB]" /> Join unlimited classes</li>
-                  <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#834DFB]" /> Read all public chapters</li>
-                  <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#834DFB]" /> Track your own scores</li>
-                </ul>
-              </div>
-              <Link href="/signup">
-                <button className="w-full border-2 border-[#834DFB] hover:bg-[#834DFB]/5 text-[#834DFB] font-bold text-sm py-3.5 rounded-full transition-colors">
-                  Get Started
-                </button>
-              </Link>
-            </div>
+            <motion.div 
+              className="flex"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.15 }}
+              transition={{ type: "spring", stiffness: 70, damping: 14, delay: 0 }}
+            >
+              <TiltWrapper className="bg-white border-2 border-black rounded-[32px] shadow-[8px_8px_0px_rgba(0,0,0,1)] overflow-hidden w-full flex flex-col relative group">
+                {/* Top Colored Section */}
+                <div className="bg-[#22D3EE] p-8 pb-12 relative overflow-hidden border-b-2 border-black h-48 flex flex-col justify-between">
+                  <div className="absolute inset-0 opacity-10 pointer-events-none">
+                    <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                      <circle cx="20" cy="20" r="15" stroke="black" strokeWidth="2" fill="none" />
+                      <circle cx="80" cy="80" r="25" stroke="black" strokeWidth="2" fill="none" />
+                    </svg>
+                  </div>
+                  <div className="flex justify-between items-start z-10 w-full">
+                    <h3 className="text-3xl font-black text-[#18102B] leading-[0.95] tracking-tight max-w-[200px]">
+                      STUDENT LIFE.
+                    </h3>
+                    <div className="text-[#18102B]">
+                      <IconStar3D className="w-8 h-8" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Overlapping Avatar Badge */}
+                <div className="absolute left-8 top-[148px] w-20 h-20 rounded-full bg-[#18102B] border-[6px] border-white flex items-center justify-center shadow-md z-20 overflow-hidden">
+                  <span className="text-3xl">🧑‍🎓</span>
+                </div>
+
+                {/* Bottom Content Section */}
+                <div className="p-8 pt-12 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-start mb-6">
+                      <div>
+                        <h4 className="text-2xl font-black text-[#18102B] leading-none tracking-tight">Student Plan</h4>
+                        <span className="text-xs font-bold text-[#6B6577]/60">@courseforge.student</span>
+                      </div>
+                      <Link href="/signup">
+                        <button className="bg-[#18102B] text-white hover:bg-slate-800 text-xs font-bold px-5 py-2.5 rounded-full transition-colors cursor-pointer">
+                          Join Free
+                        </button>
+                      </Link>
+                    </div>
+
+                    <div className="text-3xl font-black text-[#18102B] mb-6">Free</div>
+
+                    <ul className="space-y-3.5 mb-8 text-sm text-[#6B6577] font-semibold">
+                      <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#22D3EE]" /> Join unlimited classes</li>
+                      <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#22D3EE]" /> Read all public chapters</li>
+                      <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#22D3EE]" /> Track your own scores</li>
+                    </ul>
+                  </div>
+
+                  {/* Bottom Meta Row */}
+                  <div className="border-t border-slate-100 pt-5 flex justify-between items-center text-[11px] font-bold text-slate-400">
+                    <span>No Signup Required</span>
+                    <span>Self-Paced</span>
+                    <a href="https://courseforge.co" className="flex items-center gap-1 hover:text-[#834DFB] transition-colors">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                      </svg>
+                      courseforge.co
+                    </a>
+                  </div>
+                </div>
+              </TiltWrapper>
+            </motion.div>
 
             {/* Plan 2: Teacher (Highlighted) */}
-            <div className="bg-[#18102B] text-white rounded-[24px] p-8 flex flex-col justify-between border border-transparent shadow-xl relative overflow-hidden">
-              {/* Highlight ribbon */}
-              <div className="absolute top-0 right-0 bg-[#F0E100] text-[#18102B] font-extrabold text-[9px] uppercase tracking-wider py-1 px-4 transform rotate-45 translate-x-4 translate-y-3">
-                POPULAR
-              </div>
-
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-[#F0E100]">Teacher</span>
-                <div className="text-4xl font-extrabold mt-4 mb-2 flex items-baseline gap-1">
-                  Free
-                  <span className="text-xs font-medium text-slate-400">/ class</span>
+            <motion.div 
+              className="flex"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.15 }}
+              transition={{ type: "spring", stiffness: 70, damping: 14, delay: 0.15 }}
+            >
+              <TiltWrapper className="bg-white border-2 border-black rounded-[32px] shadow-[8px_8px_0px_rgba(0,0,0,1)] overflow-hidden w-full flex flex-col relative group">
+                {/* Top Green Section */}
+                <div className="bg-[#CCFF00] p-8 pb-12 relative overflow-hidden border-b-2 border-black h-48 flex flex-col justify-between">
+                  <div className="absolute top-0 right-0 bg-[#18102B] text-white font-extrabold text-[9px] uppercase tracking-wider py-1 px-4 transform rotate-45 translate-x-4 translate-y-3 z-20 border border-black shadow-sm">
+                    POPULAR
+                  </div>
+                  <div className="absolute inset-0 opacity-10 pointer-events-none">
+                    <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                      <line x1="0" y1="0" x2="100" y2="100" stroke="black" strokeWidth="2" />
+                      <line x1="100" y1="0" x2="0" y2="100" stroke="black" strokeWidth="2" />
+                    </svg>
+                  </div>
+                  <div className="flex justify-between items-start z-10 w-full">
+                    <h3 className="text-3xl font-black text-[#18102B] leading-[0.95] tracking-tight max-w-[200px]">
+                      TEACHER FORCE.
+                    </h3>
+                    <div className="text-[#18102B]">
+                      <IconDocument3D className="w-8 h-8" />
+                    </div>
+                  </div>
                 </div>
-                <p className="text-xs text-slate-400 mb-6">No credit card required.</p>
-                
-                <ul className="space-y-3.5 mb-8 text-sm text-slate-300 font-semibold">
-                  <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#F0E100]" /> Create unlimited classes</li>
-                  <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#F0E100]" /> Reuse any public chapter</li>
-                  <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#F0E100]" /> Full class-only analytics</li>
-                </ul>
-              </div>
-              <Link href="/signup">
-                <button className="w-full bg-[#F0E100] hover:bg-[#dcd000] text-[#18102B] font-extrabold text-sm py-3.5 rounded-full transition-colors shadow-lg shadow-[#F0E100]/20">
-                  Get Started
-                </button>
-              </Link>
-            </div>
+
+                {/* Overlapping Avatar Badge */}
+                <div className="absolute left-8 top-[148px] w-20 h-20 rounded-full bg-[#18102B] border-[6px] border-white flex items-center justify-center shadow-md z-20 overflow-hidden">
+                  <span className="text-3xl">👩‍🏫</span>
+                </div>
+
+                {/* Bottom Content Section */}
+                <div className="p-8 pt-12 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-start mb-6">
+                      <div>
+                        <h4 className="text-2xl font-black text-[#18102B] leading-none tracking-tight">Teacher Plan</h4>
+                        <span className="text-xs font-bold text-[#6B6577]/60">@courseforge.teacher</span>
+                      </div>
+                      <Link href="/signup">
+                        <button className="bg-[#18102B] text-white hover:bg-slate-800 text-xs font-bold px-5 py-2.5 rounded-full transition-colors cursor-pointer">
+                          Start Free
+                        </button>
+                      </Link>
+                    </div>
+
+                    <div className="text-3xl font-black text-[#18102B] mb-6 flex items-baseline gap-1">
+                      Free
+                      <span className="text-xs font-medium text-slate-400">/ class</span>
+                    </div>
+
+                    <ul className="space-y-3.5 mb-8 text-sm text-[#6B6577] font-semibold">
+                      <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#834DFB]" /> Create unlimited classes</li>
+                      <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#834DFB]" /> Reuse any public chapter</li>
+                      <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#834DFB]" /> Full class-only analytics</li>
+                    </ul>
+                  </div>
+
+                  {/* Bottom Meta Row */}
+                  <div className="border-t border-slate-100 pt-5 flex justify-between items-center text-[11px] font-bold text-slate-400">
+                    <span>No Credit Card</span>
+                    <span>Unlimited Students</span>
+                    <a href="https://courseforge.co" className="flex items-center gap-1 hover:text-[#834DFB] transition-colors">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                      </svg>
+                      courseforge.co
+                    </a>
+                  </div>
+                </div>
+              </TiltWrapper>
+            </motion.div>
 
             {/* Plan 3: School */}
-            <div className="bg-white border-2 border-[#E5DFF5] rounded-[24px] p-8 flex flex-col justify-between hover:border-[#834DFB] transition-colors duration-300">
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-[#834DFB]">School</span>
-                <div className="text-4xl font-extrabold text-[#18102B] mt-4 mb-6">Custom</div>
-                
-                <ul className="space-y-3.5 mb-8 text-sm text-[#6B6577] font-semibold">
-                  <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#834DFB]" /> Multiple teachers, one org</li>
-                  <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#834DFB]" /> Dedicated support</li>
-                  <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#834DFB]" /> Custom onboarding setup</li>
-                </ul>
-              </div>
-              <Link href="/contact">
-                <button className="w-full border-2 border-[#834DFB] hover:bg-[#834DFB]/5 text-[#834DFB] font-bold text-sm py-3.5 rounded-full transition-colors">
-                  Contact Us
-                </button>
-              </Link>
-            </div>
+            <motion.div 
+              className="flex"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.15 }}
+              transition={{ type: "spring", stiffness: 70, damping: 14, delay: 0.3 }}
+            >
+              <TiltWrapper className="bg-white border-2 border-black rounded-[32px] shadow-[8px_8px_0px_rgba(0,0,0,1)] overflow-hidden w-full flex flex-col relative group">
+                {/* Top Colored Section */}
+                <div className="bg-[#834DFB] p-8 pb-12 relative overflow-hidden border-b-2 border-black h-48 flex flex-col justify-between">
+                  <div className="absolute inset-0 opacity-15 pointer-events-none">
+                    <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                      <rect x="10" y="10" width="80" height="80" stroke="white" strokeWidth="2" fill="none" />
+                    </svg>
+                  </div>
+                  <div className="flex justify-between items-start z-10 w-full">
+                    <h3 className="text-3xl font-black text-white leading-[0.95] tracking-tight max-w-[200px]">
+                      SCHOOL POWER.
+                    </h3>
+                    <div className="text-white">
+                      <IconKey3D className="w-8 h-8" />
+                    </div>
+                  </div>
+                </div>
 
+                {/* Overlapping Avatar Badge */}
+                <div className="absolute left-8 top-[148px] w-20 h-20 rounded-full bg-[#18102B] border-[6px] border-white flex items-center justify-center shadow-md z-20 overflow-hidden">
+                  <span className="text-3xl">🏫</span>
+                </div>
+
+                {/* Bottom Content Section */}
+                <div className="p-8 pt-12 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-start mb-6">
+                      <div>
+                        <h4 className="text-2xl font-black text-[#18102B] leading-none tracking-tight">School Plan</h4>
+                        <span className="text-xs font-bold text-[#6B6577]/60">@courseforge.school</span>
+                      </div>
+                      <Link href="/contact">
+                        <button className="bg-[#18102B] text-white hover:bg-slate-800 text-xs font-bold px-6 py-2.5 rounded-full transition-colors cursor-pointer">
+                          Contact Us
+                        </button>
+                      </Link>
+                    </div>
+
+                    <div className="text-3xl font-black text-[#18102B] mb-6">Custom</div>
+
+                    <ul className="space-y-3.5 mb-8 text-sm text-[#6B6577] font-semibold">
+                      <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#834DFB]" /> Multiple teachers, one org</li>
+                      <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#834DFB]" /> Dedicated support</li>
+                      <li className="flex items-center gap-2.5"><Check className="w-4 h-4 text-[#834DFB]" /> Custom onboarding setup</li>
+                    </ul>
+                  </div>
+
+                  {/* Bottom Meta Row */}
+                  <div className="border-t border-slate-100 pt-5 flex justify-between items-center text-[11px] font-bold text-slate-400">
+                    <span>Org-wide Controls</span>
+                    <span>Enterprise Support</span>
+                    <a href="https://courseforge.co" className="flex items-center gap-1 hover:text-[#834DFB] transition-colors">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                      </svg>
+                      courseforge.co
+                    </a>
+                  </div>
+                </div>
+              </TiltWrapper>
+            </motion.div>
           </div>
 
           {/* FAQ Accordion Section */}
-          <div id="faq" className="max-w-4xl mx-auto border-t border-[#E5DFF5] pt-20">
+          <div id="faq" className="max-w-4xl mx-auto border-t-2 border-black border-dashed pt-20">
             <div className="text-center mb-12">
-              <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6">
+              <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
                 FAQ
               </span>
               <h3 className="text-3xl font-bold text-[#18102B]">
@@ -750,94 +1491,189 @@ export default function LandingClientPage({ user }: { user: any }) {
               </h3>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-4">
               {[
                 { q: 'Can students join more than one teacher\'s class?', a: 'Yes — a student can join multiple different teachers\' classes at the same time using different class keys, and their progress data is kept secure and tracked separately under each roster.' },
                 { q: 'Can I edit a chapter I reused from another teacher?', a: 'No — only the original owner (author) can edit a chapter\'s core content blocks. Reused chapters linked into your class are read-only to preserve curriculum integrity.' },
                 { q: 'Do students need an account to read public chapters?', a: 'No — public chapters are readable by anyone instantly with no registration required. An account is only needed to join a teacher\'s private class roster or attempt quizzes for grade-tracking.' },
                 { q: 'What happens if a student runs out of quiz attempts?', a: 'On an evaluation-type final quiz, once attempts run out the student sees only their final score, not a review of past answers.' },
                 { q: 'Is there a limit on how many classes I can create?', a: 'No — teachers can create as many classes as they need under the free tier, with no caps.' }
-              ].map((faq, idx) => (
-                <div key={idx} className="border-b border-[#E5DFF5] py-4.5">
-                  <button 
-                    onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                    className="w-full flex justify-between items-center text-left font-bold text-[#18102B] text-base md:text-lg hover:text-[#834DFB] transition-colors py-2 cursor-pointer focus:outline-none"
+              ].map((faq, idx) => {
+                const isOpen = openFaq === idx;
+                return (
+                  <motion.div 
+                    key={idx} 
+                    layout
+                    onClick={() => setOpenFaq(isOpen ? null : idx)}
+                    className={`bg-white rounded-[24px] border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] p-6 hover:border-[#834DFB] hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] transition-all duration-300 cursor-pointer relative overflow-hidden select-none ${isOpen ? 'border-[#834DFB] shadow-[6px_6px_0px_#834DFB]' : ''}`}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.1 }}
+                    transition={{ type: "spring", stiffness: 100, damping: 15, delay: idx * 0.05 }}
                   >
-                    <span>{faq.q}</span>
-                    <ChevronDown className={`w-5 h-5 text-[#834DFB] transform transition-transform duration-200 ${openFaq === idx ? 'rotate-180' : ''}`} />
-                  </button>
-                  <AnimatePresence initial={false}>
-                    {openFaq === idx && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="overflow-hidden"
-                      >
-                        <p className="text-sm text-[#6B6577] leading-relaxed pt-2 pb-4 pr-6">
-                          {faq.a}
-                        </p>
-                      </motion.div>
+                    {/* Glowing highlight blob when open */}
+                    {isOpen && (
+                      <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-[#CCFF00]/10 rounded-full blur-[40px] pointer-events-none"></div>
                     )}
-                  </AnimatePresence>
-                </div>
-              ))}
+                    
+                    <div className="flex justify-between items-center gap-4 relative z-10">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-xs border-2 border-black flex-shrink-0 shadow-sm ${isOpen ? 'bg-[#CCFF00] text-[#18102B]' : 'bg-[#F5F3FF] text-[#834DFB]'}`}>
+                          Q
+                        </div>
+                        <span className="font-extrabold text-[#18102B] text-base md:text-lg leading-tight">
+                          {faq.q}
+                        </span>
+                      </div>
+                      <div className={`w-8 h-8 rounded-full border-2 border-black flex items-center justify-center flex-shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180 bg-[#18102B] text-white' : 'bg-slate-50 text-slate-600'}`}>
+                        <ChevronDown className="w-4 h-4" />
+                      </div>
+                    </div>
+
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                          animate={{ height: 'auto', opacity: 1, marginTop: 16 }}
+                          exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                          transition={{ duration: 0.25, ease: "easeInOut" }}
+                          className="overflow-hidden relative z-10"
+                        >
+                          <div className="border-t border-dashed border-slate-200 pt-4 flex gap-4 items-start">
+                            <div className="w-8 h-8 rounded-full bg-[#18102B] text-[#CCFF00] flex items-center justify-center font-black text-xs border-2 border-black flex-shrink-0 shadow-sm">
+                              A
+                            </div>
+                            <p className="text-sm text-[#6B6577] font-semibold leading-relaxed pt-1.5 flex-1 pr-4">
+                              {faq.a}
+                            </p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
 
         </div>
       </section>
 
-      {/* 10. RESOURCES / BLOG */}
-      <section className="max-w-7xl mx-auto px-6 py-24 w-full">
-        <div className="max-w-3xl mb-16">
-          <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6">
-            Resources
-          </span>
-          <h2 className="text-4xl font-extrabold text-[#18102B]">
-            Guides to get the most out of CourseForge
-          </h2>
-        </div>
+      {/* 10. RESOURCES / BLOG (With Uploaded Illustrations Cover Images) */}
+      <section className="relative max-w-7xl mx-auto px-6 py-24 w-full border-t-2 border-black border-dashed overflow-hidden">
+        {/* Soft background light sphere */}
+        <div className="absolute top-[10%] left-[-15%] w-[450px] h-[450px] rounded-full bg-[#C6FF3D]/5 blur-[120px] pointer-events-none z-0"></div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            { tag: 'GUIDE', title: 'Writing your first chapter', desc: 'A short walkthrough for new teachers setting up their first class and authoring modules.' },
-            { tag: 'GUIDE', title: 'Reusing public content well', desc: 'How to search, find, and link high-quality chapters into your classroom roster instantly.' },
-            { tag: 'TIPS', title: 'Reading your class analytics', desc: 'What each number and completion percentage on your teacher dashboard actually tells you.' }
-          ].map((item, idx) => (
-            <div key={idx} className="bg-white rounded-[24px] overflow-hidden border-2 border-[#E5DFF5] shadow-sm hover:border-[#834DFB] transition-colors duration-300">
-              <div className="h-32 bg-gradient-to-br from-[#834DFB] to-[#18102B]"></div>
-              <div className="p-6">
-                <span className="text-[10px] font-extrabold text-[#834DFB] tracking-wider uppercase bg-[#F5F3FF] px-2.5 py-1 rounded-md">
-                  {item.tag}
-                </span>
-                <h4 className="text-base font-bold text-[#18102B] mt-4 mb-2">{item.title}</h4>
-                <p className="text-xs text-[#6B6577] leading-relaxed">{item.desc}</p>
-              </div>
-            </div>
-          ))}
+        <div className="relative z-10">
+          <motion.div 
+            className="max-w-3xl mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+          >
+            <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
+              Resources
+            </span>
+            <h2 className="text-4xl font-extrabold text-[#18102B]">
+              Guides to get the most out of CourseForge
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { tag: 'GUIDE', titleLine1: 'Writing your first', titleLine2: 'Chapter Outline', desc: 'A short walkthrough for new teachers setting up their first class and authoring modules.', img: '/lofi_study_room.png', bgClass: 'bg-[#FF6B35]' },
+              { tag: 'GUIDE', titleLine1: 'Reusing Public', titleLine2: 'Content Well', desc: 'How to search, find, and link high-quality chapters into your classroom roster instantly.', img: '/globe_education.png', bgClass: 'bg-[#CCFF00]' },
+              { tag: 'TIPS', titleLine1: 'Reading your class', titleLine2: 'Analytics Dashboard', desc: 'What each number and completion percentage on your teacher dashboard actually tells you.', img: '/stationery_flatlay.jpg', bgClass: 'bg-white' }
+            ].map((item, idx) => (
+              <motion.div 
+                key={idx} 
+                className="flex"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.15 }}
+                transition={{ duration: 0.6, delay: idx * 0.12 }}
+              >
+                <TiltWrapper className="w-full h-[480px] rounded-[32px] overflow-hidden flex flex-col relative group shadow-[6px_6px_0px_rgba(0,0,0,1)] border-2 border-black hover:border-[#834DFB] transition-colors duration-300 bg-white">
+                  {/* TOP HALF: Color block with text */}
+                  <div className={`p-6 pb-8 flex-1 flex flex-col gap-4 ${item.bgClass}`}>
+                    <div>
+                      <span className="bg-white text-black px-3 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-widest shadow-sm">
+                        {item.tag}
+                      </span>
+                    </div>
+                    <div>
+                      <h4 className={`text-2xl font-black leading-[0.95] tracking-tight ${item.bgClass === 'bg-[#FF6B35]' ? 'text-white' : 'text-[#18102B]'}`}>
+                        {item.titleLine1}<br/>
+                        {item.titleLine2}
+                      </h4>
+                      <p className={`text-[12px] font-semibold mt-3 leading-relaxed line-clamp-3 ${item.bgClass === 'bg-[#FF6B35]' ? 'text-white/80' : 'text-[#18102B]/70'}`}>
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* BOTTOM HALF: Full-bleed image */}
+                  <div className="relative h-[220px] w-full flex-shrink-0 bg-[#18102B] border-t-2 border-black overflow-hidden">
+                    <img src={item.img} alt={item.titleLine1} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    
+                    {/* Gradient overlay for readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+                    
+                    {/* CTA Pill button at bottom left over the image */}
+                    <div className="absolute bottom-5 left-5 z-10">
+                      <button className="bg-white/20 backdrop-blur-md border border-white/30 text-white pl-4 pr-1.5 py-1.5 rounded-full flex items-center gap-4 text-xs font-bold hover:bg-white/30 transition-colors shadow-lg">
+                        Read Guide 
+                        <span className="bg-white text-[#18102B] rounded-full w-7 h-7 flex items-center justify-center text-[10px]">→</span>
+                      </button>
+                    </div>
+                  </div>
+                </TiltWrapper>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* 11. FINAL CTA */}
       <section className="max-w-7xl mx-auto px-6 pb-24 w-full">
-        <div className="bg-[#18102B] text-white rounded-[32px] p-10 md:p-16 text-center border border-[#2D2342] shadow-2xl relative overflow-hidden">
-          <div className="absolute top-[-50px] left-[-50px] w-96 h-96 bg-[#834DFB]/5 rounded-full blur-3xl pointer-events-none"></div>
+        <motion.div 
+          className="bg-[#18102B] text-white rounded-[32px] p-10 md:p-16 text-center border-2 border-black shadow-2xl relative overflow-hidden shadow-[8px_8px_0px_rgba(0,0,0,1)]"
+          initial={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
+          whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          viewport={{ once: false, amount: 0.2 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          {/* Creative Dark Vector Background */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+            {/* Dark grid */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+            
+            {/* Neon color blobs */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#834DFB]/15 rounded-full blur-[140px]"></div>
+            <div className="absolute -top-40 -left-40 w-96 h-96 bg-[#CCFF00]/10 rounded-full blur-[100px] animate-[pulse_8s_ease-in-out_infinite]"></div>
+            <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-[#FF6B35]/15 rounded-full blur-[100px] animate-[pulse_10s_ease-in-out_infinite]" style={{ animationDelay: '3s' }}></div>
+
+            {/* Glowing tech blueprint lines */}
+            <svg className="absolute top-0 left-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
+              <line x1="0" y1="20%" x2="100%" y2="80%" stroke="white" strokeWidth="1.5" strokeDasharray="8,8" />
+              <line x1="0" y1="80%" x2="100%" y2="20%" stroke="white" strokeWidth="1.5" strokeDasharray="8,8" />
+            </svg>
+          </div>
           
-          <h2 className="text-3xl md:text-5xl font-extrabold mb-6 leading-tight max-w-2xl mx-auto">
+          <h2 className="text-3xl md:text-5xl font-black mb-6 leading-tight max-w-2xl mx-auto uppercase">
             Ready to teach without rewriting everything?
           </h2>
-          <p className="text-[#A29CB0] text-sm md:text-base mb-10 max-w-md mx-auto">
+          <p className="text-[#A29CB0] text-sm md:text-base mb-10 max-w-md mx-auto font-semibold">
             Create your first class, add a chapter, and share your key — setup takes less than five minutes.
           </p>
 
           <Link href="/signup">
-            <button className="bg-[#F0E100] hover:bg-[#dcd000] text-[#18102B] font-extrabold text-base px-10 py-4.5 rounded-full transition-all duration-200 shadow-xl shadow-[#F0E100]/10 hover:scale-[1.02] active:scale-[0.98]">
+            <button className="bg-[#F0E100] hover:bg-[#dcd000] text-[#18102B] font-black text-base px-10 py-4.5 rounded-full border-2 border-black transition-all duration-200 shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
               Get Started Free
             </button>
           </Link>
-        </div>
+        </motion.div>
       </section>
 
     </main>

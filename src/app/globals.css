@@ -317,3 +317,53 @@ body {
   z-index: 10;
 }
 
+/* ===================================================================
+   Uiverse Glowing Rotating Border Card Style
+   =================================================================== */
+.glowing-border-card {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--color-dark);
+}
+
+.glowing-border-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    transparent,
+    transparent,
+    transparent,
+    var(--color-violet),
+    var(--color-yellow),
+    transparent
+  );
+  animation: rotate-gradient 6s linear infinite;
+  z-index: 1;
+}
+
+.glowing-border-card::after {
+  content: '';
+  position: absolute;
+  inset: 2.5px;
+  background: var(--color-dark);
+  border-radius: 21.5px;
+  z-index: 2;
+}
+
+.glowing-border-card > * {
+  position: relative;
+  z-index: 3;
+}
+
+@keyframes rotate-gradient {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
