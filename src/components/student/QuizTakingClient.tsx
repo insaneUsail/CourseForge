@@ -14,7 +14,7 @@ export function QuizTakingClient({ quiz, classId }: { quiz: any, classId: string
   const [answers, setAnswers] = useState<number[]>(new Array(quiz.questions.length).fill(-1));
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [result, setResult] = useState<any>(null);
-  const [startTime] = useState(Date.now());
+  const [startTime] = useState(() => Date.now());
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const question = quiz.questions[currentQuestionIndex];

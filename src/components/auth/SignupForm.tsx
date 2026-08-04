@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useToast } from '@/components/ui/Toast';
 import Link from 'next/link';
+import { GraduationCap, BookOpen } from 'lucide-react';
 
 export function SignupForm() {
   const [state, formAction, isPending] = useActionState<ActionResult | null, FormData>(signUpAction, null);
@@ -27,17 +28,17 @@ export function SignupForm() {
           <button
             type="button"
             onClick={() => setRole('TEACHER')}
-            className="flex-1 bg-white text-slate-800 p-6 rounded-2xl border-2 border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 transition-all flex flex-col items-center gap-3 shadow-sm"
+            className="flex-1 bg-white text-navy p-6 rounded-3xl border-2 border-slate-200 hover:border-orange hover:bg-orange/5 transition-all flex flex-col items-center gap-3 shadow-sm hover:shadow-md"
           >
-            <span className="text-4xl mb-2">👨‍🏫</span>
+            <GraduationCap className="w-10 h-10 text-indigo-500" />
             <span className="font-bold">I want to teach</span>
           </button>
           <button
             type="button"
             onClick={() => setRole('STUDENT')}
-            className="flex-1 bg-white text-slate-800 p-6 rounded-2xl border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 transition-all flex flex-col items-center gap-3 shadow-sm"
+            className="flex-1 bg-white text-navy p-6 rounded-3xl border-2 border-slate-200 hover:border-teal hover:bg-teal/5 transition-all flex flex-col items-center gap-3 shadow-sm hover:shadow-md"
           >
-            <span className="text-4xl mb-2">👨‍🎓</span>
+            <BookOpen className="w-10 h-10 text-emerald-500" />
             <span className="font-bold">I want to learn</span>
           </button>
         </div>

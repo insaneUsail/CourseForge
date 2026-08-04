@@ -21,7 +21,10 @@ export default function ClassDetailClient({ classData, teacherId }: { classData:
 
   useEffect(() => {
     if (state?.success) {
-      setIsModalOpen(false);
+      const timer = setTimeout(() => {
+        setIsModalOpen(false);
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [state]);
 
@@ -89,7 +92,7 @@ export default function ClassDetailClient({ classData, teacherId }: { classData:
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {chapters.length === 0 ? (
               <div className="col-span-full py-12 text-center text-slate-500">
-                <p>You haven't added any chapters to this class yet.</p>
+                <p>You haven&apos;t added any chapters to this class yet.</p>
                 <Button className="mt-4" onClick={() => setIsModalOpen(true)}>Create First Chapter</Button>
               </div>
             ) : (

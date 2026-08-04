@@ -1,13 +1,13 @@
 import React from 'react';
 import clsx from 'clsx';
 
-export type TicketColor = 'blue' | 'green' | 'yellow' | 'pink' | 'purple';
+export type TicketColor = 'blue' | 'green' | 'yellow' | 'pink' | 'purple' | 'orange' | 'teal' | 'navy';
 
 export interface TicketCardProps {
   color?: TicketColor;
   topLeftText?: React.ReactNode;
   topRightText?: React.ReactNode;
-  title: string;
+  title: React.ReactNode;
   subtitle?: React.ReactNode;
   statusBadge?: React.ReactNode;
   priceText?: string;
@@ -21,6 +21,9 @@ const headerColors: Record<TicketColor, string> = {
   yellow: 'bg-amber-300 text-slate-900',
   pink: 'bg-pink-400 text-slate-900',
   purple: 'bg-purple-500 text-white',
+  orange: 'bg-[#FF6B35] text-white',
+  teal: 'bg-[#00C9A7] text-white',
+  navy: 'bg-[#0A1628] text-white',
 };
 
 export const TicketCard: React.FC<TicketCardProps> = ({

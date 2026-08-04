@@ -39,7 +39,7 @@ export function LoginForm() {
       </Button>
       <div className="text-center mt-4">
         <Link href="/signup" className="text-sm text-text-muted-light hover:text-text-default">
-          Don't have an account? Sign up
+          Don&apos;t have an account? Sign up
         </Link>
       </div>
     </form>

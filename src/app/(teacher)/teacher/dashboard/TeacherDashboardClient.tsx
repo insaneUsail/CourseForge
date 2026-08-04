@@ -18,7 +18,10 @@ export default function TeacherDashboardClient({ classes, stats }: { classes: an
 
   useEffect(() => {
     if (state?.success) {
-      setIsModalOpen(false);
+      const timer = setTimeout(() => {
+        setIsModalOpen(false);
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [state]);
 
@@ -81,7 +84,11 @@ export default function TeacherDashboardClient({ classes, stats }: { classes: an
                   color={color}
                   topLeftText="CLASS"
                   topRightText={`${cls._count?.chapterLinks || 0} Chapters`}
-                  title={cls.name}
+                  title={
+                    <Link href={`/teacher/classes/${cls.id}`} className="hover:text-indigo-600 hover:underline block">
+                      {cls.name}
+                    </Link>
+                  }
                   subtitle={
                     <div 
                       className="flex items-center gap-2 cursor-pointer hover:text-slate-800 transition-colors"

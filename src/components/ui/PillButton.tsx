@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 
-export type PillColor = 'purple' | 'yellow' | 'dark' | 'light' | 'green' | 'blue' | 'pink';
+export type PillColor = 'purple' | 'yellow' | 'dark' | 'light' | 'green' | 'blue' | 'pink' | 'orange' | 'teal' | 'navy';
 
 export interface PillButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   color?: PillColor;
@@ -17,6 +17,9 @@ const colorStyles: Record<PillColor, string> = {
   green: 'bg-emerald-500 hover:bg-emerald-600 text-white border-transparent',
   blue: 'bg-blue-500 hover:bg-blue-600 text-white border-transparent',
   pink: 'bg-pink-500 hover:bg-pink-600 text-white border-transparent',
+  orange: 'bg-[#FF6B35] hover:bg-[#E85A27] text-white border-transparent',
+  teal: 'bg-[#00C9A7] hover:bg-[#00B396] text-white border-transparent',
+  navy: 'bg-[#0A1628] hover:bg-[#1a2a42] text-white border-transparent',
 };
 
 export const PillButton = React.forwardRef<HTMLButtonElement, PillButtonProps>(
