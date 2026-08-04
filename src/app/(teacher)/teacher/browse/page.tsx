@@ -18,19 +18,19 @@ export default async function BrowsePage() {
   return (
     <div className="max-w-7xl mx-auto p-6 lg:p-8">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center gap-6 mb-10 pb-6 border-b border-gray-200">
-        <div className="w-16 h-16 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
-          <Globe className="w-8 h-8 text-blue-600" />
+      <div className="flex flex-col md:flex-row md:items-center gap-6 mb-12 pb-6 border-b-4 border-black">
+        <div className="w-20 h-20 bg-[#60A5FA] border-4 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] rounded-2xl flex items-center justify-center flex-shrink-0 -rotate-3">
+          <Globe className="w-10 h-10 text-[#18102B]" />
         </div>
         
         <div>
-          <Badge className="mb-2 bg-gray-100 text-gray-700 font-medium">
+          <span className="inline-block mb-3 bg-[#18102B] text-white font-black text-xs uppercase tracking-widest px-3 py-1 border-2 border-black rounded shadow-[2px_2px_0px_rgba(0,0,0,1)]">
             Community
-          </Badge>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">
+          </span>
+          <h1 className="text-4xl md:text-5xl font-black text-[#18102B] tracking-tighter uppercase">
             Browse Chapters
           </h1>
-          <p className="text-lg text-gray-500 mt-2">
+          <p className="text-lg text-white font-bold bg-[#18102B] px-4 py-1.5 mt-2 rounded border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] w-fit">
             Discover and link shared knowledge to your classes.
           </p>
         </div>

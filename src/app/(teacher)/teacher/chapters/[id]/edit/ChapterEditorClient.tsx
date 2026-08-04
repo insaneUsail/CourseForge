@@ -239,25 +239,28 @@ export default function ChapterEditorClient({ chapter: initialChapter }: { chapt
 
   return (
     <div className="flex flex-1 overflow-hidden relative bg-white">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#18102B15_1px,transparent_1px),linear-gradient(to_bottom,#18102B15_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none"></div>
+
       {/* Toast */}
       {toast && (
-        <div className={`fixed top-4 right-4 z-50 px-5 py-3 rounded-xl shadow-lg text-white text-sm font-medium transition-all ${toast.type === 'success' ? 'bg-emerald-500' : 'bg-red-500'}`}>
+        <div className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-xl shadow-[4px_4px_0px_rgba(0,0,0,1)] border-2 border-black text-white text-sm font-black uppercase tracking-widest transition-all animate-fade-in ${toast.type === 'success' ? 'bg-[#C6FF3D] text-[#18102B]' : 'bg-[#FF6B35]'}`}>
           {toast.message}
         </div>
       )}
 
       {/* Left Sidebar */}
-      <div className="w-72 bg-slate-50 border-r border-slate-200 flex flex-col overflow-y-auto">
+      <div className="w-80 bg-[#F5F3FF] border-r-4 border-black flex flex-col overflow-y-auto relative z-10 shadow-[4px_0px_0px_rgba(0,0,0,1)]">
         {/* Sidebar Header */}
-        <div className="p-5 border-b border-slate-200 bg-white">
-          <h3 className="font-bold text-slate-800 text-base flex items-center gap-2">
-            <svg className="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg>
+        <div className="p-6 border-b-4 border-black bg-[#18102B]">
+          <h3 className="font-black text-white text-lg flex items-center gap-3 uppercase tracking-widest">
+            <svg className="w-6 h-6 text-[#C6FF3D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg>
             Course Structure
           </h3>
         </div>
 
         {/* Items List */}
-        <div className="flex-1 p-4 space-y-2">
+        <div className="flex-1 p-4 space-y-3 bg-[#F5F3FF]">
           {items.map((item: any, i: number) => {
             const isSelected = selectedItem?.id === item.id;
             const isQuiz = item.type === 'quiz';
@@ -272,22 +275,22 @@ export default function ChapterEditorClient({ chapter: initialChapter }: { chapt
                   }
                   setShowQuestionForm(false);
                 }}
-                className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all duration-150 flex items-center gap-3 border ${
+                className={`w-full text-left px-4 py-4 rounded-xl text-sm font-black transition-all duration-150 flex items-center gap-3 border-2 border-black uppercase ${
                   isSelected
-                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-md transform scale-[1.02]'
-                    : 'bg-white text-slate-700 border-slate-200 hover:border-indigo-300 hover:shadow-sm'
+                    ? 'bg-[#C6FF3D] text-[#18102B] shadow-[4px_4px_0px_rgba(0,0,0,1)] translate-x-1'
+                    : 'bg-white text-[#18102B] shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:bg-[#18102B] hover:text-white hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5'
                 }`}
               >
-                <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${
+                <span className={`flex-shrink-0 w-8 h-8 rounded flex items-center justify-center text-xs font-black border-2 border-black ${
                   isSelected
-                    ? 'bg-white/20 text-white'
+                    ? 'bg-[#18102B] text-[#C6FF3D]'
                     : isQuiz
-                      ? 'bg-amber-100 text-amber-600'
-                      : 'bg-indigo-100 text-indigo-600'
+                      ? 'bg-[#FF6B35] text-white'
+                      : 'bg-[#F0E100] text-[#18102B]'
                 }`}>
                   {isQuiz ? 'Q' : i + 1}
                 </span>
-                <span className="truncate">
+                <span className="truncate tracking-wide">
                   {isQuiz ? `Quiz · ${item.stage === 'FINAL' ? 'Final' : 'Mid'}` : (item.title || 'Untitled Section')}
                 </span>
               </button>
@@ -295,180 +298,189 @@ export default function ChapterEditorClient({ chapter: initialChapter }: { chapt
           })}
           {items.length === 0 && (
             <div className="text-center py-10 px-4">
-              <div className="w-12 h-12 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-3">
-                <span className="text-indigo-400 text-xl">📝</span>
+              <div className="w-16 h-16 bg-white border-4 border-black rounded-full flex items-center justify-center mx-auto mb-4 shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                <span className="text-2xl">📝</span>
               </div>
-              <p className="text-sm text-slate-500">Your course is empty. Add a content section to begin.</p>
+              <p className="text-sm text-[#18102B] font-black uppercase tracking-widest">Your course is empty. Add a content section to begin.</p>
             </div>
           )}
         </div>
 
         {/* Sidebar Actions */}
-        <div className="p-4 border-t border-slate-200 bg-white grid grid-cols-2 gap-2 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-          <Button variant="secondary" size="sm" onClick={handleAddContent} className="w-full text-xs bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700">
+        <div className="p-4 border-t-4 border-black bg-white grid grid-cols-2 gap-3 z-10">
+          <Button variant="secondary" size="sm" onClick={handleAddContent} className="w-full font-black uppercase tracking-widest text-xs bg-[#C6FF3D] hover:bg-white border-2 border-black text-[#18102B] shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] py-4">
             + Content
           </Button>
-          <Button variant="secondary" size="sm" onClick={() => setShowQuizForm(true)} className="w-full text-xs bg-amber-50 hover:bg-amber-100 border-amber-200 text-amber-700">
+          <Button variant="secondary" size="sm" onClick={() => setShowQuizForm(true)} className="w-full font-black uppercase tracking-widest text-xs bg-[#F0E100] hover:bg-white border-2 border-black text-[#18102B] shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] py-4">
             + Quiz
           </Button>
         </div>
       </div>
 
       {/* Right Pane */}
-      <div className="flex-1 flex flex-col bg-white">
+      <div className="flex-1 flex flex-col bg-transparent z-10">
         {/* Top Bar */}
-        <div className="px-8 py-5 border-b border-slate-100 bg-white flex justify-between items-center shadow-sm z-10">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-xl border border-slate-200 hover:border-indigo-300 transition-colors focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100">
-              <svg className="w-5 h-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        <div className="px-8 py-5 border-b-4 border-black bg-white flex justify-between items-center shadow-[0_4px_0px_rgba(0,0,0,1)] z-20">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-xl border-4 border-black focus-within:ring-4 focus-within:ring-[#C6FF3D] transition-all shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+              <svg className="w-5 h-5 text-[#18102B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
               <input
                 defaultValue={chapter.title}
                 onBlur={(e) => handleUpdateChapterTitle(e.target.value)}
-                className="font-bold text-lg bg-transparent border-none px-0 py-0 focus:outline-none focus:ring-0 text-slate-800 w-72 placeholder:text-slate-300"
+                className="font-black text-xl uppercase tracking-tighter bg-transparent border-none px-0 py-0 focus:outline-none focus:ring-0 text-[#18102B] w-72 placeholder:text-gray-400"
                 placeholder="Chapter Title"
                 title="Edit Chapter Title"
               />
             </div>
             <button
               onClick={handleTogglePublic}
-              className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${
+              className={`px-4 py-2 rounded border-2 border-black text-xs font-black uppercase tracking-widest shadow-[2px_2px_0px_rgba(0,0,0,1)] transition-transform hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] ${
                 chapter.isPublic
-                  ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-                  : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                  ? 'bg-[#834DFB] text-white'
+                  : 'bg-white text-[#18102B]'
               }`}
             >
-              {chapter.isPublic ? 'Public' : 'Draft (Private)'}
+              {chapter.isPublic ? 'PUBLIC' : 'DRAFT (PRIVATE)'}
             </button>
           </div>
           <Button
             onClick={handleMarkCompleted}
             disabled={chapter.status === 'COMPLETED'}
-            className={chapter.status === 'COMPLETED' ? 'bg-emerald-500 hover:bg-emerald-500 text-white' : ''}
+            className={`font-black uppercase tracking-widest border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] ${
+              chapter.status === 'COMPLETED' 
+                ? 'bg-[#18102B] text-white opacity-100 hover:bg-[#18102B]' 
+                : 'bg-[#C6FF3D] text-[#18102B] hover:bg-white'
+            }`}
           >
-            {chapter.status === 'COMPLETED' ? '✓ Completed' : 'Mark as Completed'}
+            {chapter.status === 'COMPLETED' ? '✓ COMPLETED' : 'MARK AS COMPLETED'}
           </Button>
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 p-8 overflow-y-auto bg-slate-50">
+        <div className="flex-1 p-8 overflow-y-auto">
           {/* Quiz Creation Modal */}
           {showQuizForm && (
-            <Card className="p-8 bg-white border border-slate-200 mb-8 max-w-xl mx-auto shadow-xl rounded-2xl">
-              <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-                <span className="text-amber-500">✨</span> Create New Quiz
+            <div className="p-8 bg-[#834DFB] border-4 border-black mb-8 max-w-2xl mx-auto shadow-[12px_12px_0px_rgba(0,0,0,1)] rounded-[32px] relative overflow-hidden">
+              <div className="absolute -top-12 -right-12 text-[#18102B] opacity-20 text-9xl">?</div>
+              <h2 className="text-3xl font-black text-white mb-8 uppercase tracking-tighter flex items-center gap-3 relative z-10" style={{ WebkitTextStroke: '1px black', textShadow: '2px 2px 0 #18102B' }}>
+                <span className="text-[#F0E100]">✨</span> Create New Quiz
               </h2>
-              <div className="space-y-5">
-                <div>
-                  <label className="text-sm font-semibold text-slate-700 block mb-1.5">Quiz Type</label>
+              <div className="space-y-6 relative z-10">
+                <div className="bg-white p-6 border-4 border-black rounded-2xl shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                  <label className="text-xs font-black text-[#18102B] uppercase tracking-widest block mb-2">Quiz Type</label>
                   <select
                     value={quizStage}
                     onChange={(e) => setQuizStage(e.target.value as 'MID_CHAPTER' | 'FINAL')}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all"
+                    className="w-full px-4 py-3 rounded-lg border-2 border-black bg-white text-[#18102B] font-bold focus:border-[#834DFB] focus:ring-2 focus:ring-[#834DFB] outline-none"
                   >
                     <option value="MID_CHAPTER">Mid-Chapter Knowledge Check</option>
                     <option value="FINAL">Final Chapter Assessment</option>
                   </select>
                 </div>
-                <div>
-                  <label className="text-sm font-semibold text-slate-700 block mb-1.5">Timer (seconds)</label>
-                  <Input type="number" value={quizTimer} onChange={(e) => setQuizTimer(Number(e.target.value))} className="bg-slate-50" />
+                
+                <div className="bg-white p-6 border-4 border-black rounded-2xl shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                  <label className="text-xs font-black text-[#18102B] uppercase tracking-widest block mb-2">Timer (seconds)</label>
+                  <Input type="number" value={quizTimer} onChange={(e) => setQuizTimer(Number(e.target.value))} className="border-2 border-black font-bold" />
                 </div>
+                
                 {quizStage === 'FINAL' && (
-                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                    <label className="flex items-center gap-3 text-sm font-medium text-slate-700 cursor-pointer">
-                      <input type="checkbox" checked={quizIsEval} onChange={(e) => setQuizIsEval(e.target.checked)} className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-600" />
+                  <div className="bg-[#C6FF3D] p-6 rounded-2xl border-4 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                    <label className="flex items-center gap-3 text-sm font-black text-[#18102B] uppercase tracking-widest cursor-pointer">
+                      <input type="checkbox" checked={quizIsEval} onChange={(e) => setQuizIsEval(e.target.checked)} className="w-5 h-5 rounded border-2 border-black text-[#18102B] focus:ring-[#18102B]" />
                       Strict Evaluation Mode
                     </label>
                     {quizIsEval && (
-                      <div className="mt-4 pl-7">
-                        <label className="text-sm font-semibold text-slate-700 block mb-1.5">Max Attempts Allowed</label>
-                        <Input type="number" value={quizMaxAttempts ?? ''} onChange={(e) => setQuizMaxAttempts(e.target.value ? Number(e.target.value) : null)} className="bg-white" placeholder="Leave empty for unlimited" />
+                      <div className="mt-6 pl-8">
+                        <label className="text-xs font-black text-[#18102B] uppercase tracking-widest block mb-2">Max Attempts Allowed</label>
+                        <Input type="number" value={quizMaxAttempts ?? ''} onChange={(e) => setQuizMaxAttempts(e.target.value ? Number(e.target.value) : null)} className="border-2 border-black font-bold bg-white" placeholder="Leave empty for unlimited" />
                       </div>
                     )}
                   </div>
                 )}
-                <div className="flex gap-3 pt-4 border-t border-slate-100">
-                  <Button onClick={handleCreateQuiz} className="flex-1 bg-indigo-600 hover:bg-indigo-700">Create Quiz</Button>
-                  <Button variant="secondary" onClick={() => setShowQuizForm(false)} className="flex-1">Cancel</Button>
+                <div className="flex gap-4 pt-6">
+                  <Button onClick={handleCreateQuiz} className="flex-1 bg-[#C6FF3D] text-[#18102B] border-2 border-black font-black uppercase tracking-widest py-6 text-lg hover:bg-white shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5">Create Quiz</Button>
+                  <Button variant="secondary" onClick={() => setShowQuizForm(false)} className="flex-1 bg-white text-[#18102B] border-2 border-black font-black uppercase tracking-widest py-6 text-lg hover:bg-gray-100 shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5">Cancel</Button>
                 </div>
               </div>
-            </Card>
+            </div>
           )}
 
           {/* No item selected */}
           {!selectedItem && !showQuizForm && (
-            <div className="flex flex-col items-center justify-center h-full max-w-md mx-auto text-center">
-              <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-100 mb-6">
-                <span className="text-4xl text-indigo-200">✍️</span>
+            <div className="flex flex-col items-center justify-center h-full max-w-md mx-auto text-center animate-fade-in">
+              <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-[8px_8px_0px_rgba(0,0,0,1)] border-4 border-black mb-8 transform transition-transform hover:scale-110">
+                <span className="text-6xl text-[#18102B]">✍️</span>
               </div>
-              <h3 className="text-xl font-bold text-slate-800 mb-2">Select an item to edit</h3>
-              <p className="text-slate-500 text-base leading-relaxed">
-                Choose a content section or quiz from the sidebar on the left, or create a new one to start building your chapter.
-              </p>
+              <h3 className="text-3xl font-black text-[#18102B] mb-4 uppercase tracking-tighter" style={{ WebkitTextStroke: '1px black', color: 'white', textShadow: '2px 2px 0 #18102B' }}>Select an item to edit</h3>
+              <div className="bg-white p-6 border-4 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] rounded-2xl">
+                <p className="text-[#18102B] font-bold text-lg leading-relaxed">
+                  Choose a content section or quiz from the sidebar on the left, or create a new one to start building your chapter.
+                </p>
+              </div>
             </div>
           )}
 
           {/* Content Editor */}
           {selectedItem?.type === 'content' && (
-            <Card className="p-8 bg-white border border-slate-200 shadow-sm rounded-2xl flex flex-col h-[calc(100vh-160px)]">
-              <div className="mb-6 flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <label className="text-xs font-bold uppercase tracking-widest text-indigo-500 block mb-2">Section Title</label>
+            <div className="p-8 bg-white border-4 border-black shadow-[12px_12px_0px_rgba(0,0,0,1)] rounded-[32px] flex flex-col h-[calc(100vh-160px)] animate-fade-in">
+              <div className="mb-8 flex items-start justify-between gap-4">
+                <div className="flex-1 bg-[#F5F3FF] p-4 rounded-xl border-4 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] focus-within:ring-4 focus-within:ring-[#C6FF3D] transition-all">
+                  <label className="text-xs font-black uppercase tracking-widest text-[#18102B] block mb-2">Section Title</label>
                   <Input
                     value={contentTitle}
                     onChange={(e) => setContentTitle(e.target.value)}
                     placeholder="Enter a descriptive title for this section..."
-                    className="font-bold text-2xl border-none px-0 py-0 h-auto focus-visible:ring-0 placeholder:text-slate-200 shadow-none"
+                    className="font-black text-2xl uppercase tracking-tighter border-none px-0 py-0 h-auto focus-visible:ring-0 placeholder:text-gray-400 shadow-none bg-transparent"
                   />
                 </div>
                 <Button
                   variant="secondary"
                   onClick={() => handleDeleteContent(selectedItem.id)}
-                  className="text-red-500 hover:text-red-700 hover:bg-red-50 border-red-200"
+                  className="font-black uppercase tracking-widest bg-white text-[#FF6B35] border-4 border-[#FF6B35] shadow-[4px_4px_0px_rgba(255,107,53,1)] hover:bg-[#FF6B35] hover:text-white hover:shadow-[6px_6px_0px_rgba(255,107,53,1)] hover:-translate-y-0.5 py-4 px-6 h-auto"
                 >
                   Delete Section
                 </Button>
               </div>
-              <div className="flex-1 overflow-y-auto mb-6 bg-slate-50 rounded-xl border border-slate-100">
+              <div className="flex-1 overflow-y-auto mb-8 bg-white rounded-2xl border-4 border-black shadow-inner relative z-10">
                 <RichTextEditor
                   value={contentDraft}
                   onChange={setContentDraft}
                   className="h-full border-0 shadow-none"
                 />
               </div>
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 mt-auto">
+              <div className="flex justify-end gap-3 pt-4 border-t-4 border-black/10 mt-auto">
                 <Button 
                   onClick={() => handleSaveContent(selectedItem.id)} 
                   disabled={saving}
-                  className="px-8 bg-indigo-600 hover:bg-indigo-700 text-white"
+                  className="font-black uppercase tracking-widest bg-[#18102B] text-white py-4 px-8 border-4 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:bg-[#834DFB] hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 text-lg"
                 >
-                  {saving ? 'Saving Changes...' : 'Save Changes'}
+                  {saving ? 'SAVING CHANGES...' : 'SAVE CHANGES'}
                 </Button>
               </div>
-            </Card>
+            </div>
           )}
 
           {/* Quiz Editor */}
           {selectedItem?.type === 'quiz' && selectedQuiz && (
-            <div className="space-y-6 max-w-3xl mx-auto pb-12">
+            <div className="space-y-8 max-w-3xl mx-auto pb-12 animate-fade-in">
               {/* Quiz Info */}
-              <Card className="p-8 bg-white border border-slate-200 shadow-sm rounded-2xl relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-2 h-full bg-amber-400"></div>
-                <div className="flex justify-between items-start mb-2">
+              <div className="p-8 bg-[#F0E100] border-4 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] rounded-2xl relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-4 h-full bg-[#18102B]"></div>
+                <div className="flex justify-between items-start mb-2 pl-4">
                   <div>
-                    <h2 className="text-2xl font-bold text-slate-800">
+                    <h2 className="text-3xl font-black text-[#18102B] uppercase tracking-tighter" style={{ WebkitTextStroke: '1px black', color: 'white', textShadow: '2px 2px 0 #18102B' }}>
                       {selectedQuiz.stage === 'FINAL' ? '🏆 Final Assessment' : '📋 Knowledge Check'}
                     </h2>
-                    <div className="flex items-center gap-4 mt-3 text-sm text-slate-500 font-medium">
-                      <span className="flex items-center gap-1.5 bg-slate-100 px-3 py-1 rounded-full text-slate-700">
+                    <div className="flex flex-wrap items-center gap-4 mt-6 text-sm font-black uppercase tracking-widest">
+                      <span className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] text-[#18102B]">
                         ⏱️ {Math.floor(selectedQuiz.timerSeconds / 60)}m {selectedQuiz.timerSeconds % 60}s
                       </span>
                       {selectedQuiz.isEvaluation && (
-                        <span className="flex items-center gap-1.5 bg-rose-50 px-3 py-1 rounded-full text-rose-600">
+                        <span className="flex items-center gap-2 bg-[#FF6B35] px-4 py-2 rounded-lg border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] text-white">
                           🎯 Max {selectedQuiz.maxAttempts ?? '∞'} attempts
                         </span>
                       )}
-                      <span className="flex items-center gap-1.5 bg-indigo-50 px-3 py-1 rounded-full text-indigo-600">
+                      <span className="flex items-center gap-2 bg-[#834DFB] px-4 py-2 rounded-lg border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] text-white">
                         📝 {(selectedQuiz.questions || []).length} questions
                       </span>
                     </div>
@@ -477,41 +489,41 @@ export default function ChapterEditorClient({ chapter: initialChapter }: { chapt
                     variant="secondary"
                     size="sm"
                     onClick={() => handleDeleteQuiz(selectedQuiz.id)}
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50 border-red-200"
+                    className="font-black uppercase tracking-widest bg-white text-[#FF6B35] border-4 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:bg-[#FF6B35] hover:text-white"
                   >
                     Delete Quiz
                   </Button>
                 </div>
-              </Card>
+              </div>
 
               {/* Existing Questions */}
               {(selectedQuiz.questions || []).map((q: any, qi: number) => (
-                <Card key={q.id} className="p-6 bg-white border border-slate-200 shadow-sm rounded-2xl">
-                  <div className="flex justify-between items-start mb-5">
-                    <h3 className="font-semibold text-lg text-slate-800 leading-snug pr-8">
-                      <span className="text-indigo-600 mr-3 font-bold">Q{qi + 1}.</span>
+                <div key={q.id} className="p-8 bg-white border-4 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] rounded-2xl transform transition-transform hover:-translate-y-1 hover:shadow-[10px_10px_0px_rgba(0,0,0,1)]">
+                  <div className="flex justify-between items-start mb-6 border-b-4 border-black/10 pb-4">
+                    <h3 className="font-black text-xl text-[#18102B] leading-tight pr-8">
+                      <span className="text-[#834DFB] mr-4 text-3xl font-black block mb-2" style={{ WebkitTextStroke: '1px black', color: 'white', textShadow: '2px 2px 0 #18102B' }}>Q{qi + 1}.</span>
                       {q.questionText}
                     </h3>
                     <button
                       onClick={() => handleDeleteQuestion(q.id, selectedQuiz.id)}
-                      className="text-sm text-slate-400 hover:text-red-500 font-medium transition-colors"
+                      className="text-sm text-[#18102B] hover:text-[#FF6B35] font-black uppercase tracking-widest transition-colors bg-[#F5F3FF] border-2 border-black px-3 py-1 shadow-[2px_2px_0px_rgba(0,0,0,1)] rounded"
                     >
                       Delete
                     </button>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {(q.options as string[] || []).map((opt: string, oi: number) => (
                       <div
                         key={oi}
-                        className={`px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                        className={`px-4 py-4 rounded-xl text-lg font-bold transition-all border-4 ${
                           oi === q.correctOptionIndex
-                            ? 'bg-emerald-50 text-emerald-800 border-2 border-emerald-500 shadow-sm'
-                            : 'bg-slate-50 text-slate-600 border-2 border-transparent'
+                            ? 'bg-[#C6FF3D] text-[#18102B] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)]'
+                            : 'bg-white text-[#18102B] border-black shadow-[2px_2px_0px_rgba(0,0,0,1)]'
                         }`}
                       >
-                        <div className="flex items-center gap-2">
-                          <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${
-                            oi === q.correctOptionIndex ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-500'
+                        <div className="flex items-center gap-3">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black border-2 border-black ${
+                            oi === q.correctOptionIndex ? 'bg-[#18102B] text-[#C6FF3D]' : 'bg-gray-100 text-[#18102B]'
                           }`}>
                             {oi === q.correctOptionIndex ? '✓' : String.fromCharCode(65 + oi)}
                           </div>
@@ -520,36 +532,37 @@ export default function ChapterEditorClient({ chapter: initialChapter }: { chapt
                       </div>
                     ))}
                   </div>
-                </Card>
+                </div>
               ))}
 
               {/* Add Question Form */}
               {showQuestionForm ? (
-                <Card className="p-8 bg-white border-2 border-dashed border-indigo-200 rounded-2xl">
-                  <h3 className="font-bold text-slate-800 text-lg mb-6 flex items-center gap-2">
-                    <span className="text-indigo-500">+</span> New Question
+                <div className="p-8 bg-[#F5F3FF] border-4 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] rounded-2xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-[#C6FF3D] rounded-bl-full opacity-50 mix-blend-multiply pointer-events-none"></div>
+                  <h3 className="font-black text-[#18102B] text-2xl mb-8 uppercase tracking-widest flex items-center gap-3">
+                    <span className="bg-[#18102B] text-white w-8 h-8 flex items-center justify-center rounded-full text-xl">+</span> New Question
                   </h3>
-                  <div className="space-y-6">
-                    <div>
-                      <label className="text-sm font-semibold text-slate-700 block mb-2">Question Prompt</label>
+                  <div className="space-y-6 relative z-10">
+                    <div className="bg-white p-6 border-4 border-black rounded-xl shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                      <label className="text-sm font-black text-[#18102B] uppercase tracking-widest block mb-4">Question Prompt</label>
                       <Input
                         value={questionText}
                         onChange={(e) => setQuestionText(e.target.value)}
                         placeholder="e.g. What is the main difference between..."
-                        className="bg-slate-50 border-slate-200 text-base py-3"
+                        className="font-bold text-lg border-2 border-black py-4 px-4 bg-[#F5F3FF]"
                       />
                     </div>
-                    <div>
-                      <label className="text-sm font-semibold text-slate-700 block mb-3">Answer Options (Select the correct one)</label>
-                      <div className="space-y-3">
+                    <div className="bg-white p-6 border-4 border-black rounded-xl shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                      <label className="text-sm font-black text-[#18102B] uppercase tracking-widest block mb-6">Answer Options (Select the correct one)</label>
+                      <div className="space-y-4">
                         {options.map((opt, oi) => (
-                          <div key={oi} className={`flex items-center gap-3 p-2 rounded-xl transition-colors ${correctOption === oi ? 'bg-emerald-50' : 'hover:bg-slate-50'}`}>
+                          <div key={oi} className={`flex items-center gap-4 p-4 rounded-xl transition-all border-4 ${correctOption === oi ? 'bg-[#C6FF3D] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)]' : 'bg-white border-black shadow-[2px_2px_0px_rgba(0,0,0,1)]'}`}>
                             <input
                               type="radio"
                               name="correctOption"
                               checked={correctOption === oi}
                               onChange={() => setCorrectOption(oi)}
-                              className="w-5 h-5 text-emerald-600 focus:ring-emerald-600 border-slate-300 ml-2"
+                              className="w-6 h-6 text-[#18102B] focus:ring-[#18102B] border-2 border-black ml-2"
                             />
                             <Input
                               value={opt}
@@ -559,33 +572,33 @@ export default function ChapterEditorClient({ chapter: initialChapter }: { chapt
                                 setOptions(newOptions);
                               }}
                               placeholder={`Option ${String.fromCharCode(65 + oi)}`}
-                              className={`flex-1 ${correctOption === oi ? 'bg-white border-emerald-300 shadow-sm' : 'bg-white border-slate-200'}`}
+                              className={`flex-1 font-bold border-2 border-black px-4 py-3 ${correctOption === oi ? 'bg-white' : 'bg-gray-50'}`}
                             />
                           </div>
                         ))}
                       </div>
                       <button
                         onClick={() => setOptions([...options, ''])}
-                        className="text-sm text-indigo-600 font-semibold mt-4 hover:text-indigo-700 flex items-center gap-1"
+                        className="font-black uppercase tracking-widest text-[#18102B] mt-6 bg-[#C6FF3D] border-2 border-black px-4 py-2 shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:bg-white hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] transition-all flex items-center gap-2"
                       >
                         + Add another option
                       </button>
                     </div>
-                    <div className="flex gap-3 pt-6 border-t border-slate-100">
-                      <Button onClick={() => handleAddQuestion(selectedQuiz.id)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-8">Save Question</Button>
-                      <Button variant="secondary" onClick={() => setShowQuestionForm(false)}>Cancel</Button>
+                    <div className="flex gap-4 pt-6 border-t-4 border-black/10">
+                      <Button onClick={() => handleAddQuestion(selectedQuiz.id)} className="font-black uppercase tracking-widest bg-[#18102B] text-white border-2 border-black px-8 py-6 text-lg hover:bg-[#834DFB] shadow-[4px_4px_0px_rgba(0,0,0,1)] flex-1">Save Question</Button>
+                      <Button variant="secondary" onClick={() => setShowQuestionForm(false)} className="font-black uppercase tracking-widest bg-white text-[#18102B] border-2 border-black px-8 py-6 text-lg hover:bg-gray-100 shadow-[4px_4px_0px_rgba(0,0,0,1)] flex-1">Cancel</Button>
                     </div>
                   </div>
-                </Card>
+                </div>
               ) : (
                 <button
                   onClick={() => setShowQuestionForm(true)}
-                  className="w-full py-8 border-2 border-dashed border-slate-200 rounded-2xl text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50/50 transition-all text-sm font-bold flex flex-col items-center justify-center gap-2 group"
+                  className="w-full py-12 border-4 border-dashed border-black bg-[#F5F3FF] rounded-[32px] text-[#18102B] hover:bg-[#C6FF3D] hover:border-solid hover:shadow-[8px_8px_0px_rgba(0,0,0,1)] transition-all flex flex-col items-center justify-center gap-4 group"
                 >
-                  <div className="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-indigo-100 flex items-center justify-center transition-colors">
-                    <span className="text-xl">+</span>
+                  <div className="w-16 h-16 rounded-full bg-white border-4 border-black group-hover:bg-[#18102B] group-hover:text-[#C6FF3D] flex items-center justify-center transition-colors shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                    <span className="text-4xl font-black">+</span>
                   </div>
-                  Add a New Question
+                  <span className="font-black uppercase tracking-widest text-lg">Add a New Question</span>
                 </button>
               )}
             </div>

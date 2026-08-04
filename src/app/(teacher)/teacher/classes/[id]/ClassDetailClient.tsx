@@ -8,10 +8,9 @@ import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { PillButton } from '@/components/ui/PillButton';
 import { TicketCard, TicketColor } from '@/components/ui/TicketCard';
-import { Sidebar } from '@/components/layout/Sidebar';
-import { Plus, BarChart, Settings, Play, Edit3 } from 'lucide-react';
+import { Plus, BarChart, Settings, Edit3, Key, Layers, ChevronRight, Play } from 'lucide-react';
 
-const ticketColors: TicketColor[] = ['blue', 'green', 'yellow', 'pink', 'purple'];
+const ticketColors: TicketColor[] = ['blue', 'green', 'yellow', 'pink', 'purple', 'orange', 'teal'];
 
 export default function ClassDetailClient({ classData, teacherId }: { classData: any, teacherId: string }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,30 +27,39 @@ export default function ClassDetailClient({ classData, teacherId }: { classData:
     }
   }, [state]);
 
-  const sidebarItems = chapters.map((link: any, idx: number) => ({
+  const sidebarItems = chapters.map((link: any) => ({
     id: link.chapterId,
     label: link.chapter.title,
     href: `/teacher/chapters/${link.chapterId}/edit`
   }));
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
+
   return (
-    <div className="flex w-full h-full bg-slate-50">
-      {/* Left Sidebar (W3Schools style) */}
-      <div className="w-64 bg-white border-r border-slate-200 overflow-y-auto hidden md:block">
-        <div className="p-4 border-b border-slate-100 font-bold text-slate-800 tracking-wide uppercase text-sm">
-          Class Content
+    <div className="flex w-full h-full bg-white relative">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#18102B15_1px,transparent_1px),linear-gradient(to_bottom,#18102B15_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none"></div>
+      
+      {/* Left Sidebar */}
+      <div className="w-72 bg-[#F5F3FF] border-r-4 border-black overflow-y-auto hidden md:block z-10 relative shadow-[4px_0px_0px_rgba(0,0,0,1)]">
+        <div className="p-6 border-b-4 border-black bg-[#C6FF3D] flex items-center gap-3">
+          <Layers className="w-6 h-6 text-[#18102B]" />
+          <span className="font-black text-[#18102B] tracking-widest uppercase text-sm">Class Content</span>
         </div>
-        <div className="flex flex-col py-2">
+        <div className="flex flex-col p-4 gap-2">
           {sidebarItems.length === 0 ? (
-            <div className="px-4 py-3 text-sm text-slate-500">No chapters yet.</div>
+            <div className="p-4 bg-white border-2 border-black border-dashed rounded-lg text-sm text-[#18102B] font-bold text-center">No chapters yet.</div>
           ) : (
             sidebarItems.map((item: any) => (
               <Link 
                 key={item.id} 
                 href={item.href}
-                className="px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors"
+                className="group p-3 bg-white border-2 border-black rounded-xl text-sm font-bold text-[#18102B] hover:bg-[#18102B] hover:text-white transition-all shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 flex items-center justify-between"
               >
-                {item.label}
+                <span className="truncate pr-2">{item.label}</span>
+                <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
             ))
           )}
@@ -59,41 +67,64 @@ export default function ClassDetailClient({ classData, teacherId }: { classData:
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto p-8">
+      <div className="flex-1 overflow-y-auto p-6 lg:p-12 z-10">
         <div className="max-w-6xl mx-auto">
-          {/* Header & Pill Buttons */}
-          <div className="mb-10">
-            <h1 className="text-4xl font-extrabold text-slate-900 mb-2">{classData.name}</h1>
-            <div className="text-slate-500 mb-8 flex gap-4">
-              <span>Join Key: <strong className="text-slate-700">{classData.key}</strong></span>
-              <span>•</span>
-              <span>{classData.memberships?.length || 0} Students</span>
-            </div>
+          {/* Header */}
+          <div className="mb-12 bg-[#FF6B35] p-8 rounded-[32px] border-4 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#F0E100] rounded-bl-full opacity-50 mix-blend-screen"></div>
             
-            <div className="flex flex-wrap gap-4">
-              <PillButton 
-                color="purple" 
-                icon={<Plus />} 
-                label="Add Chapter" 
-                onClick={() => setIsModalOpen(true)} 
-              />
-              <Link href={`/teacher/analytics/${classData.id}`}>
-                <PillButton color="yellow" icon={<BarChart />} label="Analytics" />
-              </Link>
-              <PillButton color="light" icon={<Settings />} label="Settings" />
+            <div className="relative z-10">
+              <span className="inline-block mb-4 bg-white text-[#18102B] font-black text-xs uppercase tracking-widest px-3 py-1 border-2 border-black rounded shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                Class Overview
+              </span>
+              <h1 className="text-4xl md:text-5xl font-black text-[#18102B] mb-4 uppercase tracking-tighter w-full max-w-3xl truncate">
+                {classData.name}
+              </h1>
+              
+              <div className="flex flex-wrap gap-4 mb-8">
+                <div 
+                  className="bg-white px-4 py-2 rounded-lg border-2 border-black flex items-center gap-2 cursor-pointer shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] transition-all"
+                  onClick={() => copyToClipboard(classData.key)}
+                  title="Copy Key"
+                >
+                  <Key className="w-5 h-5 text-[#18102B]" />
+                  <span className="text-[#18102B] font-black uppercase text-sm">Key: {classData.key}</span>
+                </div>
+                
+                <div className="bg-[#18102B] text-white px-4 py-2 rounded-lg border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] flex items-center gap-2 font-black uppercase text-sm">
+                  {classData.memberships?.length || 0} Students
+                </div>
+              </div>
+              
+              <div className="flex flex-wrap gap-4">
+                <Button 
+                  className="bg-[#C6FF3D] text-[#18102B] hover:bg-white gap-2 font-black uppercase tracking-widest text-sm py-6"
+                  onClick={() => setIsModalOpen(true)} 
+                >
+                  <Plus className="w-5 h-5" /> Add Chapter
+                </Button>
+                <Link href={`/teacher/analytics/${classData.id}`}>
+                  <Button variant="secondary" className="bg-white gap-2 font-black uppercase tracking-widest text-sm py-6 border-black hover:bg-gray-100">
+                    <BarChart className="w-5 h-5" /> Analytics
+                  </Button>
+                </Link>
+                <Button variant="secondary" className="bg-[#18102B] text-white hover:bg-gray-800 gap-2 font-black uppercase tracking-widest text-sm py-6 border-black">
+                  <Settings className="w-5 h-5" /> Settings
+                </Button>
+              </div>
             </div>
           </div>
 
-          {/* Chapters Grid (Tickets) */}
-          <div className="mb-6 font-bold text-slate-800 text-xl border-b border-slate-200 pb-2">
+          {/* Chapters Grid */}
+          <div className="mb-8 font-black text-[#18102B] text-3xl border-b-4 border-black pb-4 uppercase tracking-tighter">
             Chapters Overview
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {chapters.length === 0 ? (
-              <div className="col-span-full py-12 text-center text-slate-500">
-                <p>You haven&apos;t added any chapters to this class yet.</p>
-                <Button className="mt-4" onClick={() => setIsModalOpen(true)}>Create First Chapter</Button>
+              <div className="col-span-full py-20 text-center bg-[#F5F3FF] rounded-[32px] border-4 border-dashed border-[#18102B] shadow-[8px_8px_0px_rgba(0,0,0,1)]">
+                <p className="text-2xl font-black text-[#18102B] uppercase mb-4 tracking-tighter">No chapters added yet.</p>
+                <Button className="bg-[#18102B] text-white font-black" onClick={() => setIsModalOpen(true)}>Create First Chapter</Button>
               </div>
             ) : (
               chapters.map((link: any, index: number) => {
@@ -111,24 +142,31 @@ export default function ClassDetailClient({ classData, teacherId }: { classData:
                     topRightText={dateAdded}
                     title={chapter.title}
                     subtitle={isAuthor ? 'You (Author)' : chapter.owner?.name || 'Unknown Author'}
-                    statusBadge={
-                      <span className={`px-2 py-1 rounded-md text-xs font-bold ${chapter.isPublic ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-700'}`}>
+                    priceText="Free"
+                    className={`min-h-[260px] ${isRemoved ? 'opacity-50 grayscale' : ''}`}
+                  >
+                    <div className="mb-4">
+                      <span className={`px-3 py-1 rounded border-2 border-black text-xs font-black uppercase shadow-[2px_2px_0px_rgba(0,0,0,1)] ${chapter.isPublic ? 'bg-[#C6FF3D] text-[#18102B]' : 'bg-white text-[#18102B]'}`}>
                         {chapter.isPublic ? 'Public' : 'Private'}
                       </span>
-                    }
-                    priceText="Free"
-                    className={isRemoved ? 'opacity-50 grayscale' : ''}
-                  >
-                    {!isRemoved && isAuthor && (
-                      <Link href={`/teacher/chapters/${chapter.id}/edit`}>
-                        <PillButton color="dark" label="Edit" className="px-4 py-2 text-xs" icon={<Edit3 className="w-3 h-3" />} />
-                      </Link>
-                    )}
-                    {!isRemoved && !isAuthor && (
-                      <Link href={`/teacher/chapters/${chapter.id}/view`}>
-                        <PillButton color="dark" label="View" className="px-4 py-2 text-xs" />
-                      </Link>
-                    )}
+                    </div>
+
+                    <div className="mt-auto pt-4 border-t-2 border-black/30 border-dashed">
+                      {!isRemoved && isAuthor && (
+                        <Link href={`/teacher/chapters/${chapter.id}/edit`}>
+                          <Button className="w-full gap-2 bg-[#18102B] text-white font-black hover:bg-gray-800">
+                            <Edit3 className="w-4 h-4" /> Edit Content
+                          </Button>
+                        </Link>
+                      )}
+                      {!isRemoved && !isAuthor && (
+                        <Link href={`/teacher/chapters/${chapter.id}/view`}>
+                          <Button className="w-full gap-2 bg-white text-[#18102B] font-black border-2 border-black hover:bg-gray-100">
+                            <Play className="w-4 h-4" /> View Content
+                          </Button>
+                        </Link>
+                      )}
+                    </div>
                   </TicketCard>
                 );
               })
@@ -137,18 +175,22 @@ export default function ClassDetailClient({ classData, teacherId }: { classData:
         </div>
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Create New Chapter">
-        <form action={formAction} className="space-y-4">
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="CREATE NEW CHAPTER">
+        <form action={formAction} className="space-y-6">
           <input type="hidden" name="classId" value={classData.id} />
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-slate-700 mb-1">Chapter Title</label>
-            <Input id="title" name="title" required placeholder="e.g. Introduction to Kinematics" />
+            <label htmlFor="title" className="block text-xs font-black uppercase text-[#18102B] mb-2 tracking-widest">Chapter Title</label>
+            <Input id="title" name="title" required placeholder="e.g. Introduction to Kinematics" className="border-2 border-black font-bold" />
           </div>
-          {state?.error && <p className="text-red-500 text-sm">{state.error}</p>}
-          <div className="flex justify-end gap-2 mt-6">
-            <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? 'Creating...' : 'Create'}
+          {state?.error && (
+            <p className="bg-[#FF6B35] text-white p-3 rounded-lg border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] font-black text-xs uppercase">
+              {state.error}
+            </p>
+          )}
+          <div className="flex justify-end gap-4 mt-8">
+            <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)} className="border-2 border-transparent hover:border-black font-bold">Cancel</Button>
+            <Button type="submit" disabled={isPending} className="bg-[#18102B] text-white font-black uppercase tracking-widest px-8">
+              {isPending ? 'CREATING...' : 'CREATE'}
             </Button>
           </div>
         </form>

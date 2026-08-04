@@ -8,7 +8,9 @@ import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { TicketCard } from '@/components/ui/TicketCard';
 import { Users, BookOpen, Plus, Key, BarChart3, Presentation, Calendar } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function TeacherDashboardClient({ classes, stats, user }: { classes: any[], stats: any, user: any }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,153 +30,160 @@ export default function TeacherDashboardClient({ classes, stats, user }: { class
     // Ideally add a toast here
   };
 
+  const ticketColors = ['blue', 'green', 'yellow', 'pink', 'purple', 'orange', 'teal'];
+
   return (
     <div>
-      {/* Hero Banner */}
-      <div className="relative w-full rounded-2xl overflow-hidden mb-10 h-[280px]">
-        <div className="absolute inset-0 bg-gray-900">
-          <div className="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80')] bg-cover bg-center mix-blend-overlay" />
-        </div>
+      {/* Neo-Brutalist Hero Banner */}
+      <div className="relative w-full rounded-[32px] overflow-hidden mb-12 h-[180px] border-4 border-black shadow-[12px_12px_0px_rgba(0,0,0,1)] bg-[#FF6B35]">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#18102B15_2px,transparent_2px),linear-gradient(to_bottom,#18102B15_2px,transparent_2px)] bg-[size:32px_32px]"></div>
+        
+        <motion.div 
+          animate={{ rotate: [0, 15, 0], scale: [1, 1.05, 1] }} 
+          transition={{ repeat: Infinity, duration: 10, ease: "easeInOut" }}
+          className="absolute top-10 right-20 w-40 h-40 bg-[#C6FF3D] border-4 border-black mix-blend-screen opacity-90 shadow-[6px_6px_0px_rgba(0,0,0,1)]"
+        ></motion.div>
+        <motion.div 
+          animate={{ y: [0, -20, 0] }}
+          transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
+          className="absolute -bottom-10 left-1/3 w-32 h-32 bg-[#834DFB] border-4 border-black rounded-full mix-blend-screen opacity-90 shadow-[8px_8px_0px_rgba(0,0,0,1)]"
+        ></motion.div>
 
-        <div className="relative z-10 flex flex-col justify-end h-full p-8 md:p-12 text-white bg-gradient-to-t from-black/80 to-transparent">
-          <Badge className="w-fit mb-4 bg-white text-[#18102B]">TEACHER PORTAL</Badge>
-          <h1 className="text-4xl md:text-5xl font-bold mb-2">
+        <div className="relative z-10 flex flex-col justify-end h-full p-8 md:p-12 text-[#18102B]">
+          <span className="w-fit mb-4 bg-white text-[#18102B] font-black text-xs uppercase tracking-widest px-3 py-1 border-2 border-black rounded shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+            TEACHER PORTAL
+          </span>
+          <h1 className="text-4xl md:text-6xl font-black mb-2 uppercase tracking-tighter text-white" style={{ WebkitTextStroke: '1px black' }}>
             Welcome back, {user?.name}
           </h1>
-          <p className="text-lg md:text-xl text-gray-200">
+          <p className="text-lg md:text-xl text-[#18102B] font-bold bg-[#C6FF3D] w-fit px-4 py-2 border-2 border-black rounded-lg shadow-[4px_4px_0px_rgba(0,0,0,1)]">
             Manage your classes, students, and course content.
           </p>
         </div>
       </div>
 
       {/* Finance / Stats Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-        <Card className="bg-white hoverable={false} p-6 flex flex-col justify-between h-40">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <Card className="bg-[#B4F481] hoverable={true} p-6 flex flex-col justify-between h-40">
           <div className="flex justify-between items-start">
-            <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
-              <Presentation className="w-5 h-5" />
+            <div className="w-12 h-12 bg-white border-2 border-black rounded-xl flex items-center justify-center shadow-[2px_2px_0px_rgba(0,0,0,1)] rotate-3">
+              <Presentation className="w-6 h-6 text-[#18102B]" />
             </div>
-            <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded">Active</span>
+            <span className="text-xs font-black text-white bg-[#18102B] px-3 py-1 border-2 border-black rounded shadow-[2px_2px_0px_rgba(0,0,0,1)] uppercase">Active</span>
           </div>
           <div>
-            <span className="text-4xl font-bold text-gray-900">{stats.totalClasses}</span>
-            <p className="text-sm font-medium text-gray-500 mt-1">Total Classes</p>
+            <span className="text-5xl font-black text-[#18102B]">{stats.totalClasses}</span>
+            <p className="text-sm font-bold text-[#18102B] uppercase tracking-wider mt-1">Total Classes</p>
           </div>
         </Card>
 
-        <Card className="bg-white hoverable={false} p-6 flex flex-col justify-between h-40">
+        <Card className="bg-[#A78BFA] hoverable={true} p-6 flex flex-col justify-between h-40">
           <div className="flex justify-between items-start">
-            <div className="w-10 h-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center">
-              <BookOpen className="w-5 h-5" />
+            <div className="w-12 h-12 bg-white border-2 border-black rounded-xl flex items-center justify-center shadow-[2px_2px_0px_rgba(0,0,0,1)] -rotate-3">
+              <BookOpen className="w-6 h-6 text-[#18102B]" />
             </div>
           </div>
           <div>
-            <span className="text-4xl font-bold text-gray-900">{stats.totalChapters}</span>
-            <p className="text-sm font-medium text-gray-500 mt-1">Total Chapters</p>
+            <span className="text-5xl font-black text-[#18102B]">{stats.totalChapters}</span>
+            <p className="text-sm font-bold text-[#18102B] uppercase tracking-wider mt-1">Total Chapters</p>
           </div>
         </Card>
 
-        <Card className="bg-white hoverable={false} p-6 flex flex-col justify-between h-40">
+        <Card className="bg-[#60A5FA] hoverable={true} p-6 flex flex-col justify-between h-40">
           <div className="flex justify-between items-start">
-            <div className="w-10 h-10 bg-green-50 text-green-600 rounded-lg flex items-center justify-center">
-              <Users className="w-5 h-5" />
+            <div className="w-12 h-12 bg-white border-2 border-black rounded-xl flex items-center justify-center shadow-[2px_2px_0px_rgba(0,0,0,1)] rotate-6">
+              <Users className="w-6 h-6 text-[#18102B]" />
             </div>
           </div>
           <div>
-            <span className="text-4xl font-bold text-gray-900">{stats.totalStudents}</span>
-            <p className="text-sm font-medium text-gray-500 mt-1">Total Students</p>
+            <span className="text-5xl font-black text-[#18102B]">{stats.totalStudents}</span>
+            <p className="text-sm font-bold text-[#18102B] uppercase tracking-wider mt-1">Total Students</p>
           </div>
         </Card>
         
-        <Card className="bg-white hoverable={false} p-6 flex flex-col justify-between h-40">
+        <Card className="bg-[#FCD34D] hoverable={true} p-6 flex flex-col justify-between h-40">
           <div className="flex justify-between items-start">
-            <div className="w-10 h-10 bg-orange-50 text-orange-600 rounded-lg flex items-center justify-center">
-              <BarChart3 className="w-5 h-5" />
+            <div className="w-12 h-12 bg-white border-2 border-black rounded-xl flex items-center justify-center shadow-[2px_2px_0px_rgba(0,0,0,1)] -rotate-6">
+              <BarChart3 className="w-6 h-6 text-[#18102B]" />
             </div>
           </div>
           <div>
-            <span className="text-4xl font-bold text-gray-900">{stats.classesThisMonth}</span>
-            <p className="text-sm font-medium text-gray-500 mt-1">Created This Month</p>
+            <span className="text-5xl font-black text-[#18102B]">{stats.classesThisMonth}</span>
+            <p className="text-sm font-bold text-[#18102B] uppercase tracking-wider mt-1">Created This Month</p>
           </div>
         </Card>
       </div>
 
       {/* Classes Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-8 pb-4 gap-4">
-        <h2 className="text-2xl font-bold text-gray-900">Your Classes</h2>
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-8 pb-4 border-b-4 border-black gap-4">
+        <h2 className="text-4xl font-black text-[#18102B] uppercase tracking-tighter">Your Classes</h2>
         <div className="flex gap-4">
           <Link href="/teacher/browse">
-            <Button variant="secondary" className="bg-white">Browse Public</Button>
+            <Button variant="secondary" className="bg-white hover:bg-gray-100">Browse Public</Button>
           </Link>
           <Button onClick={() => setIsModalOpen(true)} className="gap-2">
-            <Plus className="w-5 h-5" /> Create Class
+            <Plus className="w-6 h-6 border-2 border-black bg-white text-black rounded-full" /> Create Class
           </Button>
         </div>
       </div>
 
       {classes.length === 0 ? (
-        <div className="w-full bg-white border border-gray-200 rounded-2xl p-12 flex flex-col items-center justify-center text-center shadow-sm">
-          <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6">
-            <Presentation className="w-10 h-10 text-gray-400" />
+        <div className="w-full bg-white border-4 border-black rounded-[32px] p-12 flex flex-col items-center justify-center text-center shadow-[8px_8px_0px_rgba(0,0,0,1)] relative overflow-hidden">
+          <div className="w-24 h-24 bg-[#18102B] rounded-2xl flex items-center justify-center mb-6 border-4 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] rotate-3">
+            <Presentation className="w-12 h-12 text-[#FF6B35]" />
           </div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">No classes yet</h3>
-          <p className="text-gray-500 mb-8">Create your first class to get started!</p>
+          <h3 className="text-3xl font-black text-[#18102B] mb-2 uppercase tracking-tighter">No classes yet</h3>
+          <p className="text-[#18102B] font-bold text-lg mb-8">Create your first class to get started!</p>
           <Button size="lg" className="gap-2" onClick={() => setIsModalOpen(true)}>
             <Plus className="w-5 h-5" /> Create New Class
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           {/* Create New Class Card */}
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="group relative overflow-hidden rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-white hover:border-[#18102B] transition-all duration-300 p-8 flex flex-col items-center justify-center min-h-[220px]"
+            className="group relative overflow-hidden rounded-[32px] border-4 border-dashed border-[#18102B] bg-[#F5F3FF] hover:bg-[#C6FF3D] hover:border-solid hover:shadow-[8px_8px_0px_rgba(0,0,0,1)] transition-all duration-300 p-8 flex flex-col items-center justify-center min-h-[260px]"
           >
-            <div className="w-14 h-14 rounded-full bg-white shadow-sm border border-gray-200 flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
-              <Plus className="w-6 h-6 text-gray-400 group-hover:text-[#18102B]" />
+            <div className="w-16 h-16 rounded-full bg-white border-4 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
+              <Plus className="w-8 h-8 text-[#18102B]" />
             </div>
-            <span className="text-lg font-semibold text-gray-500 group-hover:text-[#18102B]">Create New</span>
+            <span className="text-xl font-black text-[#18102B] uppercase tracking-tight">Create New</span>
           </button>
 
           {/* Class Cards */}
-          {classes.map((cls) => {
+          {classes.map((cls, idx) => {
+            const color = ticketColors[idx % ticketColors.length] as any;
             return (
-              <Card key={cls.id} className="flex flex-col justify-between min-h-[220px] hover:border-[#834DFB] transition-colors">
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <Badge className="bg-gray-100 text-gray-700 font-medium">
-                      {cls._count?.chapterLinks || 0} Chapters
-                    </Badge>
-                    <span className="flex items-center gap-1 text-sm text-gray-500 font-medium">
-                      <Users className="w-4 h-4" /> {cls._count?.memberships || 0}
-                    </span>
-                  </div>
-                  
-                  <h3 className="text-xl font-bold mb-2 text-gray-900">
-                    {cls.name}
-                  </h3>
-                  
-                  <div 
-                    className="inline-flex items-center gap-2 cursor-pointer transition-colors bg-gray-50 hover:bg-gray-100 px-3 py-1.5 rounded mt-2 border border-gray-200"
-                    onClick={(e) => { e.preventDefault(); copyToClipboard(cls.key); }}
-                    title="Click to copy"
-                  >
-                    <Key className="w-4 h-4 text-gray-500" />
-                    <span className="font-mono text-sm text-gray-700">
-                      Key: {cls.key}
-                    </span>
-                  </div>
+              <TicketCard
+                key={cls.id}
+                color={color}
+                title={cls.name}
+                subtitle={`${cls._count?.memberships || 0} Students`}
+                topLeftText="Manage Class"
+                topRightText="Active"
+                priceText={`${cls._count?.chapterLinks || 0} Chps`}
+                className="min-h-[260px]"
+              >
+                <div 
+                  className="inline-flex items-center gap-2 cursor-pointer transition-colors bg-white hover:bg-gray-100 px-3 py-1.5 rounded-lg mt-2 border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)]"
+                  onClick={(e) => { e.preventDefault(); copyToClipboard(cls.key); }}
+                  title="Click to copy key"
+                >
+                  <Key className="w-4 h-4 text-[#18102B]" />
+                  <span className="font-bold text-sm text-[#18102B] uppercase tracking-wider">
+                    Key: {cls.key}
+                  </span>
                 </div>
                 
-                {/* Action Footer */}
-                <div className="p-4 border-t border-gray-100 bg-gray-50/50">
-                  <Link href={`/teacher/classes/${cls.id}`}>
-                    <Button variant="secondary" className="w-full bg-white">
+                <div className="mt-6 pt-4 border-t-2 border-dashed border-black/30">
+                  <Link href={`/teacher/classes/${cls.id}`} className="block w-full">
+                    <Button variant="secondary" className="w-full bg-white text-black font-black hover:bg-gray-100">
                       Manage Class
                     </Button>
                   </Link>
                 </div>
-              </Card>
+              </TicketCard>
             );
           })}
         </div>
@@ -184,16 +193,17 @@ export default function TeacherDashboardClient({ classes, stats, user }: { class
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Create New Class">
         <form action={formAction} className="space-y-4">
           <div>
-            <Input id="name" name="name" required placeholder="e.g. Advanced Physics 401" label="Class Name" />
+            <label className="text-xs font-black uppercase text-[#18102B] mb-1 block">Class Name</label>
+            <Input id="name" name="name" required placeholder="e.g. Advanced Physics 401" className="border-2 border-black font-bold" />
           </div>
           {state?.error && (
-            <div className="bg-red-50 text-red-600 p-3 rounded-lg border border-red-200 font-medium text-sm">
+            <div className="bg-[#FF6B35] text-white p-3 rounded-lg border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] font-black text-xs uppercase">
               {state.error}
             </div>
           )}
-          <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-100">
-            <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-            <Button type="submit" disabled={isPending}>
+          <div className="flex justify-end gap-3 mt-8">
+            <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)} className="border-2 border-transparent hover:border-black font-bold">Cancel</Button>
+            <Button type="submit" disabled={isPending} className="bg-[#18102B] text-white font-bold">
               {isPending ? 'Creating...' : 'Create Class'}
             </Button>
           </div>

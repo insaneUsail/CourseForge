@@ -10,19 +10,19 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', loading, children, disabled, ...props }, ref) => {
     
-    const baseClasses = 'inline-flex items-center justify-center rounded-lg font-semibold transition-all duration-200 ease-out focus:outline-none disabled:opacity-50 disabled:pointer-events-none';
+    const baseClasses = 'group relative overflow-hidden inline-flex items-center justify-center font-bold text-base border-2 border-black active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none rounded-lg';
     
     const variants = {
-      primary: 'bg-[#18102B] text-white hover:bg-black hover:shadow-md active:scale-[0.98] focus:ring-2 focus:ring-offset-2 focus:ring-[#18102B]',
-      secondary: 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 active:scale-[0.98]',
-      danger: 'bg-red-500 text-white hover:bg-red-600 active:scale-[0.98]',
-      ghost: 'bg-transparent text-gray-700 hover:bg-gray-100 active:scale-[0.98]'
+      primary: 'bg-[#18102B] text-white shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:bg-black',
+      secondary: 'bg-white text-[#18102B] shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:bg-gray-50',
+      danger: 'bg-[#FF6B35] text-white shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:bg-[#ff5511]',
+      ghost: 'bg-transparent text-[#18102B] border-transparent hover:border-black shadow-none hover:shadow-[4px_4px_0px_rgba(0,0,0,1)]'
     };
 
     const sizes = {
-      sm: 'h-9 px-3 text-sm min-w-[44px]',
-      md: 'h-11 px-6 text-base min-w-[44px]',
-      lg: 'h-14 px-8 text-lg min-w-[44px]'
+      sm: 'h-10 px-4 text-sm',
+      md: 'h-12 px-6 text-base',
+      lg: 'h-14 px-8 text-lg'
     };
 
     return (

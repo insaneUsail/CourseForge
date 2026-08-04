@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { submitAttempt } from '@/lib/actions/attempt-actions';
-import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Timer } from '@/components/ui/Timer';
 import { ScorePill } from '@/components/ui/ScorePill';
@@ -61,37 +60,56 @@ export function QuizTakingClient({ quiz, classId }: { quiz: any, classId: string
 
   if (isSubmitted && result) {
     return (
-      <div className="container mx-auto px-4 py-16 max-w-2xl text-center page-enter">
-        <Card className="p-8">
-          <h2 className="text-3xl font-bold text-text-light mb-6">Quiz Completed</h2>
-          <div className="flex justify-center mb-6">
+      <div className="min-h-screen bg-[#F5F3FF] flex flex-col items-center justify-center p-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#18102B15_1px,transparent_1px),linear-gradient(to_bottom,#18102B15_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none"></div>
+        <div className="bg-white p-12 rounded-[32px] border-4 border-black shadow-[12px_12px_0px_rgba(0,0,0,1)] max-w-2xl w-full text-center relative z-10 animate-fade-in">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#C6FF3D] rounded-bl-full opacity-50 mix-blend-screen pointer-events-none"></div>
+          <h2 className="text-4xl md:text-5xl font-black text-[#18102B] mb-8 uppercase tracking-tighter" style={{ WebkitTextStroke: '1px black', color: 'white', textShadow: '4px 4px 0 #18102B' }}>
+            Quiz Completed!
+          </h2>
+          <div className="flex justify-center mb-8 transform hover:scale-110 transition-transform">
             <ScorePill score={result.score} total={result.totalQuestions} />
           </div>
-          <p className="text-text-default mb-8">Time taken: {result.timeTakenSeconds} seconds</p>
-          <Button onClick={() => router.push(`/student/history`)}>
-            View Attempt History
-          </Button>
-        </Card>
+          <div className="bg-[#F5F3FF] border-2 border-black rounded-xl p-4 inline-block mb-12 shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+            <p className="text-[#18102B] font-black uppercase tracking-widest text-sm">
+              Time taken: <span className="text-[#FF6B35]">{result.timeTakenSeconds} seconds</span>
+            </p>
+          </div>
+          <div>
+            <Button 
+              onClick={() => router.push(`/student/history`)}
+              className="w-full bg-[#18102B] text-white font-black uppercase tracking-widest py-6 text-lg hover:bg-[#FF6B35]"
+            >
+              View Attempt History
+            </Button>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <>
-      <div className="bg-bg-dark2 border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 z-10">
-        <div className="text-text-light font-medium">
+    <div className="min-h-screen bg-white relative flex flex-col">
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#18102B15_1px,transparent_1px),linear-gradient(to_bottom,#18102B15_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none"></div>
+
+      <div className="bg-[#18102B] border-b-4 border-black px-6 py-4 flex items-center justify-between sticky top-0 z-20 shadow-[0px_4px_0px_rgba(0,0,0,1)]">
+        <div className="text-white font-black uppercase tracking-widest text-sm bg-[#FF6B35] border-2 border-black px-4 py-2 rounded-lg shadow-[2px_2px_0px_rgba(0,0,0,1)]">
           Question {currentQuestionIndex + 1} of {quiz.questions.length}
         </div>
         {quiz.timerSeconds && (
-          <Timer totalSeconds={quiz.timerSeconds} onTimeUp={handleSubmit} />
+          <div className="bg-[#C6FF3D] border-2 border-black rounded-lg shadow-[2px_2px_0px_rgba(0,0,0,1)] px-4 py-1">
+            <Timer totalSeconds={quiz.timerSeconds} onTimeUp={handleSubmit} />
+          </div>
         )}
       </div>
 
-      <div className="container mx-auto px-4 py-12 max-w-3xl flex-1 flex flex-col justify-center page-enter">
-        <Card className="p-8">
-          <h3 className="text-2xl font-bold text-text-light mb-8">{question.questionText}</h3>
+      <div className="container mx-auto px-4 py-12 max-w-4xl flex-1 flex flex-col justify-center relative z-10 animate-fade-in">
+        <div className="bg-white p-8 md:p-12 rounded-[32px] border-4 border-black shadow-[12px_12px_0px_rgba(0,0,0,1)]">
+          <h3 className="text-2xl md:text-3xl font-black text-[#18102B] mb-10 leading-tight">
+            {question.questionText}
+          </h3>
           
-          <div className="space-y-4 mb-8">
+          <div className="space-y-4 mb-12">
             {(question.options as string[]).map((option: string, idx: number) => {
               const isSelected = answers[currentQuestionIndex] === idx;
               return (
@@ -99,14 +117,17 @@ export function QuizTakingClient({ quiz, classId }: { quiz: any, classId: string
                   key={idx}
                   onClick={() => handleSelectOption(idx)}
                   className={`
-                    p-4 rounded-lg border-2 cursor-pointer transition-all min-h-[44px] flex items-center
+                    p-6 rounded-xl border-4 cursor-pointer transition-all min-h-[60px] flex items-center group
                     ${isSelected 
-                      ? 'border-accent bg-accent/10' 
-                      : 'border-border bg-surface hover:bg-surface-alt hover:border-text-default'
+                      ? 'border-black bg-[#C6FF3D] shadow-[6px_6px_0px_rgba(0,0,0,1)] -translate-y-1' 
+                      : 'border-black bg-white hover:bg-[#F5F3FF] shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5'
                     }
                   `}
                 >
-                  <span className={`text-lg ${isSelected ? 'text-text-light font-medium' : 'text-text-default'}`}>
+                  <div className={`w-8 h-8 rounded-full border-2 border-black flex items-center justify-center mr-4 font-black ${isSelected ? 'bg-[#18102B] text-white' : 'bg-white text-[#18102B]'}`}>
+                    {String.fromCharCode(65 + idx)}
+                  </div>
+                  <span className={`text-xl font-bold ${isSelected ? 'text-[#18102B]' : 'text-[#18102B]'}`}>
                     {option}
                   </span>
                 </div>
@@ -114,16 +135,21 @@ export function QuizTakingClient({ quiz, classId }: { quiz: any, classId: string
             })}
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-end pt-6 border-t-4 border-black/10 border-dashed">
             <Button 
               onClick={handleNext} 
               disabled={answers[currentQuestionIndex] === -1 || isSubmitting}
+              className={`font-black uppercase tracking-widest px-8 py-6 text-lg ${
+                isLastQuestion 
+                  ? 'bg-[#FF6B35] text-white hover:bg-[#18102B]' 
+                  : 'bg-[#18102B] text-white hover:bg-[#834DFB]'
+              }`}
             >
-              {isSubmitting ? 'Submitting...' : isLastQuestion ? 'Submit Quiz' : 'Next Question'}
+              {isSubmitting ? 'SUBMITTING...' : isLastQuestion ? 'SUBMIT QUIZ' : 'NEXT QUESTION'}
             </Button>
           </div>
-        </Card>
+        </div>
       </div>
-    </>
+    </div>
   );
 }

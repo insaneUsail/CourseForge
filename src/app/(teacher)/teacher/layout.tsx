@@ -15,13 +15,17 @@ export default async function TeacherLayout({ children }: { children: React.Reac
   };
 
   return (
-    <div className="min-h-screen bg-white flex">
+    <div className="min-h-screen bg-[#F5F3FF] flex">
       {/* Sidebar (fixed left) */}
       <DashboardSidebar user={user} />
       
       {/* Main Content Area */}
-      <main className="flex-1 ml-64 min-h-screen page-enter bg-[#C6FF3D]/5">
-        {children}
+      <main className="flex-1 ml-64 min-h-screen relative page-enter bg-[#F5F3FF]">
+        {/* Blueprint Grid Background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#18102B0a_1px,transparent_1px),linear-gradient(to_bottom,#18102B0a_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none z-0"></div>
+        <div className="relative z-10 h-full">
+          {children}
+        </div>
       </main>
     </div>
   );
