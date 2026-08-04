@@ -89,6 +89,11 @@ export default function LandingClientPage({ user }: { user: any }) {
   // FAQ accordion state
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [activeFeature, setActiveFeature] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Features sticky scroll
   const featureScrollRef = useRef<HTMLDivElement>(null);
@@ -221,9 +226,9 @@ export default function LandingClientPage({ user }: { user: any }) {
         
             
             <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-[#18102B] uppercase leading-[0.95] flex flex-col">
-              <motion.span style={{ x: textX1, y: textY1 }} className="block">I WRITE.</motion.span>
-              <motion.span style={{ x: textX2, y: textY2 }} className="block">I TEACH.</motion.span>
-              <motion.div style={{ x: textX1, y: textY2 }} className="h-[75px] md:h-[95px] relative overflow-hidden mt-3">
+              <motion.span style={isMounted ? { x: textX1, y: textY1 } : { x: 0, y: 0 }} className="block">I WRITE.</motion.span>
+              <motion.span style={isMounted ? { x: textX2, y: textY2 } : { x: 0, y: 0 }} className="block">I TEACH.</motion.span>
+              <motion.div style={isMounted ? { x: textX1, y: textY2 } : { x: 0, y: 0 }} className="h-[75px] md:h-[95px] relative overflow-hidden mt-3">
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={phraseIdx}
@@ -460,7 +465,7 @@ export default function LandingClientPage({ user }: { user: any }) {
         className="relative bg-[#18102B] border-b-2 border-black py-12 px-6 overflow-hidden origin-center"
         initial={{ opacity: 0, scaleY: 0.2 }}
         whileInView={{ opacity: 1, scaleY: 1 }}
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: false, amount: 0.2 }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       >
         {/* Subtle grid background */}
@@ -525,10 +530,10 @@ export default function LandingClientPage({ user }: { user: any }) {
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
           <motion.div 
-            className="max-w-3xl mb-16"
+            className="max-w-3xl mb-4"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.6 }}
           >
             <span className="inline-block bg-[#18102B] text-[#F5F3FF] text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
@@ -612,7 +617,6 @@ export default function LandingClientPage({ user }: { user: any }) {
                     rotateY: isCenter ? 0 : isLeft ? 35 : -35, // 3D rotation
                     zIndex: 40 - absOffset,
                     opacity: isCenter ? 1 : Math.max(0.4, 1 - absOffset * 0.25),
-                    filter: isCenter ? 'blur(0px)' : `blur(${absOffset * 1.5}px)`
                   }}
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   style={{ transformOrigin: 'center center' }}
@@ -662,7 +666,7 @@ export default function LandingClientPage({ user }: { user: any }) {
           </div>
 
           {/* Pagination Indicators */}
-          <div className="flex justify-center items-center gap-3 mt-8 relative z-50">
+          <div className="flex justify-center items-center gap-3 mt-16 relative z-50">
             {[0, 1, 2, 3, 4, 5].map((idx) => (
               <button 
                 key={idx}
@@ -700,7 +704,7 @@ export default function LandingClientPage({ user }: { user: any }) {
             className="flex items-center justify-center relative"
             initial={{ opacity: 0, x: -100, rotate: -6 }}
             whileInView={{ opacity: 1, x: 0, rotate: 0 }}
-            viewport={{ once: true, amount: 0.15 }}
+            viewport={{ once: false, amount: 0.15 }}
             transition={{ type: "spring", stiffness: 60, damping: 12 }}
           >
             {/* Decorative background grid */}
@@ -762,7 +766,7 @@ export default function LandingClientPage({ user }: { user: any }) {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
+              viewport={{ once: false, amount: 0.2 }}
               transition={{ duration: 0.5 }}
             >
               <span className="inline-block bg-[#F0E100] text-black text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-4 border-2 border-black">
@@ -782,7 +786,7 @@ export default function LandingClientPage({ user }: { user: any }) {
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
+                viewport={{ once: false, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
                 className="bg-[#22D3EE] rounded-[32px] p-6 sm:p-8 border-[3px] border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] flex flex-col gap-5 group hover:-translate-y-2 hover:shadow-[12px_12px_0px_rgba(0,0,0,1)] transition-all duration-300"
               >
@@ -816,7 +820,7 @@ export default function LandingClientPage({ user }: { user: any }) {
               <motion.div
                 initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
+                viewport={{ once: false, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="bg-[#F0E100] rounded-[32px] p-6 sm:p-8 border-[3px] border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] flex gap-4 sm:gap-6 items-center relative overflow-hidden group hover:-translate-y-2 hover:shadow-[12px_12px_0px_rgba(0,0,0,1)] transition-all duration-300"
               >
@@ -848,7 +852,7 @@ export default function LandingClientPage({ user }: { user: any }) {
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
+                viewport={{ once: false, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
                 className="relative bg-[#FF6B35] rounded-[32px] p-6 sm:p-8 border-[3px] border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] flex flex-col gap-6 overflow-hidden group hover:-translate-y-2 hover:shadow-[12px_12px_0px_rgba(0,0,0,1)] transition-all duration-300"
               >
@@ -908,7 +912,7 @@ export default function LandingClientPage({ user }: { user: any }) {
             className="text-center max-w-2xl mx-auto mb-16"
             initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.6 }}
           >
             <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
@@ -929,7 +933,7 @@ export default function LandingClientPage({ user }: { user: any }) {
               className="w-full flex"
               initial={{ opacity: 0, x: -120, rotate: -4 }}
               whileInView={{ opacity: 1, x: 0, rotate: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
+              viewport={{ once: false, amount: 0.2 }}
               transition={{ type: "spring", stiffness: 70, damping: 14 }}
             >
               <TiltWrapper className="bg-white rounded-[32px] border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] overflow-hidden w-full flex flex-col relative group">
@@ -1013,7 +1017,7 @@ export default function LandingClientPage({ user }: { user: any }) {
               className="w-full flex"
               initial={{ opacity: 0, x: 120, rotate: 4 }}
               whileInView={{ opacity: 1, x: 0, rotate: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
+              viewport={{ once: false, amount: 0.2 }}
               transition={{ type: "spring", stiffness: 70, damping: 14 }}
             >
               <TiltWrapper className="bg-white rounded-[32px] border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] overflow-hidden w-full flex flex-col relative group">
@@ -1109,7 +1113,7 @@ export default function LandingClientPage({ user }: { user: any }) {
             className="text-center max-w-2xl mx-auto mb-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.5 }}
           >
             <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
@@ -1124,7 +1128,7 @@ export default function LandingClientPage({ user }: { user: any }) {
             className="w-full overflow-x-auto rounded-[32px] border-2 border-black bg-white shadow-[8px_8px_0px_rgba(0,0,0,1)] relative overflow-hidden"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.15 }}
+            viewport={{ once: false, amount: 0.15 }}
             transition={{ duration: 0.8 }}
           >
             {/* Window Header (Retro macOS/Browser Style) */}
@@ -1166,7 +1170,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                     className="hover:bg-slate-50 transition-colors duration-200"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.1 }}
+                    viewport={{ once: false, amount: 0.1 }}
                     transition={{ duration: 0.5, delay: idx * 0.08 }}
                   >
                     <td className="p-6 text-base font-extrabold text-[#18102B] bg-slate-50/30 border-r-2 border-black max-w-[280px]">
@@ -1227,7 +1231,7 @@ export default function LandingClientPage({ user }: { user: any }) {
               className="text-center max-w-2xl mx-auto mb-16"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
+              viewport={{ once: false, amount: 0.2 }}
               transition={{ duration: 0.5 }}
             >
               <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
@@ -1279,7 +1283,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                   className="flex"
                   initial={{ opacity: 0, y: 50, rotateX: 10 }}
                   whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
+                  viewport={{ once: false, amount: 0.2 }}
                   transition={{ type: "spring", stiffness: 100, damping: 20, delay: idx * 0.15 }}
                 >
                   <motion.div 
@@ -1339,7 +1343,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                   className={`${statColors[idx]} rounded-[20px] p-6`}
                   initial={{ opacity: 0, y: 30, scale: 0.8 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: true, amount: 0.2 }}
+                  viewport={{ once: false, amount: 0.2 }}
                   transition={{ type: "spring", stiffness: 100, damping: 15, delay: idx * 0.1 }}
                 >
                   <div className="text-4xl font-extrabold tracking-tight">
@@ -1377,7 +1381,7 @@ export default function LandingClientPage({ user }: { user: any }) {
             className="text-center max-w-2xl mx-auto mb-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.5 }}
           >
             <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
@@ -1438,7 +1442,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                 className="flex"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.15 }}
+                viewport={{ once: false, amount: 0.15 }}
                 transition={{ type: "spring", stiffness: 80, damping: 14, delay: idx * 0.1 }}
               >
                 <TiltWrapper className={`relative w-full h-[240px] md:h-[260px] rounded-[24px] p-8 md:p-10 flex flex-col justify-between overflow-hidden shadow-[6px_6px_0px_rgba(0,0,0,1)] border-2 border-black hover:-translate-y-1 hover:shadow-[8px_8px_0px_rgba(0,0,0,1)] transition-all duration-300 ${item.bgClass}`}>
@@ -1510,7 +1514,7 @@ export default function LandingClientPage({ user }: { user: any }) {
             className="text-center max-w-2xl mx-auto mb-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.5 }}
           >
             <span className="inline-block bg-[#B4F481] text-[#18102B] text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
@@ -1529,7 +1533,7 @@ export default function LandingClientPage({ user }: { user: any }) {
               className="flex"
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
+              viewport={{ once: false, amount: 0.15 }}
               transition={{ type: "spring", stiffness: 70, damping: 14, delay: 0 }}
             >
               <TiltWrapper className="bg-white border-2 border-black rounded-[32px] shadow-[8px_8px_0px_rgba(0,0,0,1)] overflow-hidden w-full flex flex-col relative group">
@@ -1602,7 +1606,7 @@ export default function LandingClientPage({ user }: { user: any }) {
               className="flex"
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
+              viewport={{ once: false, amount: 0.15 }}
               transition={{ type: "spring", stiffness: 70, damping: 14, delay: 0.15 }}
             >
               <TiltWrapper className="bg-white border-2 border-black rounded-[32px] shadow-[8px_8px_0px_rgba(0,0,0,1)] overflow-hidden w-full flex flex-col relative group">
@@ -1681,7 +1685,7 @@ export default function LandingClientPage({ user }: { user: any }) {
               className="flex"
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
+              viewport={{ once: false, amount: 0.15 }}
               transition={{ type: "spring", stiffness: 70, damping: 14, delay: 0.3 }}
             >
               <TiltWrapper className="bg-white border-2 border-black rounded-[32px] shadow-[8px_8px_0px_rgba(0,0,0,1)] overflow-hidden w-full flex flex-col relative group">
@@ -1777,7 +1781,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                     className={`bg-white rounded-[24px] border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] p-6 hover:border-[#834DFB] hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] transition-all duration-300 cursor-pointer relative overflow-hidden select-none ${isOpen ? 'border-[#834DFB] shadow-[6px_6px_0px_#834DFB]' : ''}`}
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.1 }}
+                    viewport={{ once: false, amount: 0.1 }}
                     transition={{ type: "spring", stiffness: 100, damping: 15, delay: idx * 0.05 }}
                   >
                     {/* Glowing highlight blob when open */}
@@ -1848,7 +1852,7 @@ export default function LandingClientPage({ user }: { user: any }) {
             className="max-w-3xl mb-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.5 }}
           >
             <span className="inline-block bg-[#18102B] text-white text-xs font-bold uppercase tracking-wider py-1.5 px-4 rounded-full mb-6 border border-black">
@@ -1870,7 +1874,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                 className="flex"
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.15 }}
+                viewport={{ once: false, amount: 0.15 }}
                 transition={{ duration: 0.6, delay: idx * 0.12 }}
               >
                 <TiltWrapper className="w-full h-[480px] rounded-[32px] overflow-hidden flex flex-col relative group shadow-[6px_6px_0px_rgba(0,0,0,1)] border-2 border-black hover:border-[#834DFB] transition-colors duration-300 bg-white">
@@ -1918,9 +1922,9 @@ export default function LandingClientPage({ user }: { user: any }) {
       <section className="max-w-7xl mx-auto px-6 pb-24 w-full">
         <motion.div 
           className="bg-[#F5F3FF] text-[#18102B] rounded-[32px] p-10 md:p-16 text-center border-2 border-black relative overflow-hidden shadow-[8px_8px_0px_rgba(0,0,0,1)]"
-          initial={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-          viewport={{ once: true, amount: 0.2 }}
+          initial={{ opacity: 0, scale: 1.05,  }}
+          whileInView={{ opacity: 1, scale: 1,  }}
+          viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           {/* Creative Dark Vector Background */}
