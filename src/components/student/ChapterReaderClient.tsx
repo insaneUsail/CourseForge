@@ -69,25 +69,25 @@ export function ChapterReaderClient({ chapter, classId }: { chapter: any, classI
         footer={classId ? <div className="text-xs text-[#18102B] p-4 font-black uppercase tracking-widest bg-[#C6FF3D] border-t-4 border-black">Class context active</div> : undefined}
       />
       
-      <div className="flex-1 overflow-auto p-6 md:p-12 bg-white relative">
+      <div className="flex-1 overflow-auto p-4 md:p-6 md:p-12 bg-white relative">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#18102B15_1px,transparent_1px),linear-gradient(to_bottom,#18102B15_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none"></div>
 
         <div className="max-w-4xl mx-auto relative z-10">
-          <div className="mb-12">
+          <div className="mb-6 md:mb-12">
             <span className="inline-block bg-[#C6FF3D] text-[#18102B] font-black uppercase tracking-widest text-xs px-3 py-1 border-2 border-black rounded shadow-[2px_2px_0px_rgba(0,0,0,1)] mb-4">
               Chapter Reader
             </span>
-            <h1 className="text-4xl md:text-5xl font-black text-[#18102B] uppercase tracking-tighter" style={{ WebkitTextStroke: '1px black', color: 'white', textShadow: '4px 4px 0 #18102B' }}>
+            <h1 className="text-lg md:text-2xl md:text-4xl md:text-5xl font-black text-[#18102B] uppercase tracking-tighter" style={{ WebkitTextStroke: '1px black', color: 'white', textShadow: '4px 4px 0 #18102B' }}>
               {chapter.title}
             </h1>
           </div>
           
           {activeItem?.type === 'content' && (
-            <div className="p-8 md:p-12 mb-8 bg-white border-4 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] rounded-3xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF6B35] rounded-bl-full opacity-20 pointer-events-none"></div>
+            <div className="p-4 md:p-8 md:p-12 mb-4 md:mb-8 bg-white border-4 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] rounded-3xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-16 md:w-32 h-16 md:h-32 bg-[#FF6B35] rounded-bl-full opacity-20 pointer-events-none"></div>
               
-              <h2 className="text-3xl font-black text-[#18102B] mb-8 uppercase tracking-tighter border-b-4 border-black pb-4 relative z-10">
+              <h2 className="text-xl md:text-3xl font-black text-[#18102B] mb-4 md:mb-8 uppercase tracking-tighter border-b-4 border-black pb-4 relative z-10">
                 {activeItem.data.title || activeItem.label}
               </h2>
               
@@ -99,23 +99,23 @@ export function ChapterReaderClient({ chapter, classId }: { chapter: any, classI
           )}
 
           {activeItem?.type === 'quiz' && (
-            <div className="p-8 md:p-12 mb-8 bg-[#834DFB] border-4 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] rounded-3xl text-center relative overflow-hidden">
+            <div className="p-4 md:p-8 md:p-12 mb-4 md:mb-8 bg-[#834DFB] border-4 border-black shadow-[8px_8px_0px_rgba(0,0,0,1)] rounded-3xl text-center relative overflow-hidden">
               <div className="absolute -left-12 -bottom-12">
-                <Target className="w-48 h-48 text-[#18102B] opacity-20" />
+                <Target className="w-12 md:w-24 md:w-48 h-12 md:h-24 md:h-48 text-[#18102B] opacity-20" />
               </div>
               
               <div className="relative z-10">
-                <h2 className="text-4xl font-black text-white mb-6 uppercase tracking-tighter" style={{ WebkitTextStroke: '1px black', textShadow: '2px 2px 0 #18102B' }}>
+                <h2 className="text-lg md:text-2xl md:text-4xl font-black text-white mb-6 uppercase tracking-tighter" style={{ WebkitTextStroke: '1px black', textShadow: '2px 2px 0 #18102B' }}>
                   {activeItem.label}
                 </h2>
                 
-                <p className="text-white font-bold text-lg mb-8 max-w-xl mx-auto border-2 border-black bg-[#18102B] p-4 rounded-xl shadow-[4px_4px_0px_rgba(198,255,61,1)]">
+                <p className="text-white font-bold text-lg mb-4 md:mb-8 max-w-xl mx-auto border-2 border-black bg-[#18102B] p-4 rounded-xl shadow-[4px_4px_0px_rgba(198,255,61,1)]">
                   Test your knowledge on the previous sections. Prepare yourself before starting!
                 </p>
                 
                 <Button 
                   onClick={() => handleTakeQuiz(activeItem.data.id)}
-                  className="bg-[#C6FF3D] text-[#18102B] text-xl px-12 py-6 font-black uppercase tracking-widest gap-3 shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:bg-white border-2 border-black"
+                  className="bg-[#C6FF3D] text-[#18102B] text-xl px-4 md:px-6 md:px-12 py-3 md:py-6 font-black uppercase tracking-widest gap-3 shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:bg-white border-2 border-black"
                 >
                   <Play className="w-6 h-6 fill-current" /> Start Quiz
                 </Button>
@@ -123,11 +123,11 @@ export function ChapterReaderClient({ chapter, classId }: { chapter: any, classI
             </div>
           )}
 
-          <div className="flex justify-end mt-12 pb-12">
+          <div className="flex justify-end mt-6 md:mt-12 pb-12">
             {activeIndex < items.length - 1 && (
               <Button 
                 onClick={handleNext}
-                className="bg-[#18102B] text-white gap-2 font-black uppercase tracking-widest px-8 py-6 text-lg group hover:bg-[#FF6B35]"
+                className="bg-[#18102B] text-white gap-2 font-black uppercase tracking-widest px-4 md:px-8 py-3 md:py-6 text-lg group hover:bg-[#FF6B35]"
               >
                 Next Section 
                 <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />

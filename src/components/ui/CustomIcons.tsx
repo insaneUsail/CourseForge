@@ -102,7 +102,7 @@ export const IconTarget3D = ({ className = "w-12 h-12" }: { className?: string }
 );
 
 // Abstract Background/Decoration Elements
-export const AbstractSphere = ({ className = "w-24 h-24" }: { className?: string }) => (
+export const AbstractSphere = ({ className = "w-12 md:w-24 h-12 md:h-24" }: { className?: string }) => (
   <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
     <Defs />
     <circle cx="50" cy="50" r="40" fill="url(#grad-purple-cyan)" filter="url(#glow-large)" opacity="0.4" />
@@ -111,7 +111,7 @@ export const AbstractSphere = ({ className = "w-24 h-24" }: { className?: string
   </svg>
 );
 
-export const AbstractRing = ({ className = "w-24 h-24" }: { className?: string }) => (
+export const AbstractRing = ({ className = "w-12 md:w-24 h-12 md:h-24" }: { className?: string }) => (
   <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
     <Defs />
     <circle cx="50" cy="50" r="35" stroke="url(#grad-green-blue)" strokeWidth="6" strokeDasharray="10 5" filter="url(#glow-large)" opacity="0.6" />
@@ -121,7 +121,7 @@ export const AbstractRing = ({ className = "w-24 h-24" }: { className?: string }
   </svg>
 );
 
-export const AbstractCube = ({ className = "w-24 h-24" }: { className?: string }) => (
+export const AbstractCube = ({ className = "w-12 md:w-24 h-12 md:h-24" }: { className?: string }) => (
   <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
     <Defs />
     <path d="M50 20L75 35L50 50L25 35L50 20Z" fill="url(#grad-pink-orange)" opacity="0.8" filter="url(#glow-neon)" />

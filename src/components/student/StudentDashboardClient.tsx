@@ -14,8 +14,8 @@ export function StudentDashboardClient() {
       <div className="absolute -top-4 -right-4 bg-[#C6FF3D] text-[#18102B] font-black text-[10px] uppercase tracking-widest px-3 py-1 rounded border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] rotate-6 z-20">
         FAST JOIN
       </div>
-      <Card className="w-full bg-[#18102B] border-4 border-black text-white hoverable={false} p-8 rounded-[32px] shadow-[10px_10px_0px_rgba(0,0,0,1)] z-10 relative">
-        <h2 className="text-3xl font-black text-white mb-6 uppercase tracking-tighter">
+      <Card className="w-full bg-[#18102B] border-4 border-black text-white hoverable={false} p-4 md:p-8 rounded-[32px] shadow-[10px_10px_0px_rgba(0,0,0,1)] z-10 relative">
+        <h2 className="text-xl md:text-3xl font-black text-white mb-6 uppercase tracking-tighter">
           Join a Class
         </h2>
         <form action={formAction} className="space-y-4">
@@ -41,7 +41,7 @@ export function StudentDashboardClient() {
               Successfully joined class!
             </p>
           )}
-          <Button type="submit" className="w-full mt-6 bg-[#C6FF3D] text-black hover:bg-white text-lg py-6" size="lg" disabled={isPending}>
+          <Button type="submit" className="w-full mt-6 bg-[#C6FF3D] text-black hover:bg-white text-lg py-3 md:py-6" size="lg" disabled={isPending}>
             {isPending ? 'Joining...' : 'Join Class'}
           </Button>
         </form>

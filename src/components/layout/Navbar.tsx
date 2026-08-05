@@ -83,8 +83,8 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
           </Link>
           
           {/* Mobile Logo */}
-          <Link href="/" className="pl-3 text-lg font-extrabold text-[#18102B] sm:hidden tracking-tight">
-            CF
+          <Link href="/" className="pl-3 text-lg font-extrabold text-[#18102B] sm:hidden tracking-tight flex items-center">
+            Course<span className="animate-sway inline-block text-[#834DFB] origin-bottom-left ml-0.5">Forge</span>
           </Link>
 
           {/* Center Links (Desktop) */}
@@ -140,7 +140,7 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
                 <Link href="/login" className="text-sm font-bold text-[#18102B]/80 hover:text-[#18102B] hover:bg-white/40 px-4 py-2 rounded-full hidden md:block transition-colors">
                   Log in
                 </Link>
-                <Link href="/signup" className="bg-[#18102B] text-[#C6FF3D] px-6 py-2.5 rounded-full text-sm font-black hover:bg-black transition-colors shadow-md hidden sm:block border-2 border-black">
+                <Link href="/signup" className="bg-[#18102B] text-[#C6FF3D] px-4 md:px-6 py-2.5 rounded-full text-sm font-black hover:bg-black transition-colors shadow-md hidden sm:block border-2 border-black">
                   Get Started
                 </Link>
               </>
@@ -173,67 +173,79 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
         </nav>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer Overlay & Sidebar */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-40 bg-[#F5F3FF]/95 backdrop-blur-xl pt-24 px-6 flex flex-col gap-6 animate-fade-in overflow-y-auto">
-          {user ? (
-            user.role === 'teacher' ? (
-              <>
-                <Link href="/teacher/dashboard" onClick={() => setMobileMenuOpen(false)} className="text-[#18102B] font-black text-2xl py-3 flex items-center gap-3">
-                  <LayoutDashboard className="w-6 h-6 text-[#834DFB]" /> My Classes
-                </Link>
-                <Link href="/teacher/browse" onClick={() => setMobileMenuOpen(false)} className="text-[#18102B] font-black text-2xl py-3 flex items-center gap-3">
-                  <Globe className="w-6 h-6 text-[#834DFB]" /> Browse Public
-                </Link>
-                <Link href="/teacher/analytics" onClick={() => setMobileMenuOpen(false)} className="text-[#18102B] font-black text-2xl py-3 flex items-center gap-3">
-                  <BarChart3 className="w-6 h-6 text-[#834DFB]" /> Analytics
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link href="/student/dashboard" onClick={() => setMobileMenuOpen(false)} className="text-[#18102B] font-black text-2xl py-3 flex items-center gap-3">
-                  <LayoutDashboard className="w-6 h-6 text-[#834DFB]" /> My Classes
-                </Link>
-                <Link href="/student/history" onClick={() => setMobileMenuOpen(false)} className="text-[#18102B] font-black text-2xl py-3 flex items-center gap-3">
-                  <History className="w-6 h-6 text-[#834DFB]" /> History
-                </Link>
-              </>
-            )
-          ) : (
-            <>
-              {navLinks.map((link) => (
-                <a 
-                  key={link.id}
-                  href={`#${link.id}`} 
-                  onClick={(e) => scrollTo(e, link.id)} 
-                  className={clsx(
-                    "font-black text-3xl py-2",
-                    activeSection === link.id ? "text-[#834DFB]" : "text-[#18102B]/70"
-                  )}
-                >
-                  {link.label}
-                </a>
-              ))}
-            </>
-          )}
+        <div className="md:hidden fixed inset-0 z-40 flex justify-end">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-fade-in"
+            onClick={() => setMobileMenuOpen(false)}
+          ></div>
+          
+          {/* Sidebar Drawer */}
+          <div className="relative w-[85%] max-w-sm h-full bg-[#18102B] border-l-4 border-black pt-28 px-4 md:px-8 pb-10 flex flex-col gap-3 md:gap-6 overflow-y-auto animate-slide-in-right shadow-[-12px_0px_0px_rgba(198,255,61,1)]">
+            
+            <div className="flex flex-col gap-3 md:gap-6 text-right items-end flex-1">
+              {user ? (
+                user.role === 'teacher' ? (
+                  <>
+                    <Link href="/teacher/dashboard" onClick={() => setMobileMenuOpen(false)} className="text-white hover:text-[#C6FF3D] font-black text-lg md:text-2xl py-3 flex items-center justify-end gap-4 w-full transition-colors">
+                      My Classes <LayoutDashboard className="w-7 h-7 text-[#C6FF3D]" />
+                    </Link>
+                    <Link href="/teacher/browse" onClick={() => setMobileMenuOpen(false)} className="text-white hover:text-[#C6FF3D] font-black text-lg md:text-2xl py-3 flex items-center justify-end gap-4 w-full transition-colors">
+                      Browse Public <Globe className="w-7 h-7 text-[#C6FF3D]" />
+                    </Link>
+                    <Link href="/teacher/analytics" onClick={() => setMobileMenuOpen(false)} className="text-white hover:text-[#C6FF3D] font-black text-lg md:text-2xl py-3 flex items-center justify-end gap-4 w-full transition-colors">
+                      Analytics <BarChart3 className="w-7 h-7 text-[#C6FF3D]" />
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/student/dashboard" onClick={() => setMobileMenuOpen(false)} className="text-white hover:text-[#C6FF3D] font-black text-lg md:text-2xl py-3 flex items-center justify-end gap-4 w-full transition-colors">
+                      My Classes <LayoutDashboard className="w-7 h-7 text-[#C6FF3D]" />
+                    </Link>
+                    <Link href="/student/history" onClick={() => setMobileMenuOpen(false)} className="text-white hover:text-[#C6FF3D] font-black text-lg md:text-2xl py-3 flex items-center justify-end gap-4 w-full transition-colors">
+                      History <History className="w-7 h-7 text-[#C6FF3D]" />
+                    </Link>
+                  </>
+                )
+              ) : (
+                <>
+                  {navLinks.map((link) => (
+                    <a 
+                      key={link.id}
+                      href={`#${link.id}`} 
+                      onClick={(e) => scrollTo(e, link.id)} 
+                      className={clsx(
+                        "font-black text-xl md:text-3xl py-2 w-full text-right transition-colors",
+                        activeSection === link.id ? "text-[#C6FF3D]" : "text-white/80 hover:text-white"
+                      )}
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </>
+              )}
+            </div>
 
-          <div className="border-t-2 border-black/10 pt-6 mt-4 flex flex-col gap-4">
-            {!user ? (
-              <>
-                <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="text-[#18102B] bg-white border-2 border-black font-black text-center py-4 rounded-full text-xl shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-                  Log in
-                </Link>
-                <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="text-[#C6FF3D] bg-[#18102B] font-black text-center py-4 rounded-full text-xl shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-                  Get Started
-                </Link>
-              </>
-            ) : (
-              <form action={logoutAction} className="w-full">
-                <button type="submit" onClick={() => setMobileMenuOpen(false)} className="w-full text-[#18102B] bg-white border-2 border-black font-black text-center py-4 rounded-full text-xl cursor-pointer shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-                  Log out
-                </button>
-              </form>
-            )}
+            <div className="border-t-2 border-white/20 pt-8 mt-4 flex flex-col gap-4">
+              {!user ? (
+                <>
+                  <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="text-[#18102B] bg-white border-2 border-black font-black text-center py-4 rounded-xl text-xl shadow-[4px_4px_0px_rgba(198,255,61,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+                    Log in
+                  </Link>
+                  <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="text-[#18102B] bg-[#C6FF3D] border-2 border-black font-black text-center py-4 rounded-xl text-xl shadow-[4px_4px_0px_rgba(255,107,53,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+                    Get Started
+                  </Link>
+                </>
+              ) : (
+                <form action={logoutAction} className="w-full">
+                  <button type="submit" onClick={() => setMobileMenuOpen(false)} className="w-full text-white bg-[#FF6B35] border-2 border-black font-black text-center py-4 rounded-xl text-xl cursor-pointer shadow-[4px_4px_0px_rgba(240,225,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all hover:bg-[#e85a25]">
+                    Log out
+                  </button>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       )}

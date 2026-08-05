@@ -5,11 +5,11 @@ import { Mail, Info, FileText, Shield, Headphones, Globe, Code, MessageSquare } 
 export const Footer: React.FC = () => {
   return (
     <footer className="bg-[#18102B] text-[#F5F3FF] py-16 border-t border-[#3B344D]">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-6 md:gap-12">
         
         {/* Brand */}
         <div className="col-span-1 md:col-span-2">
-          <Link href="/" className="text-3xl font-extrabold flex items-center gap-1.5 mb-6 text-white min-h-[44px]">
+          <Link href="/" className="text-xl md:text-3xl font-extrabold flex items-center gap-1.5 mb-6 text-white min-h-[44px]">
             CourseForge
             <span className="w-2.5 h-2.5 rounded-full bg-[#F0E100] border border-[#834DFB] mt-1.5 animate-pulse"></span>
           </Link>
@@ -38,9 +38,9 @@ export const Footer: React.FC = () => {
         </div>
       </div>
       
-      <div className="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-[#3B344D] flex flex-col md:flex-row items-center justify-between gap-4 text-[#A29CB0] text-sm">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 mt-16 pt-8 border-t border-[#3B344D] flex flex-col md:flex-row items-center justify-between gap-4 text-[#A29CB0] text-sm">
         <p>&copy; {new Date().getFullYear()} CourseForge. All rights reserved.</p>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3 md:gap-6">
           <Link href="#" className="hover:text-white transition-colors"><Code className="w-5 h-5" /></Link>
           <Link href="#" className="hover:text-white transition-colors"><MessageSquare className="w-5 h-5" /></Link>
           <Link href="#" className="hover:text-white transition-colors"><Mail className="w-5 h-5" /></Link>

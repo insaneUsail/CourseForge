@@ -13,7 +13,7 @@ export default async function ChapterEditorPage({ params }: { params: Promise<{ 
   const chapterData = await getChapterDetail(id);
 
   if (!chapterData) {
-    return <div className="p-8 text-error">Chapter not found or error loading chapter.</div>;
+    return <div className="p-4 md:p-8 text-error">Chapter not found or error loading chapter.</div>;
   }
 
   

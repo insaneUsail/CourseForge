@@ -44,17 +44,17 @@ export const TicketCard: React.FC<TicketCardProps> = ({
       <span className="absolute top-2 right-2 font-black text-black opacity-20 z-10 text-xs">+</span >
 
       {/* Header section */}
-      <div className={clsx('px-6 py-4 flex justify-between items-center text-[10px] uppercase tracking-widest font-black border-b-2 border-black', headerColors[color])}>
+      <div className={clsx('px-4 md:px-6 py-4 flex justify-between items-center text-[10px] uppercase tracking-widest font-black border-b-2 border-black', headerColors[color])}>
         <div>{topLeftText}</div>
         <div>{topRightText}</div>
       </div>
       
       {/* Body section */}
-      <div className="p-6 flex flex-col flex-1 relative bg-white">
+      <div className="p-4 md:p-6 flex flex-col flex-1 relative bg-white">
         <div className="text-xs font-black uppercase tracking-widest text-[#6B6577] mb-2">{subtitle}</div>
         
-        <div className="flex justify-between items-start gap-4 mb-8">
-          <h3 className="text-2xl font-black text-[#18102B] leading-tight tracking-tight">{title}</h3>
+        <div className="flex justify-between items-start gap-4 mb-4 md:mb-8">
+          <h3 className="text-lg md:text-2xl font-black text-[#18102B] leading-tight tracking-tight">{title}</h3>
           {statusBadge && (
             <div className="flex-shrink-0">
               {statusBadge}

@@ -42,7 +42,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
       <div 
         ref={modalRef}
         className={clsx(
-          'relative w-full max-w-lg bg-[var(--color-surface)] rounded-[var(--radius-lg)] shadow-xl p-6 transition-all transform scale-100',
+          'relative w-full max-w-lg bg-[var(--color-surface)] rounded-[var(--radius-lg)] shadow-xl p-4 md:p-6 transition-all transform scale-100',
           className
         )}
       >

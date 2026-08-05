@@ -39,10 +39,10 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ user }) => {
   const links = user.role === 'teacher' ? teacherLinks : studentLinks;
 
   return (
-    <aside className="w-64 h-screen bg-white border-r-2 border-black flex flex-col fixed left-0 top-0 z-40 overflow-y-auto shadow-[4px_0px_0px_rgba(0,0,0,1)]">
+    <aside className="hidden md:flex w-64 h-screen bg-white border-r-2 border-black flex-col fixed left-0 top-0 z-40 overflow-y-auto shadow-[4px_0px_0px_rgba(0,0,0,1)]">
       {/* Brand */}
-      <div className="p-6 border-b-2 border-black flex items-center justify-center bg-[#C6FF3D]">
-        <Link href="/" className="text-2xl font-black text-[#18102B] flex items-center gap-2 tracking-tighter uppercase">
+      <div className="p-4 md:p-6 border-b-2 border-black flex items-center justify-center bg-[#C6FF3D]">
+        <Link href="/" className="text-lg md:text-2xl font-black text-[#18102B] flex items-center gap-2 tracking-tighter uppercase">
           <div className="w-8 h-8 bg-[#18102B] border-2 border-black rounded-sm flex items-center justify-center font-black text-lg text-[#C6FF3D] shadow-[2px_2px_0px_rgba(0,0,0,1)]">
             CF
           </div>
@@ -51,7 +51,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ user }) => {
       </div>
 
       {/* User Profile Snippet */}
-      <div className="p-6 border-b-2 border-black bg-[#18102B] text-white">
+      <div className="p-4 md:p-6 border-b-2 border-black bg-[#18102B] text-white">
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 rounded-sm bg-[#834DFB] border-2 border-black text-white flex items-center justify-center font-black text-lg flex-shrink-0 shadow-[2px_2px_0px_rgba(0,0,0,1)]">
             {user.name.charAt(0).toUpperCase()}

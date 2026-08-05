@@ -23,15 +23,15 @@ export default async function BrowsePublicPage() {
     <div className="flex-1 flex flex-col bg-slate-50 min-h-screen">
       <Navbar user={user} />
       
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-12 text-center max-w-3xl mx-auto">
-          <h1 className="text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">Explore Free Content</h1>
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-3 md:py-6 md:py-12">
+        <div className="mb-6 md:mb-12 text-center max-w-3xl mx-auto">
+          <h1 className="text-lg md:text-2xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">Explore Free Content</h1>
           <p className="text-lg text-slate-600">
             Browse through our collection of free, high-quality public chapters created by teachers around the world.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:p-8">
           {publicChapters.length === 0 ? (
             <div className="col-span-full py-16 text-center text-slate-500 bg-white rounded-3xl border border-slate-200">
               <p className="text-xl font-medium">No public chapters available yet.</p>

@@ -23,7 +23,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ items, activeId, onSelect, foo
     <>
       {/* Mobile Toggle */}
       <button 
-        className="md:hidden fixed bottom-6 right-6 z-40 bg-[#C6FF3D] text-[#18102B] p-3 rounded-full shadow-[4px_4px_0px_rgba(0,0,0,1)] border-2 border-black min-w-[56px] min-h-[56px] flex items-center justify-center hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+        className="md:hidden fixed bottom-24 right-6 z-40 bg-[#C6FF3D] text-[#18102B] p-3 rounded-full shadow-[4px_4px_0px_rgba(0,0,0,1)] border-2 border-black min-w-[56px] min-h-[56px] flex items-center justify-center hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? <X className="w-8 h-8" strokeWidth={3} /> : <Menu className="w-8 h-8" strokeWidth={3} />}
@@ -43,7 +43,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ items, activeId, onSelect, foo
         isOpen ? 'translate-x-0 shadow-[8px_0px_0px_rgba(0,0,0,1)]' : '-translate-x-full md:translate-x-0 md:shadow-[4px_0px_0px_rgba(0,0,0,1)]'
       )}>
         
-        <div className="flex-1 overflow-y-auto py-6 px-4">
+        <div className="flex-1 overflow-y-auto py-3 md:py-6 px-4">
           <ul className="space-y-3">
             {items.map((item, index) => {
               const isActive = item.id === activeId;

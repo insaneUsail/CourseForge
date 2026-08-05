@@ -18,7 +18,7 @@ export function LoginForm() {
   }, [state?.error, toast]);
 
   return (
-    <form action={formAction} className="flex flex-col gap-6 w-full">
+    <form action={formAction} className="flex flex-col gap-3 md:gap-6 w-full">
       <Input
         label="Email Address"
         name="email"

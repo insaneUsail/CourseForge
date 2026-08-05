@@ -13,7 +13,7 @@ export default async function ClassDetailPage({ params }: { params: Promise<{ id
   const classData = await getClassDetail(id);
 
   if (!classData) {
-    return <div className="p-8 text-error">Class not found or error loading class.</div>;
+    return <div className="p-4 md:p-8 text-error">Class not found or error loading class.</div>;
   }
 
   const isOwner = classData.teacherId === session.user.id;

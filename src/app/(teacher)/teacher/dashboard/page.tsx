@@ -12,7 +12,7 @@ export default async function TeacherDashboardPage() {
   const classes = await getTeacherClasses();
   
   if (!classes) {
-    return <div className="p-8 font-black text-[#18102B] uppercase">Failed to load classes</div>;
+    return <div className="p-4 md:p-8 font-black text-[#18102B] uppercase">Failed to load classes</div>;
   }
 
   // Calculate basic stats for the teacher
@@ -31,7 +31,7 @@ export default async function TeacherDashboardPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6 lg:p-8">
+    <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
       <TeacherDashboardClient classes={classes} stats={stats} user={session.user} />
     </div>
   );

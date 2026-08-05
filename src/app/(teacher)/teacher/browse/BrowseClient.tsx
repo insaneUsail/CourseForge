@@ -59,9 +59,9 @@ export default function BrowseClient({ classes, initialChapters }: { classes: an
 
   return (
     <div>
-      <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4 mb-12 bg-[#18102B] p-8 rounded-[32px] border-4 border-black shadow-[12px_12px_0px_rgba(0,0,0,1)] max-w-4xl mx-auto relative overflow-hidden">
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#C6FF3D] rounded-full blur-2xl opacity-20"></div>
-        <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-[#FF6B35] rounded-full blur-2xl opacity-20"></div>
+      <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4 mb-6 md:mb-12 bg-[#18102B] p-4 md:p-8 rounded-[32px] border-2 md:border-4 border-black shadow-[6px_6px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_rgba(0,0,0,1)] max-w-4xl mx-auto relative overflow-hidden">
+        <div className="absolute -top-10 -right-10 w-16 md:w-32 h-16 md:h-32 bg-[#C6FF3D] rounded-full blur-2xl opacity-20"></div>
+        <div className="absolute -bottom-10 -left-10 w-16 md:w-32 h-16 md:h-32 bg-[#FF6B35] rounded-full blur-2xl opacity-20"></div>
         <Input 
           value={query} 
           onChange={(e) => setQuery(e.target.value)} 
@@ -80,17 +80,17 @@ export default function BrowseClient({ classes, initialChapters }: { classes: an
       </form>
 
       {toast && (
-        <div className={`p-4 mb-12 rounded-xl font-black text-center border-4 border-black shadow-[6px_6px_0px_rgba(0,0,0,1)] uppercase tracking-wider ${toast.type === 'success' ? 'bg-[#C6FF3D] text-[#18102B]' : 'bg-[#FF6B35] text-white'}`}>
+        <div className={`p-4 mb-6 md:mb-12 rounded-xl font-black text-center border-2 md:border-4 border-black shadow-[6px_6px_0px_rgba(0,0,0,1)] uppercase tracking-wider ${toast.type === 'success' ? 'bg-[#C6FF3D] text-[#18102B]' : 'bg-[#FF6B35] text-white'}`}>
           {toast.message}
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:p-8">
         {chapters.length === 0 ? (
-          <div className="col-span-full py-20 text-center bg-[#F5F3FF] rounded-[32px] border-4 border-dashed border-[#18102B] shadow-[8px_8px_0px_rgba(0,0,0,1)] relative overflow-hidden">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-[#60A5FA] rounded-full blur-3xl opacity-30"></div>
+          <div className="col-span-full py-20 text-center bg-[#F5F3FF] rounded-[32px] border-2 md:border-4 border-dashed border-[#18102B] shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] relative overflow-hidden">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 md:w-24 md:w-48 h-12 md:h-24 md:h-48 bg-[#60A5FA] rounded-full blur-3xl opacity-30"></div>
             <Search className="w-16 h-16 mx-auto mb-6 text-[#18102B] opacity-50 relative z-10" />
-            <p className="text-3xl font-black text-[#18102B] uppercase tracking-tighter relative z-10">No chapters found.</p>
+            <p className="text-xl md:text-3xl font-black text-[#18102B] uppercase tracking-tighter relative z-10">No chapters found.</p>
             <p className="mt-2 text-[#18102B] font-bold bg-[#F0E100] px-4 py-1.5 border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] inline-block relative z-10 -rotate-2">Try adjusting your search query.</p>
           </div>
         ) : (
@@ -150,9 +150,9 @@ export default function BrowseClient({ classes, initialChapters }: { classes: an
               </select>
             </div>
             
-            <div className="flex justify-end gap-4 mt-8">
+            <div className="flex justify-end gap-4 mt-4 md:mt-8">
               <Button type="button" variant="ghost" onClick={() => setSelectedChapter(null)} className="border-2 border-transparent hover:border-black font-bold">Cancel</Button>
-              <Button type="submit" disabled={isLinking || !selectedClassId} className="bg-[#18102B] text-white font-black uppercase tracking-widest px-8">
+              <Button type="submit" disabled={isLinking || !selectedClassId} className="bg-[#18102B] text-white font-black uppercase tracking-widest px-4 md:px-8">
                 {isLinking ? 'ADDING...' : 'ADD CHAPTER'}
               </Button>
             </div>
