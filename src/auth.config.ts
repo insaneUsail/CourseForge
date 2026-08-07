@@ -58,4 +58,5 @@ export const authConfig = {
     },
   },
   providers: [], // Providers added in the Node-runtime auth.ts
+  trustHost: true,
 } satisfies NextAuthConfig;
