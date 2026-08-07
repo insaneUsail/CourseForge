@@ -38,7 +38,7 @@ export const TicketCard: React.FC<TicketCardProps> = ({
   className
 }) => {
   return (
-    <div className={clsx('flex flex-col rounded-2xl overflow-hidden shadow-[6px_6px_0px_rgba(0,0,0,1)] hover:shadow-[10px_10px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-300 bg-white border-2 border-black relative', className)}>
+    <div className={clsx('flex flex-col rounded-2xl overflow-hidden shadow-[6px_6px_0px_rgba(0,0,0,1)] hover:shadow-[10px_10px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-transform duration-300 bg-white border-2 border-black relative', className)}>
       {/* Corner crosshairs for aesthetics */}
       <span className="absolute top-2 left-2 font-black text-black opacity-20 z-10 text-xs">+</span >
       <span className="absolute top-2 right-2 font-black text-black opacity-20 z-10 text-xs">+</span >

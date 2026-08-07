@@ -77,3 +77,21 @@ export async function signUpAction(prevState: any, formData: FormData) {
 export async function logoutAction() {
   await signOut({ redirectTo: '/' });
 }
+
+export async function demoLoginAction(formData: FormData) {
+  try {
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    
+    await signIn('credentials', {
+      email,
+      password,
+      redirectTo: email === 'teacher@guest.com' ? '/teacher/dashboard' : '/student/dashboard',
+    });
+  } catch (error: any) {
+    if (error?.message === 'NEXT_REDIRECT' || error?.digest?.startsWith('NEXT_REDIRECT')) {
+      throw error;
+    }
+    console.error('Demo login error', error);
+  }
+}

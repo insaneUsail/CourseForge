@@ -143,7 +143,7 @@ export default function TeacherDashboardClient({ classes, stats, user }: { class
           {/* Create New Class Card */}
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="group relative overflow-hidden rounded-[32px] border-2 md:border-4 border-dashed border-[#18102B] bg-[#F5F3FF] hover:bg-[#C6FF3D] hover:border-solid hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] transition-all duration-300 p-4 md:p-8 flex flex-col items-center justify-center min-h-[260px]"
+            className="group relative overflow-hidden rounded-[32px] border-2 md:border-4 border-dashed border-[#18102B] bg-[#F5F3FF] hover:bg-[#C6FF3D] hover:border-solid hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] transition-transform duration-300 p-4 md:p-8 flex flex-col items-center justify-center min-h-[260px]"
           >
             <div className="w-16 h-16 rounded-full bg-white border-2 md:border-4 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
               <Plus className="w-8 h-8 text-[#18102B]" />

@@ -84,14 +84,14 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ user }) => {
               key={link.href} 
               href={link.href}
               className={clsx(
-                "group relative overflow-hidden flex items-center gap-3 px-4 py-3 rounded-lg font-black uppercase tracking-wider transition-all duration-200 border-2 border-transparent",
+                "group relative overflow-hidden flex items-center gap-3 px-4 py-3 rounded-lg font-black uppercase tracking-wider transition-transform duration-200 border-2 border-transparent",
                 isActive 
                   ? "bg-[#C6FF3D] border-black text-[#18102B] shadow-[4px_4px_0px_rgba(0,0,0,1)] translate-x-1" 
                   : "text-[#18102B] hover:border-black hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5"
               )}
             >
               {!isActive && (
-                <div className="absolute left-0 top-0 bottom-0 w-0 bg-[#F0E100] transition-all duration-300 ease-out group-hover:w-full z-0"></div>
+                <div className="absolute left-0 top-0 bottom-0 w-0 bg-[#F0E100] transition-transform duration-300 ease-out group-hover:w-full z-0"></div>
               )}
               <div className="relative z-10 flex items-center gap-3">
                 <Icon className={clsx("w-5 h-5", isActive ? "text-[#18102B]" : "text-[#18102B]")} strokeWidth={2.5} />
@@ -106,7 +106,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ user }) => {
       <div className="p-4 border-t-2 border-black bg-white">
         <form action={logoutAction}>
           <button type="submit" className="w-full group relative overflow-hidden flex items-center justify-center gap-2 px-4 py-3 border-2 border-black rounded-lg font-black uppercase tracking-wider text-[#18102B] hover:text-white transition-colors duration-200 shadow-[4px_4px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none">
-            <div className="absolute left-0 top-0 bottom-0 w-0 bg-[#FF6B35] transition-all duration-300 ease-out group-hover:w-full z-0"></div>
+            <div className="absolute left-0 top-0 bottom-0 w-0 bg-[#FF6B35] transition-transform duration-300 ease-out group-hover:w-full z-0"></div>
             <div className="relative z-10 flex items-center gap-2">
               <LogOut className="w-5 h-5" strokeWidth={2.5} />
               <span className="text-xs">Log out</span>

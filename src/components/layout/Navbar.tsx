@@ -92,7 +92,7 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
             {user ? (
               user.role === 'teacher' ? (
                 <>
-                  <Link href="/teacher/dashboard" className="bg-[#B4F481] text-[#18102B] font-bold px-4 py-2 rounded-full flex items-center gap-2 transition-all hover:shadow-md border border-black/10">
+                  <Link href="/teacher/dashboard" className="bg-[#B4F481] text-[#18102B] font-bold px-4 py-2 rounded-full flex items-center gap-2 transition-transform hover:shadow-md border border-black/10">
                     <LayoutDashboard className="w-4 h-4" /> My Classes
                   </Link>
                   <Link href="/teacher/browse" className="text-[#18102B] hover:bg-white/50 font-bold px-4 py-2 rounded-full transition-colors flex items-center gap-2">
@@ -104,7 +104,7 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
                 </>
               ) : (
                 <>
-                  <Link href="/student/dashboard" className="bg-[#B4F481] text-[#18102B] font-bold px-4 py-2 rounded-full flex items-center gap-2 transition-all hover:shadow-md border border-black/10">
+                  <Link href="/student/dashboard" className="bg-[#B4F481] text-[#18102B] font-bold px-4 py-2 rounded-full flex items-center gap-2 transition-transform hover:shadow-md border border-black/10">
                     <LayoutDashboard className="w-4 h-4" /> My Classes
                   </Link>
                   <Link href="/student/history" className="text-[#18102B] hover:bg-white/50 font-bold px-4 py-2 rounded-full transition-colors flex items-center gap-2">
@@ -120,7 +120,7 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
                     href={`#${link.id}`} 
                     onClick={(e) => scrollTo(e, link.id)}
                     className={clsx(
-                      "font-bold px-5 py-2 rounded-full transition-all flex items-center gap-2",
+                      "font-bold px-5 py-2 rounded-full transition-transform flex items-center gap-2",
                       activeSection === link.id 
                         ? "bg-[#18102B] text-white shadow-md border border-black/10 scale-105" 
                         : "text-[#18102B]/80 hover:text-[#18102B] hover:bg-white/40"
@@ -231,16 +231,16 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
             <div className="border-t-2 border-white/20 pt-8 mt-4 flex flex-col gap-4">
               {!user ? (
                 <>
-                  <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="text-[#18102B] bg-white border-2 border-black font-black text-center py-4 rounded-xl text-xl shadow-[4px_4px_0px_rgba(198,255,61,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+                  <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="text-[#18102B] bg-white border-2 border-black font-black text-center py-4 rounded-xl text-xl shadow-[4px_4px_0px_rgba(198,255,61,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-transform">
                     Log in
                   </Link>
-                  <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="text-[#18102B] bg-[#C6FF3D] border-2 border-black font-black text-center py-4 rounded-xl text-xl shadow-[4px_4px_0px_rgba(255,107,53,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all">
+                  <Link href="/signup" onClick={() => setMobileMenuOpen(false)} className="text-[#18102B] bg-[#C6FF3D] border-2 border-black font-black text-center py-4 rounded-xl text-xl shadow-[4px_4px_0px_rgba(255,107,53,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-transform">
                     Get Started
                   </Link>
                 </>
               ) : (
                 <form action={logoutAction} className="w-full">
-                  <button type="submit" onClick={() => setMobileMenuOpen(false)} className="w-full text-white bg-[#FF6B35] border-2 border-black font-black text-center py-4 rounded-xl text-xl cursor-pointer shadow-[4px_4px_0px_rgba(240,225,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all hover:bg-[#e85a25]">
+                  <button type="submit" onClick={() => setMobileMenuOpen(false)} className="w-full text-white bg-[#FF6B35] border-2 border-black font-black text-center py-4 rounded-xl text-xl cursor-pointer shadow-[4px_4px_0px_rgba(240,225,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-transform hover:bg-[#e85a25]">
                     Log out
                   </button>
                 </form>

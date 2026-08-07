@@ -23,7 +23,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ items, activeId, onSelect, foo
     <>
       {/* Mobile Toggle */}
       <button 
-        className="md:hidden fixed bottom-24 right-6 z-40 bg-[#C6FF3D] text-[#18102B] p-3 rounded-full shadow-[4px_4px_0px_rgba(0,0,0,1)] border-2 border-black min-w-[56px] min-h-[56px] flex items-center justify-center hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+        className="md:hidden fixed bottom-24 right-6 z-40 bg-[#C6FF3D] text-[#18102B] p-3 rounded-full shadow-[4px_4px_0px_rgba(0,0,0,1)] border-2 border-black min-w-[56px] min-h-[56px] flex items-center justify-center hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-transform"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? <X className="w-8 h-8" strokeWidth={3} /> : <Menu className="w-8 h-8" strokeWidth={3} />}
@@ -55,7 +55,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ items, activeId, onSelect, foo
                       setIsOpen(false);
                     }}
                     className={clsx(
-                      'w-full group flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200 min-h-[44px] border-2 border-black',
+                      'w-full group flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-transform duration-200 min-h-[44px] border-2 border-black',
                       isActive 
                         ? 'bg-[#18102B] text-white shadow-[4px_4px_0px_rgba(198,255,61,1)]' 
                         : 'bg-white text-[#18102B] shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_rgba(0,0,0,1)]'

@@ -47,7 +47,7 @@ export default async function ClassChaptersPage({ params }: { params: Promise<{ 
               <Link 
                 key={item.id} 
                 href={item.href}
-                className="group p-3 bg-white border-2 border-black rounded-xl text-sm font-bold text-[#18102B] hover:bg-[#18102B] hover:text-white transition-all shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 flex items-center justify-between"
+                className="group p-3 bg-white border-2 border-black rounded-xl text-sm font-bold text-[#18102B] hover:bg-[#18102B] hover:text-white transition-transform shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 flex items-center justify-between"
               >
                 <span className="truncate pr-2">{item.label}</span>
                 <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />

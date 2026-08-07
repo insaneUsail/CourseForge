@@ -56,7 +56,7 @@ export default function ClassDetailClient({ classData, teacherId }: { classData:
               <Link 
                 key={item.id} 
                 href={item.href}
-                className="group p-3 bg-white border-2 border-black rounded-xl text-sm font-bold text-[#18102B] hover:bg-[#18102B] hover:text-white transition-all shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 flex items-center justify-between"
+                className="group p-3 bg-white border-2 border-black rounded-xl text-sm font-bold text-[#18102B] hover:bg-[#18102B] hover:text-white transition-transform shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 flex items-center justify-between"
               >
                 <span className="truncate pr-2">{item.label}</span>
                 <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -76,7 +76,7 @@ export default function ClassDetailClient({ classData, teacherId }: { classData:
             <div className="relative z-10 flex flex-col items-start gap-4 mb-4">
               <Link 
                 href="/teacher/dashboard" 
-                className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#18102B] bg-white px-3 py-1.5 border-2 border-black rounded shadow-[2px_2px_0px_rgba(0,0,0,1)] active:translate-y-0.5 active:shadow-none transition-all"
+                className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#18102B] bg-white px-3 py-1.5 border-2 border-black rounded shadow-[2px_2px_0px_rgba(0,0,0,1)] active:translate-y-0.5 active:shadow-none transition-transform"
               >
                 ← Back to Dashboard
               </Link>
@@ -90,7 +90,7 @@ export default function ClassDetailClient({ classData, teacherId }: { classData:
               
               <div className="flex flex-wrap gap-4 mb-4 md:mb-8">
                 <div 
-                  className="bg-white px-4 py-2 rounded-lg border-2 border-black flex items-center gap-2 cursor-pointer shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] transition-all"
+                  className="bg-white px-4 py-2 rounded-lg border-2 border-black flex items-center gap-2 cursor-pointer shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_rgba(0,0,0,1)] transition-transform"
                   onClick={() => copyToClipboard(classData.key)}
                   title="Copy Key"
                 >

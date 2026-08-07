@@ -28,7 +28,7 @@ export const PillButton = React.forwardRef<HTMLButtonElement, PillButtonProps>(
       <button
         ref={ref}
         className={clsx(
-          'inline-flex items-center justify-center gap-2 px-4 md:px-6 py-3 rounded-full font-bold text-sm transition-all border shadow-sm hover:shadow active:scale-95',
+          'inline-flex items-center justify-center gap-2 px-4 md:px-6 py-3 rounded-full font-bold text-sm transition-transform border shadow-sm hover:shadow active:scale-95',
           colorStyles[color],
           className
         )}

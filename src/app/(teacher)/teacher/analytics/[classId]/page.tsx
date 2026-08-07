@@ -27,7 +27,7 @@ export default async function ClassAnalyticsPage({ params }: { params: Promise<{
           <div className="flex flex-col items-start gap-4 mb-2">
             <Link 
               href={`/teacher/classes/${classId}`} 
-              className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#18102B] bg-white px-3 py-1.5 border-2 border-black rounded shadow-[2px_2px_0px_rgba(0,0,0,1)] active:translate-y-0.5 active:shadow-none transition-all"
+              className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#18102B] bg-white px-3 py-1.5 border-2 border-black rounded shadow-[2px_2px_0px_rgba(0,0,0,1)] active:translate-y-0.5 active:shadow-none transition-transform"
             >
               ← Back to Class
             </Link>

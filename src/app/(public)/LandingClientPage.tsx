@@ -250,7 +250,7 @@ export default function LandingClientPage({ user }: { user: any }) {
             
             <div className="flex flex-wrap gap-4">
               <Link href={user ? (user.role === 'teacher' ? '/teacher/dashboard' : '/student/dashboard') : '/signup'}>
-                <button className="cta-button-group group relative overflow-hidden inline-flex items-center gap-2.5 px-4 md:px-8 py-4.5 rounded-full bg-[#18102B] text-white font-bold text-base hover:text-black active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all duration-200 border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] cursor-pointer">
+                <button className="cta-button-group group relative overflow-hidden inline-flex items-center gap-2.5 px-4 md:px-8 py-4.5 rounded-full bg-[#18102B] text-white font-bold text-base hover:text-black active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-transform duration-200 border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] cursor-pointer">
                   <span className="relative z-10 flex items-center gap-2.5 transition-colors duration-300">
                     Get Started Free
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
@@ -259,7 +259,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                 </button>
               </Link>
               <a href="#how-it-works">
-                <button className="cta-button-group group relative overflow-hidden inline-flex items-center gap-2 px-4 md:px-8 py-4.5 rounded-full bg-white border-2 border-black text-[#18102B] hover:text-white font-bold text-base active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all duration-200 shadow-[4px_4px_0px_rgba(0,0,0,1)] cursor-pointer">
+                <button className="cta-button-group group relative overflow-hidden inline-flex items-center gap-2 px-4 md:px-8 py-4.5 rounded-full bg-white border-2 border-black text-[#18102B] hover:text-white font-bold text-base active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-transform duration-200 shadow-[4px_4px_0px_rgba(0,0,0,1)] cursor-pointer">
                   <span className="relative z-10 flex items-center gap-2 transition-colors duration-300">
                     See How It Works
                   </span>
@@ -317,7 +317,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                 transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
                 className="w-full h-full"
               >
-              <TiltWrapper className="bg-[#FF6B35] text-white rounded-2xl p-4 md:p-6 border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] relative w-full h-full hover:shadow-[10px_10px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-300">
+              <TiltWrapper className="bg-[#FF6B35] text-white rounded-2xl p-4 md:p-6 border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] relative w-full h-full hover:shadow-[10px_10px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-transform duration-300">
                 {/* Corner Crosshairs */}
                 <span className="crosshair-corner crosshair-top-left font-black text-black">+</span >
                 <span className="crosshair-corner crosshair-top-right font-black text-black">+</span >
@@ -383,7 +383,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                 transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 0.2 }}
                 className="w-full h-full"
               >
-              <TiltWrapper className="bg-[#18102B] text-white rounded-2xl p-4 md:p-6 border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] relative w-full h-full hover:shadow-[10px_10px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-300">
+              <TiltWrapper className="bg-[#18102B] text-white rounded-2xl p-4 md:p-6 border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] relative w-full h-full hover:shadow-[10px_10px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-transform duration-300">
                 {/* Angled Ribbon tags */}
                 <div className="absolute -top-3.5 left-6 flex flex-col gap-1 z-30">
                   <div className="bg-[#C6FF3D] text-black font-black text-[10px] uppercase tracking-wider py-1 px-3 rounded-md border-2 border-black transform -rotate-3">
@@ -418,7 +418,7 @@ export default function LandingClientPage({ user }: { user: any }) {
 
                 {/* Solid flat neon-lime button */}
                 <Link href="/signup">
-                <button className="cta-button-group w-full bg-[#C6FF3D] hover:bg-[#b0f020] text-black font-black text-xs uppercase tracking-widest py-3.5 rounded-xl border-2 border-black transition-all duration-200 shadow-[3px_3px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none cursor-pointer">
+                <button className="cta-button-group w-full bg-[#C6FF3D] hover:bg-[#b0f020] text-black font-black text-xs uppercase tracking-widest py-3.5 rounded-xl border-2 border-black transition-transform duration-200 shadow-[3px_3px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none cursor-pointer">
                   <TypewriterText text="Join Class Now" delay={1.5} />
                 </button>
                 </Link>
@@ -438,7 +438,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                 transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 0.5 }}
                 className="w-full h-full"
               >
-              <TiltWrapper className="bg-white rounded-2xl p-5 border-2 border-black flex items-center gap-4 shadow-[4px_4px_0px_rgba(0,0,0,1)] w-full h-full hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-300">
+              <TiltWrapper className="bg-white rounded-2xl p-5 border-2 border-black flex items-center gap-4 shadow-[4px_4px_0px_rgba(0,0,0,1)] w-full h-full hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-transform duration-300">
                 {/* Concentric Gauge SVG */}
                 <div className="relative w-12 h-12">
                   <svg className="w-full h-full transform -rotate-90">
@@ -498,7 +498,7 @@ export default function LandingClientPage({ user }: { user: any }) {
             </div>
             
             <div className="w-full overflow-hidden relative h-8">
-              <div className="animate-marquee flex gap-3 md:gap-6 md:p-12 items-center">
+              <div className="animate-marquee flex gap-3 md:gap-6 items-center">
                 {[
                   'Greenview High', 'St. Xavier\'s', 'Lincoln Academy', 'Sunrise Tutorials', 'Northfield Prep', 'Delhi Public School',
                   'Greenview High', 'St. Xavier\'s', 'Lincoln Academy', 'Sunrise Tutorials', 'Northfield Prep', 'Delhi Public School'
@@ -624,7 +624,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                   style={{ transformOrigin: 'center center' }}
                   onClick={() => !isCenter && setActiveFeature(idx)}
                 >
-                  <div className={`w-full h-[480px] rounded-[32px] overflow-hidden flex flex-col relative group border-2 border-black transition-all duration-300 ${isCenter ? 'shadow-[6px_6px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_rgba(0,0,0,1)]' : 'shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-y-2 hover:shadow-[10px_10px_0px_rgba(0,0,0,1)]'}`}>
+                  <div className={`w-full h-[480px] rounded-[32px] overflow-hidden flex flex-col relative group border-2 border-black transition-transform duration-300 ${isCenter ? 'shadow-[6px_6px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_rgba(0,0,0,1)]' : 'shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-y-2 hover:shadow-[10px_10px_0px_rgba(0,0,0,1)]'}`}>
                     {/* TOP HALF: Color block with text */}
                     <div className={`p-4 md:p-8 pb-10 flex-1 flex flex-col gap-5 ${card.bgClass}`}>
                       <div className="flex items-center gap-2 flex-wrap">
@@ -656,7 +656,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                       {/* Read more pill button at bottom left over the image */}
                       <div className="absolute bottom-5 left-5 z-10">
                         <Link href="/signup">
-                        <button className="cta-button-group bg-[#18102B] border-2 border-black text-[#CCFF00] pl-4 pr-1.5 py-1.5 rounded-full flex items-center gap-4 text-xs font-bold hover:bg-[#834DFB] hover:text-white active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-200 shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                        <button className="cta-button-group bg-[#18102B] border-2 border-black text-[#CCFF00] pl-4 pr-1.5 py-1.5 rounded-full flex items-center gap-4 text-xs font-bold hover:bg-[#834DFB] hover:text-white active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-transform duration-200 shadow-[4px_4px_0px_rgba(0,0,0,1)]">
                           Read More 
                           <span className="bg-[#CCFF00] text-[#18102B] border-2 border-black rounded-full w-7 h-7 flex items-center justify-center text-[10px] font-black">→</span>
                         </button>
@@ -676,7 +676,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                 key={idx}
                 onClick={() => setActiveFeature(idx)}
                 aria-label={`Go to slide ${idx + 1}`}
-                className={`w-3 h-3 rounded-full border-2 border-black transition-all duration-300 ${activeFeature === idx ? 'bg-[#CCFF00] scale-125' : 'bg-white/30 hover:bg-white/80'}`}
+                className={`w-3 h-3 rounded-full border-2 border-black transition-transform duration-300 ${activeFeature === idx ? 'bg-[#CCFF00] scale-125' : 'bg-white/30 hover:bg-white/80'}`}
               />
             ))}
           </div>
@@ -716,7 +716,7 @@ export default function LandingClientPage({ user }: { user: any }) {
             
             {/* Visual Card */}
             <div className="w-[340px]">
-              <TiltWrapper className="relative bg-white rounded-[28px] border-2 border-black p-4 md:p-8 shadow-[6px_6px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all duration-300">
+              <TiltWrapper className="relative bg-white rounded-[28px] border-2 border-black p-4 md:p-8 shadow-[6px_6px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-transform duration-300">
                 <div className="flex justify-between items-center text-xs font-bold text-[#6B6577] mb-6">
                   <span>Class Overview</span>
                   <span className="px-2 py-0.5 rounded-md bg-[#F5F3FF] text-[#834DFB] font-bold border border-black">LIVE DATA</span>
@@ -796,7 +796,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: false, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="bg-[#22D3EE] rounded-[32px] p-4 md:p-6 sm:p-8 border-[3px] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] flex flex-col gap-5 group hover:-translate-y-2 hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_rgba(0,0,0,1)] transition-all duration-300"
+                className="bg-[#22D3EE] rounded-[32px] p-4 md:p-6 sm:p-8 border-[3px] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] flex flex-col gap-5 group hover:-translate-y-2 hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_rgba(0,0,0,1)] transition-transform duration-300"
               >
                 <div className="flex items-center justify-between">
                   <div className="bg-white text-[#18102B] px-4 py-1.5 rounded-full border-2 border-black font-black text-xs uppercase tracking-widest shadow-[2px_2px_0px_rgba(0,0,0,1)]">
@@ -830,7 +830,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: false, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="bg-[#F0E100] rounded-[32px] p-4 md:p-6 sm:p-8 border-[3px] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] flex gap-4 sm:gap-6 items-center relative overflow-hidden group hover:-translate-y-2 hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_rgba(0,0,0,1)] transition-all duration-300"
+                className="bg-[#F0E100] rounded-[32px] p-4 md:p-6 sm:p-8 border-[3px] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] flex gap-4 sm:gap-6 items-center relative overflow-hidden group hover:-translate-y-2 hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_rgba(0,0,0,1)] transition-transform duration-300"
               >
                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white flex-shrink-0 flex items-center justify-center border-[3px] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] z-10 relative group-hover:bg-[#18102B] transition-colors duration-300">
                   <div className="w-12 h-12 rounded-xl border-2 border-black bg-[#C6FF3D] flex items-center justify-center shadow-[2px_2px_0px_rgba(0,0,0,1)] group-hover:scale-110 transition-transform">
@@ -862,7 +862,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="relative bg-[#FF6B35] rounded-[32px] p-4 md:p-6 sm:p-8 border-[3px] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] flex flex-col gap-3 md:gap-6 overflow-hidden group hover:-translate-y-2 hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_rgba(0,0,0,1)] transition-all duration-300"
+                className="relative bg-[#FF6B35] rounded-[32px] p-4 md:p-6 sm:p-8 border-[3px] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] flex flex-col gap-3 md:gap-6 overflow-hidden group hover:-translate-y-2 hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_rgba(0,0,0,1)] transition-transform duration-300"
               >
                 {/* Background watermark */}
                 <div className="absolute right-0 bottom-0 text-[200px] font-black text-black/10 leading-none select-none pointer-events-none translate-x-10 translate-y-10">
@@ -1218,7 +1218,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                       )}
                     </td>
 
-                    <td className={`p-4 md:p-6 text-center bg-[#F5F3FF]/40 border-l-2 border-black transition-all ${row.highlight ? 'bg-[#CCFF00]/10' : ''}`}>
+                    <td className={`p-4 md:p-6 text-center bg-[#F5F3FF]/40 border-l-2 border-black transition-transform ${row.highlight ? 'bg-[#CCFF00]/10' : ''}`}>
                       <span className="bg-[#CCFF00] text-[#18102B] px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_rgba(0,0,0,1)] inline-flex items-center gap-1.5 transform hover:scale-105 transition-transform duration-200 select-none">
                         ✓ YES
                       </span>
@@ -1302,7 +1302,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                 >
                   <motion.div 
                     whileHover={{ y: -10, scale: 1.02 }}
-                    className={`${item.bgClass} rounded-[40px] p-4 md:p-8 sm:p-10 border-2 md:border-4 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] hover:shadow-[16px_16px_0px_rgba(0,0,0,1)] relative overflow-hidden w-full flex flex-col justify-between group transition-all duration-300`}
+                    className={`${item.bgClass} rounded-[40px] p-4 md:p-8 sm:p-10 border-2 md:border-4 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] hover:shadow-[16px_16px_0px_rgba(0,0,0,1)] relative overflow-hidden w-full flex flex-col justify-between group transition-transform duration-300`}
                   >
                     {/* Giant Watermark Step Number */}
                     <div className="absolute -bottom-10 -right-6 text-[180px] font-black opacity-10 pointer-events-none leading-none select-none mix-blend-overlay">
@@ -1459,7 +1459,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                 viewport={{ once: false, amount: 0.15 }}
                 transition={{ type: "spring", stiffness: 80, damping: 14, delay: idx * 0.1 }}
               >
-                <TiltWrapper className={`relative w-full h-[240px] md:h-[260px] rounded-[24px] p-4 md:p-8 md:p-10 flex flex-col justify-between overflow-hidden shadow-[6px_6px_0px_rgba(0,0,0,1)] border-2 border-black hover:-translate-y-1 hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] transition-all duration-300 ${item.bgClass}`}>
+                <TiltWrapper className={`relative w-full h-[240px] md:h-[260px] rounded-[24px] p-4 md:p-8 md:p-10 flex flex-col justify-between overflow-hidden shadow-[6px_6px_0px_rgba(0,0,0,1)] border-2 border-black hover:-translate-y-1 hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] transition-transform duration-300 ${item.bgClass}`}>
                   {/* Giant 3D Icon Overlay on Right */}
                   <div className="absolute -right-12 top-1/2 -translate-y-1/2 w-[220px] h-[220px] opacity-90 z-0 pointer-events-none drop-shadow-2xl">
                     <Icon className="w-full h-full" />
@@ -1794,7 +1794,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                     key={idx} 
                     layout
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    className={`bg-white rounded-[24px] border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] p-4 md:p-6 hover:border-[#834DFB] hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] transition-all duration-300 cursor-pointer relative overflow-hidden select-none ${isOpen ? 'border-[#834DFB] shadow-[6px_6px_0px_#834DFB]' : ''}`}
+                    className={`bg-white rounded-[24px] border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] p-4 md:p-6 hover:border-[#834DFB] hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] transition-transform duration-300 cursor-pointer relative overflow-hidden select-none ${isOpen ? 'border-[#834DFB] shadow-[6px_6px_0px_#834DFB]' : ''}`}
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: false, amount: 0.1 }}
@@ -1922,7 +1922,7 @@ export default function LandingClientPage({ user }: { user: any }) {
                     {/* CTA Pill button at bottom left over the image */}
                     <div className="absolute bottom-5 left-5 z-10">
                       <Link href="/signup">
-                      <button className="cta-button-group bg-[#18102B] border-2 border-black text-[#FF6B35] pl-4 pr-1.5 py-1.5 rounded-full flex items-center gap-4 text-xs font-bold hover:bg-white hover:text-[#18102B] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all duration-200 shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                      <button className="cta-button-group bg-[#18102B] border-2 border-black text-[#FF6B35] pl-4 pr-1.5 py-1.5 rounded-full flex items-center gap-4 text-xs font-bold hover:bg-white hover:text-[#18102B] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-transform duration-200 shadow-[4px_4px_0px_rgba(0,0,0,1)]">
                         Read Guide 
                         <span className="bg-[#FF6B35] text-white border-2 border-black rounded-full w-7 h-7 flex items-center justify-center text-[10px] font-black">→</span>
                       </button>
@@ -1971,7 +1971,7 @@ export default function LandingClientPage({ user }: { user: any }) {
 
           <div className="relative z-10">
             <Link href="/signup">
-              <button className="cta-button-group bg-[#18102B] hover:bg-black text-[#B4F481] font-black text-base px-10 py-4.5 rounded-full border-2 border-black transition-all duration-200 shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
+              <button className="cta-button-group bg-[#18102B] hover:bg-black text-[#B4F481] font-black text-base px-10 py-4.5 rounded-full border-2 border-black transition-transform duration-200 shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
               Get Started Free
               </button>
             </Link>

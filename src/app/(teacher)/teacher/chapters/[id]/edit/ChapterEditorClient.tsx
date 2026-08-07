@@ -246,7 +246,7 @@ export default function ChapterEditorClient({ chapter: initialChapter }: { chapt
 
       {/* Toast */}
       {toast && (
-        <div className={`fixed top-4 right-4 z-50 px-4 md:px-6 py-4 rounded-xl shadow-[4px_4px_0px_rgba(0,0,0,1)] border-2 border-black text-white text-sm font-black uppercase tracking-widest transition-all animate-fade-in ${toast.type === 'success' ? 'bg-[#C6FF3D] text-[#18102B]' : 'bg-[#FF6B35]'}`}>
+        <div className={`fixed top-4 right-4 z-50 px-4 md:px-6 py-4 rounded-xl shadow-[4px_4px_0px_rgba(0,0,0,1)] border-2 border-black text-white text-sm font-black uppercase tracking-widest transition-transform animate-fade-in ${toast.type === 'success' ? 'bg-[#C6FF3D] text-[#18102B]' : 'bg-[#FF6B35]'}`}>
           {toast.message}
         </div>
       )}
@@ -261,7 +261,7 @@ export default function ChapterEditorClient({ chapter: initialChapter }: { chapt
 
       {/* Floating Action Button for Mobile */}
       <button 
-        className="md:hidden fixed bottom-24 right-6 z-40 bg-[#C6FF3D] text-[#18102B] p-3 rounded-full shadow-[4px_4px_0px_rgba(0,0,0,1)] border-2 border-black min-w-[56px] min-h-[56px] flex items-center justify-center hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+        className="md:hidden fixed bottom-24 right-6 z-40 bg-[#C6FF3D] text-[#18102B] p-3 rounded-full shadow-[4px_4px_0px_rgba(0,0,0,1)] border-2 border-black min-w-[56px] min-h-[56px] flex items-center justify-center hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-transform"
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
       >
         {isSidebarOpen ? <X className="w-8 h-8" strokeWidth={3} /> : <Menu className="w-8 h-8" strokeWidth={3} />}
@@ -298,7 +298,7 @@ export default function ChapterEditorClient({ chapter: initialChapter }: { chapt
                   setShowQuestionForm(false);
                   setIsSidebarOpen(false); // Auto-close on mobile
                 }}
-                className={`w-full text-left px-4 py-4 rounded-xl text-sm font-black transition-all duration-150 flex items-center gap-3 border-2 border-black uppercase ${
+                className={`w-full text-left px-4 py-4 rounded-xl text-sm font-black transition-transform duration-150 flex items-center gap-3 border-2 border-black uppercase ${
                   isSelected
                     ? 'bg-[#C6FF3D] text-[#18102B] shadow-[4px_4px_0px_rgba(0,0,0,1)] translate-x-1'
                     : 'bg-white text-[#18102B] shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:bg-[#18102B] hover:text-white hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5'
@@ -345,7 +345,7 @@ export default function ChapterEditorClient({ chapter: initialChapter }: { chapt
         {/* Top Bar */}
         <div className="px-4 py-4 border-b-2 md:border-b-4 border-black bg-white flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 sm:gap-4 shadow-[0_4px_0px_rgba(0,0,0,1)] z-20 shrink-0">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto flex-1">
-            <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border-2 border-black focus-within:ring-4 focus-within:ring-[#C6FF3D] transition-all shadow-[2px_2px_0px_rgba(0,0,0,1)] flex-1 min-w-0">
+            <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border-2 border-black focus-within:ring-4 focus-within:ring-[#C6FF3D] transition-transform shadow-[2px_2px_0px_rgba(0,0,0,1)] flex-1 min-w-0">
               <svg className="w-5 h-5 text-[#18102B] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
               <input
                 defaultValue={chapter.title}
@@ -447,7 +447,7 @@ export default function ChapterEditorClient({ chapter: initialChapter }: { chapt
           {selectedItem?.type === 'content' && (
             <div className="p-4 md:p-8 bg-white border-2 md:border-4 border-black shadow-[6px_6px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_rgba(0,0,0,1)] rounded-[32px] flex flex-col h-[calc(100vh-160px)] animate-fade-in pb-28 md:pb-8">
               <div className="mb-6 md:mb-8 flex flex-col md:flex-row items-stretch md:items-start justify-between gap-4">
-                <div className="flex-1 bg-[#F5F3FF] p-4 rounded-xl border-2 md:border-4 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] focus-within:ring-4 focus-within:ring-[#C6FF3D] transition-all">
+                <div className="flex-1 bg-[#F5F3FF] p-4 rounded-xl border-2 md:border-4 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] focus-within:ring-4 focus-within:ring-[#C6FF3D] transition-transform">
                   <label className="text-xs font-black uppercase tracking-widest text-[#18102B] block mb-2">Section Title</label>
                   <Input
                     value={contentTitle}
@@ -538,7 +538,7 @@ export default function ChapterEditorClient({ chapter: initialChapter }: { chapt
                     {(q.options as string[] || []).map((opt: string, oi: number) => (
                       <div
                         key={oi}
-                        className={`px-4 py-4 rounded-xl text-lg font-bold transition-all border-2 md:border-4 ${
+                        className={`px-4 py-4 rounded-xl text-lg font-bold transition-transform border-2 md:border-4 ${
                           oi === q.correctOptionIndex
                             ? 'bg-[#C6FF3D] text-[#18102B] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)]'
                             : 'bg-white text-[#18102B] border-black shadow-[2px_2px_0px_rgba(0,0,0,1)]'
@@ -579,7 +579,7 @@ export default function ChapterEditorClient({ chapter: initialChapter }: { chapt
                       <label className="text-sm font-black text-[#18102B] uppercase tracking-widest block mb-6">Answer Options (Select the correct one)</label>
                       <div className="space-y-4">
                         {options.map((opt, oi) => (
-                          <div key={oi} className={`flex items-center gap-4 p-4 rounded-xl transition-all border-2 md:border-4 ${correctOption === oi ? 'bg-[#C6FF3D] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)]' : 'bg-white border-black shadow-[2px_2px_0px_rgba(0,0,0,1)]'}`}>
+                          <div key={oi} className={`flex items-center gap-4 p-4 rounded-xl transition-transform border-2 md:border-4 ${correctOption === oi ? 'bg-[#C6FF3D] border-black shadow-[4px_4px_0px_rgba(0,0,0,1)]' : 'bg-white border-black shadow-[2px_2px_0px_rgba(0,0,0,1)]'}`}>
                             <input
                               type="radio"
                               name="correctOption"
@@ -602,7 +602,7 @@ export default function ChapterEditorClient({ chapter: initialChapter }: { chapt
                       </div>
                       <button
                         onClick={() => setOptions([...options, ''])}
-                        className="font-black uppercase tracking-widest text-[#18102B] mt-6 bg-[#C6FF3D] border-2 border-black px-4 py-2 shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:bg-white hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] transition-all flex items-center gap-2"
+                        className="font-black uppercase tracking-widest text-[#18102B] mt-6 bg-[#C6FF3D] border-2 border-black px-4 py-2 shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:bg-white hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] transition-transform flex items-center gap-2"
                       >
                         + Add another option
                       </button>
@@ -616,7 +616,7 @@ export default function ChapterEditorClient({ chapter: initialChapter }: { chapt
               ) : (
                 <button
                   onClick={() => setShowQuestionForm(true)}
-                  className="w-full py-3 md:py-6 md:py-12 border-2 md:border-4 border-dashed border-black bg-[#F5F3FF] rounded-[32px] text-[#18102B] hover:bg-[#C6FF3D] hover:border-solid hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] transition-all flex flex-col items-center justify-center gap-4 group"
+                  className="w-full py-3 md:py-6 md:py-12 border-2 md:border-4 border-dashed border-black bg-[#F5F3FF] rounded-[32px] text-[#18102B] hover:bg-[#C6FF3D] hover:border-solid hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_rgba(0,0,0,1)] transition-transform flex flex-col items-center justify-center gap-4 group"
                 >
                   <div className="w-16 h-16 rounded-full bg-white border-2 md:border-4 border-black group-hover:bg-[#18102B] group-hover:text-[#C6FF3D] flex items-center justify-center transition-colors shadow-[4px_4px_0px_rgba(0,0,0,1)]">
                     <span className="text-lg md:text-2xl md:text-4xl font-black">+</span>

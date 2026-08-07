@@ -28,7 +28,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ value, className, show
     <div className={clsx('w-full flex items-center gap-2', className)}>
       <div className="flex-1 h-2 bg-[var(--color-surface-alt)] rounded-full overflow-hidden">
         <div
-          className={clsx('h-full transition-all duration-500 ease-out progress-fill', getColor(width))}
+          className={clsx('h-full transition-transform duration-500 ease-out progress-fill', getColor(width))}
           style={{ width: `${width}%` }}
         />
       </div>

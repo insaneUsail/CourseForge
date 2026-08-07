@@ -117,7 +117,7 @@ export function QuizTakingClient({ quiz, classId }: { quiz: any, classId: string
                   key={idx}
                   onClick={() => handleSelectOption(idx)}
                   className={`
-                    p-4 md:p-6 rounded-xl border-4 cursor-pointer transition-all min-h-[60px] flex items-center group
+                    p-4 md:p-6 rounded-xl border-4 cursor-pointer transition-transform min-h-[60px] flex items-center group
                     ${isSelected 
                       ? 'border-black bg-[#C6FF3D] shadow-[6px_6px_0px_rgba(0,0,0,1)] -translate-y-1' 
                       : 'border-black bg-white hover:bg-[#F5F3FF] shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5'

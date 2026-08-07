@@ -12,6 +12,7 @@ export function TiltWrapper({ children, className = "" }: { children: React.Reac
   const rotateY = useSpring(useTransform(x, [-150, 150], [-15, 15]), { stiffness: 150, damping: 15 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) return;
     const el = e.currentTarget;
     const rect = el.getBoundingClientRect();
     const width = rect.width;
@@ -23,6 +24,7 @@ export function TiltWrapper({ children, className = "" }: { children: React.Reac
   };
 
   const handleMouseLeave = () => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) return;
     x.set(0);
     y.set(0);
   };
