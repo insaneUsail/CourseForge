@@ -504,7 +504,7 @@ export default function LandingClientPage({ user }: { user: any }) {
         <section id="features" className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center">
         {/* Background Texture: Huge Starbursts and Crosses */}
         <div className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center opacity-10">
-           <svg viewBox="0 0 800 800" className="w-[80vw] h-[80vw] max-w-[1200px] text-white will-change-transform animate-[spin_120s_linear_infinite]" fill="currentColor">
+           <svg viewBox="0 0 800 800" className="w-[80vw] h-[80vw] max-w-[1200px] text-white" fill="currentColor">
               <path d="M400,0 L430,370 L800,400 L430,430 L400,800 L370,430 L0,400 L370,370 Z" />
            </svg>
         </div>
@@ -602,11 +602,11 @@ export default function LandingClientPage({ user }: { user: any }) {
                   animate={{
                     x: offset * 180, // Horizontal spread
                     scale: isCenter ? 1 : Math.max(0.75, 1 - absOffset * 0.1), // Scale down siblings
-                    rotateY: isCenter ? 0 : isLeft ? 35 : -35, // 3D rotation
+                    rotateY: 0, // Flat 2D for high performance
                     zIndex: 40 - absOffset,
                     opacity: isCenter ? 1 : Math.max(0.4, 1 - absOffset * 0.25),
                   }}
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.5 }}
                   style={{ transformOrigin: 'center center' }}
                   onClick={() => !isCenter && setActiveFeature(idx)}
                 >
