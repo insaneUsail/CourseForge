@@ -12,7 +12,6 @@ Teachers can create structured chapters and deploy them to multiple private or p
   <img src="./docs/images/landing-features.png" alt="Landing Page Features" width="32%" />
   <img src="./docs/images/student-reader.png" alt="Student Chapter Reader" width="32%" />
   <img src="./docs/images/teacher-dashboard.png" alt="Teacher Dashboard" width="32%" />
-  <img src="./docs/images/student-dashboard.png" alt="Student Dashboard" width="48%" />
 </div>
 
 ---
