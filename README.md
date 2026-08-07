@@ -1,28 +1,34 @@
-# CourseForge 🚀
+# CourseForge 🎓
 
-CourseForge is a modern, open-source educational platform designed to empower teachers and students. It allows educators to create structured classes, build rich interactive chapters, and share knowledge publicly, while providing students with a seamless learning and assessment experience.
+**CourseForge** is a modern, neo-brutalist e-learning platform that allows teachers to write lessons once and teach them everywhere. It bridges the gap between structured content creation and interactive, trackable student learning. 
 
-## ✨ Features
+Teachers can create structured chapters and deploy them to multiple private or public classes with a single click. Students can fast-join classes using secure codes, read rich curriculum content, and take quizzes to reinforce their knowledge, all tracked in their personal history.
 
-- **For Teachers:**
-  - Create and manage classes with unique enrollment keys.
-  - Build comprehensive chapters using a rich text editor.
-  - Create quizzes and assessments for students.
-  - View detailed analytics and performance metrics for all students.
-  - Share chapters to the public directory for open access.
+---
 
-- **For Students:**
-  - Join classes using secure enrollment keys.
-  - Access learning materials and interactive chapters.
-  - Take quizzes to test knowledge and track personal progress.
-  - Browse the public directory to learn new topics for free without enrolling.
+## 📸 Screenshots
 
-- **Modern & Responsive Design:**
-  - Built with a vibrant, modern UI using Tailwind CSS.
-  - Fully responsive and accessible.
-  - Dark mode and Light mode support.
+<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+  <img src="./docs/images/landing-features.png" alt="Landing Page Features" width="32%" />
+  <img src="./docs/images/student-reader.png" alt="Student Chapter Reader" width="32%" />
+  <img src="./docs/images/teacher-dashboard.png" alt="Teacher Dashboard" width="32%" />
+  <img src="./docs/images/student-dashboard.png" alt="Student Dashboard" width="32%" />
+  <img src="./docs/images/teacher-browse.png" alt="Browse Public Chapters" width="32%" />
+</div>
 
-## 🛠️ Tech Stack
+---
+
+## 🚀 Features
+
+- **Neo-Brutalist Design**: Vibrant colors (`#C6FF3D`, `#FF6B35`, `#834DFB`) and bold 3D card aesthetics built with TailwindCSS and Framer Motion.
+- **Write Once, Teach Everywhere**: Create a chapter in your private repository and assign it to 10 different classes without duplicating content. 
+- **Public & Private Chapters**: Browse community chapters from other educators to quickly construct comprehensive curriculums.
+- **Interactive Reading**: Track student progress and completion of chapters.
+- **Role-Based Workflows**: Separate, tailored dashboards and capabilities for `STUDENT` and `TEACHER` accounts.
+
+---
+
+## 🛠 Tech Stack
 
 - **Framework**: [Next.js 16](https://nextjs.org/) (App Router & Server Actions)
 - **Database**: [Neon Postgres](https://neon.tech/) with [Prisma ORM](https://www.prisma.io/)
