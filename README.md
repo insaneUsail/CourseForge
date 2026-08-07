@@ -9,11 +9,10 @@ Teachers can create structured chapters and deploy them to multiple private or p
 ## 📸 Screenshots
 
 <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
-  <img src="./docs/images/landing-features.png" alt="Landing Page Features" width="48%" />
-  <img src="./docs/images/student-reader.png" alt="Student Chapter Reader" width="48%" />
-  <img src="./docs/images/teacher-dashboard.png" alt="Teacher Dashboard" width="48%" />
+  <img src="./docs/images/landing-features.png" alt="Landing Page Features" width="32%" />
+  <img src="./docs/images/student-reader.png" alt="Student Chapter Reader" width="32%" />
+  <img src="./docs/images/teacher-dashboard.png" alt="Teacher Dashboard" width="32%" />
   <img src="./docs/images/student-dashboard.png" alt="Student Dashboard" width="48%" />
-  <img src="./docs/images/teacher-browse.png" alt="Browse Public Chapters" width="48%" />
 </div>
 
 ---
