@@ -442,3 +442,66 @@ body {
 .animate-slide-in-right {
   animation: slide-in-right 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Custom Loader Spinner */
+.neo-spinner {
+  --size: 30px;
+  --first-block-clr: #FF6B35;
+  --second-block-clr: #C6FF3D;
+  --clr: #18102B;
+  width: 100px;
+  height: 100px;
+  position: relative;
+}
+
+.neo-spinner::after,
+.neo-spinner::before {
+  box-sizing: border-box;
+  position: absolute;
+  content: "";
+  width: var(--size);
+  height: var(--size);
+  top: 50%;
+  animation: spinner-up 2.4s cubic-bezier(0, 0, 0.24, 1.21) infinite;
+  left: 50%;
+  background: var(--first-block-clr);
+  border: 2px solid var(--clr);
+  box-shadow: 2px 2px 0px var(--clr);
+}
+
+.neo-spinner::after {
+  background: var(--second-block-clr);
+  top: calc(50% - var(--size));
+  left: calc(50% - var(--size));
+  animation: spinner-down 2.4s cubic-bezier(0, 0, 0.24, 1.21) infinite;
+}
+
+@keyframes spinner-down {
+  0%, 100% {
+    transform: none;
+  }
+  25% {
+    transform: translateX(100%);
+  }
+  50% {
+    transform: translateX(100%) translateY(100%);
+  }
+  75% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes spinner-up {
+  0%, 100% {
+    transform: none;
+  }
+  25% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(-100%) translateY(-100%);
+  }
+  75% {
+    transform: translateY(-100%);
+  }
+}
