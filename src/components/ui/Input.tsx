@@ -22,7 +22,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           id={inputId}
           ref={ref}
           className={clsx(
-            'bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-[#834DFB] focus:border-transparent min-h-[48px] placeholder:text-gray-400',
+            'bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-900 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-[#834DFB] focus:border-transparent min-h-[40px] placeholder:text-gray-400',
             error && 'border-red-500 focus:ring-red-500',
             className
           )}

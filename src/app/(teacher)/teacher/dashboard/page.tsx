@@ -31,7 +31,7 @@ export default async function TeacherDashboardPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
+    <div className="w-full max-w-[1600px] mx-auto p-4 md:p-6">
       <TeacherDashboardClient classes={classes} stats={stats} user={session.user} />
     </div>
   );

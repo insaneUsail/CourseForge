@@ -59,9 +59,9 @@ export default function BrowseClient({ classes, initialChapters }: { classes: an
 
   return (
     <div>
-      <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4 mb-6 md:mb-12 bg-[#18102B] p-4 md:p-8 rounded-[32px] border-2 md:border-4 border-black shadow-[6px_6px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_rgba(0,0,0,1)] max-w-4xl mx-auto relative overflow-hidden">
-        <div className="absolute -top-10 -right-10 w-16 md:w-32 h-16 md:h-32 bg-[#C6FF3D] rounded-full blur-2xl opacity-20"></div>
-        <div className="absolute -bottom-10 -left-10 w-16 md:w-32 h-16 md:h-32 bg-[#FF6B35] rounded-full blur-2xl opacity-20"></div>
+      <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4 mb-6 md:mb-12 bg-[#18102B] p-4 md:p-6 rounded-[32px] border-2 md:border-4 border-black shadow-[6px_6px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_rgba(0,0,0,1)] max-w-4xl mx-auto relative overflow-hidden">
+        <div className="absolute -top-10 -right-10 w-16 md:w-24 h-16 md:h-24 bg-[#C6FF3D] rounded-full blur-2xl opacity-20"></div>
+        <div className="absolute -bottom-10 -left-10 w-16 md:w-24 h-16 md:h-24 bg-[#FF6B35] rounded-full blur-2xl opacity-20"></div>
         <Input 
           value={query} 
           onChange={(e) => setQuery(e.target.value)} 

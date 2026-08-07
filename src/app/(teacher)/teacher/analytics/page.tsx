@@ -26,13 +26,13 @@ export default async function AnalyticsOverviewPage() {
           <span className="inline-block mb-2 bg-[#18102B] text-white font-black text-xs uppercase tracking-widest px-3 py-1 border-2 border-black rounded shadow-[2px_2px_0px_rgba(0,0,0,1)]">
             Overview
           </span>
-          <h1 className="text-xl md:text-3xl md:text-5xl font-black text-[#18102B] tracking-tighter uppercase">Analytics</h1>
+          <h1 className="text-xl md:text-3xl lg:text-4xl font-black text-[#18102B] tracking-tighter uppercase">Analytics</h1>
         </div>
       </div>
       
       {/* 4-Stat Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:p-8 mb-16">
-        <Card className="p-4 md:p-6 bg-[#B4F481] hoverable={true} flex flex-col justify-center h-40 relative overflow-hidden">
+        <Card className="p-4 md:p-6 bg-[#B4F481] hoverable={true} flex flex-col justify-center h-28 md:h-32 relative overflow-hidden">
           <div className="absolute -right-4 -bottom-4 w-12 md:w-24 h-12 md:h-24 bg-white/30 rounded-full blur-2xl"></div>
           <div className="flex items-center justify-between mb-2 relative z-10">
             <span className="text-sm font-black text-[#18102B] uppercase tracking-widest">Total Students</span>
@@ -40,10 +40,10 @@ export default async function AnalyticsOverviewPage() {
               <Users className="w-5 h-5 text-[#18102B]" />
             </div>
           </div>
-          <span className="text-xl md:text-3xl md:text-5xl font-black text-[#18102B] relative z-10">{data.totalStudents}</span>
+          <span className="text-2xl md:text-4xl font-black text-[#18102B] relative z-10">{data.totalStudents}</span>
         </Card>
         
-        <Card className="p-4 md:p-6 bg-[#A78BFA] hoverable={true} flex flex-col justify-center h-40 relative overflow-hidden">
+        <Card className="p-4 md:p-6 bg-[#A78BFA] hoverable={true} flex flex-col justify-center h-28 md:h-32 relative overflow-hidden">
           <div className="absolute -right-4 -bottom-4 w-12 md:w-24 h-12 md:h-24 bg-white/30 rounded-full blur-2xl"></div>
           <div className="flex items-center justify-between mb-2 relative z-10">
             <span className="text-sm font-black text-[#18102B] uppercase tracking-widest">Avg Score</span>
@@ -51,10 +51,10 @@ export default async function AnalyticsOverviewPage() {
               <BarChart3 className="w-5 h-5 text-[#18102B]" />
             </div>
           </div>
-          <span className="text-xl md:text-3xl md:text-5xl font-black text-[#18102B] relative z-10">{Math.round(data.avgScore)}%</span>
+          <span className="text-2xl md:text-4xl font-black text-[#18102B] relative z-10">{Math.round(data.avgScore)}%</span>
         </Card>
         
-        <Card className="p-4 md:p-6 bg-[#60A5FA] hoverable={true} flex flex-col justify-center h-40 relative overflow-hidden">
+        <Card className="p-4 md:p-6 bg-[#60A5FA] hoverable={true} flex flex-col justify-center h-28 md:h-32 relative overflow-hidden">
           <div className="absolute -right-4 -bottom-4 w-12 md:w-24 h-12 md:h-24 bg-white/30 rounded-full blur-2xl"></div>
           <div className="flex items-center justify-between mb-2 relative z-10">
             <span className="text-sm font-black text-[#18102B] uppercase tracking-widest">Attempted</span>
@@ -62,10 +62,10 @@ export default async function AnalyticsOverviewPage() {
               <CheckCircle2 className="w-5 h-5 text-[#18102B]" />
             </div>
           </div>
-          <span className="text-xl md:text-3xl md:text-5xl font-black text-[#18102B] relative z-10">{data.studentsWhoAttempted}</span>
+          <span className="text-2xl md:text-4xl font-black text-[#18102B] relative z-10">{data.studentsWhoAttempted}</span>
         </Card>
         
-        <Card className="p-4 md:p-6 bg-[#FF6B35] hoverable={true} flex flex-col justify-center h-40 relative overflow-hidden">
+        <Card className="p-4 md:p-6 bg-[#FF6B35] hoverable={true} flex flex-col justify-center h-28 md:h-32 relative overflow-hidden">
           <div className="absolute -right-4 -bottom-4 w-12 md:w-24 h-12 md:h-24 bg-white/30 rounded-full blur-2xl"></div>
           <div className="flex items-center justify-between mb-2 relative z-10">
             <span className="text-sm font-black text-white uppercase tracking-widest">Not Started</span>
@@ -73,7 +73,7 @@ export default async function AnalyticsOverviewPage() {
               <AlertCircle className="w-5 h-5 text-[#18102B]" />
             </div>
           </div>
-          <span className="text-xl md:text-3xl md:text-5xl font-black text-white relative z-10">{data.studentsNotStarted}</span>
+          <span className="text-2xl md:text-4xl font-black text-white relative z-10">{data.studentsNotStarted}</span>
         </Card>
       </div>
 

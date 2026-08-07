@@ -27,7 +27,7 @@ export default async function BrowsePage() {
           <span className="inline-block mb-3 bg-[#18102B] text-white font-black text-xs uppercase tracking-widest px-3 py-1 border-2 border-black rounded shadow-[2px_2px_0px_rgba(0,0,0,1)]">
             Community
           </span>
-          <h1 className="text-lg md:text-2xl md:text-4xl md:text-5xl font-black text-[#18102B] tracking-tighter uppercase">
+          <h1 className="text-xl md:text-3xl lg:text-4xl font-black text-[#18102B] tracking-tighter uppercase">
             Browse Chapters
           </h1>
           <p className="text-lg text-white font-bold bg-[#18102B] px-4 py-1.5 mt-2 rounded border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] w-fit">

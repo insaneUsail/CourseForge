@@ -56,7 +56,7 @@ export default function LoginPage() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="w-full md:w-1/2 flex flex-col items-center justify-center p-4 md:p-6 lg:p-12 perspective-1000"
         >
-          <TiltWrapper className="w-full max-w-md bg-white p-10 rounded-[32px] border-2 md:border-4 border-black shadow-[6px_6px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_rgba(0,0,0,1)] relative z-20">
+          <TiltWrapper className="w-full max-w-md bg-white p-6 md:p-8 rounded-[32px] border-2 md:border-4 border-black shadow-[6px_6px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_rgba(0,0,0,1)] relative z-20">
             {/* Decorative Corner Tags */}
             <div className="absolute -top-4 -right-4 bg-[#FF6B35] text-white font-black text-xs uppercase tracking-widest px-3 py-1 rounded border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] rotate-12">
               SECURE
